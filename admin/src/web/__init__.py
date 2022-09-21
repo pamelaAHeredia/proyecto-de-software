@@ -6,18 +6,18 @@ def create_app(static_folder="static"):
     # Define home
     @app.route("/")
     def hello_world():
-        contenido = "Hola mundo!"
+        contenido = "mundo!"
         return render_template('index.html', contenido=contenido)
 
     @app.route("/personas")
     def personas():
-        contenido = "Hola personas!"
+        contenido = "personas!"
         return render_template('index.html', contenido=contenido)
 
     @app.route("/personas/<string:nombre>")
     def persona(nombre):
         nombre = nombre.capitalize()
-        contenido = f"Hola {nombre}"
+        contenido = nombre
         return render_template('index.html', contenido=contenido)
 
     return app
