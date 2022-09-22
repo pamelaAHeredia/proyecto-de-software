@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <title>Ejemplo Proyecto</title>
-    </head>
-    <body>
+{% extends "layout.html" %}
+{% block title %}Ejemplo Proyecto{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
         {% if contenido == "Argentina" %}
             <h1>La Ciudad Autonónoma de Buenos Aires es la capital de {{contenido}} <h1>
         {% else %}
             <h1>Hola {{contenido}} !!<h1>
         {% endif %}
-    </body>
-</html>
+        <a href="{{url_for('issues_index')}}"> Issues </a>
+{% endblock %}
