@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <title>Ejemplo Proyecto</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    </head>
-    <body>
+{% extends "layout.html" %}
+{% block title %}Ejemplo Proyecto{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
         {% if contenido == "Argentina" %}
             <h1>La Ciudad Autonónoma de Buenos Aires es la capital de {{contenido}} <h1>
         {% else %}
             <h1>Hola {{contenido}} !!<h1>
         {% endif %}
         <a href="{{url_for('issues_index')}}"> Issues </a>
-    </body>
-</html>
+{% endblock %}
