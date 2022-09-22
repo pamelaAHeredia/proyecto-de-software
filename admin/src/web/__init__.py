@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 
+from src.web.helpers import handlers
+
 issues = [
     {
         "id": 1,
@@ -26,11 +28,11 @@ issues = [
 
 
 def create_app(static_folder="static"):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder=static_folder) 
 
     # Define home
     @app.route("/")
-    def hello_world():
+    def home():
         contenido = "mundo"
         return render_template('index.html', contenido=contenido)
 
@@ -48,5 +50,7 @@ def create_app(static_folder="static"):
     @app.route("/issues/")
     def issues_index():
         return render_template("issues/index.html", issues=issues)
+
+    app.register_error_handler(404, handlers.not_found_error)
 
     return app
