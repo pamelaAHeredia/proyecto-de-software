@@ -2,6 +2,7 @@
 <html lang="es">
     <head>
         <title>Ejemplo Proyecto</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     </head>
     <body>
         {% if contenido == "Argentina" %}
@@ -9,5 +10,6 @@
         {% else %}
             <h1>Hola {{contenido}} !!<h1>
         {% endif %}
+        <a href="{{url_for('issues_index')}}"> Issues </a>
     </body>
 </html>
