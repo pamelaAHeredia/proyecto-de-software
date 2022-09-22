@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-
 from src.web.helpers import handlers
 
 issues = [
@@ -51,6 +50,8 @@ def create_app(static_folder="static"):
     def issues_index():
         return render_template("issues/index.html", issues=issues)
 
+    # Handler Error
     app.register_error_handler(404, handlers.not_found_error)
+    app.register_error_handler(500, handlers.internal_server_error)
 
     return app
