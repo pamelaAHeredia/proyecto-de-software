@@ -27,7 +27,7 @@ issues = [
 
 
 def create_app(static_folder="static"):
-    app = Flask(__name__, static_folder=static_folder) 
+    app = Flask(__name__, static_folder=static_folder)
 
     # Define home
     @app.route("/")
