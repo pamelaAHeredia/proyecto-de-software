@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from src.web.helpers import handlers
 
 issues = [
@@ -48,6 +48,17 @@ def create_app(static_folder="static"):
 
     @app.route("/issues/")
     def issues_index():
+        return render_template("issues/index.html", issues=issues)
+    
+    @app.route("/issues/add", methods=["POST"])
+    def issues_add():
+        issue = {"id": request.form.get("id"),
+        "user": request.form.get("user"),
+        "title": request.form.get("title"),
+        "description": request.form.get("description"),
+        "status": request.form.get("status"),
+                 }
+        issues.append(issue)
         return render_template("issues/index.html", issues=issues)
 
     # Handler Error
