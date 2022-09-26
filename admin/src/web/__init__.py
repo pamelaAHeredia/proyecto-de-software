@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from src.web.helpers import handlers
+from src.models import database
+
 
 issues = [
     {
@@ -64,5 +66,9 @@ def create_app(static_folder="static"):
     # Handler Error
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
+    
+    @app.cli.command(name="resetdb")
+    def resetdb():
+        database.reset_db()
 
     return app
