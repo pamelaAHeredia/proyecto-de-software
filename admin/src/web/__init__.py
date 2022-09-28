@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from src.web.helpers import handlers
 from src.models import database
+from src.models import seeds
 from src.web.controllers.user import user_blueprint
 from src.web.config import config
 
@@ -79,4 +80,8 @@ def create_app(env="development", static_folder="static"):
     def resetdb():
         database.reset_db()
 
+    @app.cli.command(name="seeds")
+    def seedsdb():
+        seeds.run()
+        
     return app
