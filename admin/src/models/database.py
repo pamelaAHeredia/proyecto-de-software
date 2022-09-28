@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-def init_db(app):
+def init_app(app):
     db.init_app(app)
     config_db(app)
 
@@ -17,8 +17,9 @@ def config_db(app):
         db.session.remove()
 
 def reset_db():
-    print("Eliminando base de datos")
+    print("🗑️ Eliminando base de datos")
     db.drop_all()
-    print("Creando base de datos")
+    print("🆕 Creando base de datos")
     db.create_all()
-    print("Hecho!")
+    print("✅ Hecho!")
+    
