@@ -12,15 +12,15 @@ def users_index():
     return render_template("users/index.html", users=users)
 
 
-"""
-@user_blueprint.route("/issues/add", methods=["POST"])
-def issues_add():
-    issue = {
-        "id": request.form.get("id"),
-        "user": request.form.get("user"),
-        "title": request.form.get("title"),
-        "description": request.form.get("description"),
-        "status": request.form.get("status"),
+@user_blueprint.route("/add", methods=["POST"])
+def users_add():
+    data_user = {
+        "email": request.form.get("email"),
+        "username": request.form.get("username"),
+        "password": request.form.get("email"),
+        "first_name": request.form.get("first_name"),
+        "last_name": request.form.get("last_name"),
     }
-    issues.append(issue)
-    return render_template("issues/index.html", issues=issues) """
+    auth.create_user(**data_user)
+    return users_index() 
+
