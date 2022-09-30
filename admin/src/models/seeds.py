@@ -1,4 +1,3 @@
-import email
 from src.models import auth
 
 
