@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Consultas{% endblock %}
+{% block title %}Consultas Usuarios{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
 {% block content %}
+
 <h1>Consultas</h1>
 
 <table class="index-table box">
@@ -33,11 +34,11 @@
   </tbody>
 </table>
 <form action="{{ url_for('users.users_add')}}" method="post">
-  <input type="text" name="email" placeholder="Ingrese el email">
-  <input type="text" name="username" placeholder="Ingrese el usuario">
-  <input type="text" name="first_name" placeholder="Ingrese el Nombre">
-  <input type="text" name="last_name" placeholder="Ingrese el Apellido">
-  <button>Enviar</button>
+  <input type="email" name="email" placeholder="Ingrese el email" required="true">
+  <input type="text" name="username" placeholder="Ingrese el usuario" required="true">
+  <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true">
+  <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true">
+  <button class="btn btn-primary">Enviar</button>
 </form>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
