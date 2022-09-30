@@ -1,5 +1,5 @@
 from src.models.database import db
-from src.models.auth.user import User
+from src.models.auth.user import User, Role
 
 def list_users():
     return User.query.all()
@@ -10,4 +10,8 @@ def create_user(**kwargs):
     db.session.commit()
     return user
 
-
+def create_role(**kwargs):
+    role = Role(**kwargs)
+    db.session.add(role)
+    db.session.commit()
+    return role
