@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Consultas{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h1>Consultas</h1>
+
+<table class="index-table box">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Email</th>
+      <th>Nombre de Usuario</th>
+      <th>Esta Activo ?</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <th>{{ user.id }}</th>
+      <th>{{ user.email }}</th>
+      <th>{{ user.username }}</th>
+      <th>{%if user.is_active -%} {{"Si"}}
+        {%else -%}{{"No"}}
+        {% endif %}</th>
+      <th>{{ user.first_name }}</th>
+      <th>{{ user.last_name }}</th>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<form action="{{ url_for('users.users_add')}}" method="post">
+  <input type="text" name="email" placeholder="Ingrese el email">
+  <input type="text" name="username" placeholder="Ingrese el usuario">
+  <input type="text" name="first_name" placeholder="Ingrese el Nombre">
+  <input type="text" name="last_name" placeholder="Ingrese el Apellido">
+  <button>Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}

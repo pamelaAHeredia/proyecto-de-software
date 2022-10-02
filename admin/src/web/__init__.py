@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 from src.web.helpers import handlers
+from src.models import database
+from src.models import seeds
+from src.web.controllers.user import user_blueprint
+from src.web.config import config
+
 
 issues = [
     {
@@ -26,8 +31,12 @@ issues = [
 ]
 
 
-def create_app(static_folder="static"):
+def create_app(env="development", static_folder="static"):
     app = Flask(__name__, static_folder=static_folder)
+
+    app.config.from_object(config[env])
+
+    database.init_app(app)
 
     # Define home
     @app.route("/")
@@ -61,8 +70,18 @@ def create_app(static_folder="static"):
         issues.append(issue)
         return render_template("issues/index.html", issues=issues)
 
+    app.register_blueprint(user_blueprint)
+
     # Handler Error
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
+    
+    @app.cli.command(name="resetdb")
+    def resetdb():
+        database.reset_db()
 
+    @app.cli.command(name="seeds")
+    def seedsdb():
+        seeds.run()
+        
     return app
