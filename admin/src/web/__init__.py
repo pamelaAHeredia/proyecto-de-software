@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from src.web.helpers import handlers
 from src.models import database
 from src.models import seeds
@@ -36,6 +36,8 @@ def create_app(env="development", static_folder="static"):
 
     app.config.from_object(config[env])
 
+    app.secret_key = "secret key"
+
     database.init_app(app)
 
     # Define home
@@ -68,6 +70,7 @@ def create_app(env="development", static_folder="static"):
         "status": request.form.get("status"),
                  }
         issues.append(issue)
+        flash('nuevo issue agregado!')
         return render_template("issues/index.html", issues=issues)
 
     app.register_blueprint(user_blueprint)

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Consultas{% endblock %}
+{% block title %}Consultas Issues{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -34,7 +34,7 @@
     <input type="text" name="title" placeholder="Ingrese el título">
     <input type="text" name="description" placeholder="Ingrese la descripción">
     <input type="text" name="status" placeholder="Ingrese el estado">
-    <button>Enviar</button>
+    <button class="btn btn-primary">Enviar</button>
   </form>
   <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}   
