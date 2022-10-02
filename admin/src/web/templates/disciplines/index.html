@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Disciplinas{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<h1>Consultas</h1>
+
+<table class="index-table box">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Disciplina</th>
+            <th>Categoria</th>
+            <th>Instructores</th>
+            <th>Dias y Horarios</th>
+            <th>Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for discipline in disciplines %}
+        <tr>
+            <th>{{ discipline.id }}</th>
+            <th>{{ discipline.name }}</th>
+            <th>{{ discipline.category }}</th>
+            <th>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </th>
+            <th>{{ discipline.days_and_schedules }}</th>
+            <th>{{ discipline.amount }}</th>
+            <th>{%if discipline.is_active -%} {{"Si"}}
+                {%else -%}{{"No"}}
+                {% endif %}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form action="{{ url_for('discipline.discipline_add')}}" method="post">
+    <input type="text" name="name" placeholder="Ingrese el nombre de la disciplina" required="true">
+    <input type="text" name="category" placeholder="Ingrese la categoria" required="true">
+    <input type="text" name="instructor_first_name" placeholder="Ingrese el nombre del instructor" required="true">
+    <input type="text" name="instructor_last_name" placeholder="Ingrese el apellido del instructor" required="true">
+    <input type="text" name="days_and_schedules" placeholder="Ingrese dias y horarios" required="true">
+    <input type="number" name="amount" placeholder="Ingrese monto" required="true">
+
+    <button class="btn btn-primary">Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}

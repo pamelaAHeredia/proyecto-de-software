@@ -3,6 +3,7 @@ from src.web.helpers import handlers
 from src.models import database
 from src.models import seeds
 from src.web.controllers.user import user_blueprint
+from src.web.controllers.discipline import discipline_blueprint
 from src.web.config import config
 
 
@@ -74,6 +75,7 @@ def create_app(env="development", static_folder="static"):
         return render_template("issues/index.html", issues=issues)
 
     app.register_blueprint(user_blueprint)
+    app.register_blueprint(discipline_blueprint)
 
     # Handler Error
     app.register_error_handler(404, handlers.not_found_error)

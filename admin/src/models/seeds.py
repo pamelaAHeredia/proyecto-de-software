@@ -1,4 +1,5 @@
 from src.models import auth
+from src.models import club
 
 
 def run():
@@ -44,4 +45,12 @@ def run():
         first_name="Nadia",
         last_name="Benitez",
         roles=[role_2, role_3],
+    )
+    discipline = club.create_discipline(
+        name="Basquet",
+        category="Pre mini",
+        instructor_first_name = "Juan",
+        instructor_last_name = "De Los Palotes",
+        days_and_schedules = "Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
+        amount = 600.00
     )
