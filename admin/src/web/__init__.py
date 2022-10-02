@@ -73,12 +73,14 @@ def create_app(env="development", static_folder="static"):
         flash('nuevo issue agregado!')
         return render_template("issues/index.html", issues=issues)
 
+    # Registro de Blueprints
     app.register_blueprint(user_blueprint)
 
     # Handler Error
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
     
+    # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():
         database.reset_db()

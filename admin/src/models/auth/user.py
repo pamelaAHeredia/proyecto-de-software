@@ -1,10 +1,12 @@
 from src.models.database import db
 
+# Define la tabla que relaciona Usuarios con Roles
 user_has_role = db.Table('user_has_role',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True)
 )
 
+# Define la clase Usuario
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True, unique=True)
