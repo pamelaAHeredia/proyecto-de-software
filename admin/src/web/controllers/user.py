@@ -1,4 +1,5 @@
-from flask import Blueprint, request, render_template, flash
+from flask import Blueprint, request, render_template, flash, redirect, url_for
+
 from src.models.auth.user import User
 from src.models import auth
 from src.models.auth.utils import hash_pass
@@ -27,5 +28,5 @@ def users_add():
     }
     auth.create_user(**data_user)
     flash("Usuario guardado con éxito!")
-    return users_index() 
+    return redirect(url_for("users.users_index"))
 

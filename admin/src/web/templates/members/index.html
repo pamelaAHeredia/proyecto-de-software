@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Socios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<h1>Consultas</h1>
+
+<table class="index-table box">
+  <thead>
+    <tr>
+      <th>N° de Socio</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Esta Activo ?</th>
+      <th>Tipo de Documento</th>
+      <th>N° de Documento</th>
+      <th>Genero</th>
+      <th>Domicilio</th>
+      <th>Email</th>
+      <th>Telefono</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in members %}
+    <tr>
+      <th>{{ member.membership_number }}</th>
+      <th>{{ member.first_name }}</th>
+      <th>{{ member.last_name }}</th>
+      <th>{%if member.is_active -%} {{"Si"}}
+        {%else -%}{{"No"}}
+        {% endif %}</th>
+      <th>{{ member.document_type }}</th>
+      <th>{{ member.document_number }}</th>
+      <th>{{ member.gender }}</th>
+      <th>{{ member.address }}</th>
+      <th>{{ member.email }}</th>
+      <th>{{ member.phone_number }}</th>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> 
+<form action="{{ url_for('members.members_add')}}" method="post">
+  <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true">
+  <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true">
+  Tipo de Documento: 
+  <select name="document_type">
+    <option value="DNI"selected>DNI</option>
+    <option value="LE">LE</option> 
+    <option value="LC">LC</option>
+    <option value="PASAPORTE">PASAPORTE</option>
+  </select>
+  <input type="text" name="document_number" placeholder="Ingrese N° de documento" required="true">
+  <p>
+    Genero:
+    <input type="radio" name="gender" value="M" checked /> Masculino
+    <input type="radio" name="gender" value="F" /> Femenino
+    <input type="radio" name="gender" value="Otro" /> Otro
+  </p>
+  <input type="text" name="address" placeholder="Ingrese el Domicilio" required="true">
+  <input type="email" name="email" placeholder="Ingrese el email">
+  <input type="tel" name="phone_number" placeholder="Ingrese el telefono" />
+  <button class="btn btn-primary">Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}

@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, flash
+
 from src.web.helpers import handlers
 from src.models import database
 from src.models import seeds
 from src.web.controllers.user import user_blueprint
+from src.web.controllers.member import member_blueprint
 from src.web.config import config
 
 
@@ -75,6 +77,7 @@ def create_app(env="development", static_folder="static"):
 
     # Registro de Blueprints
     app.register_blueprint(user_blueprint)
+    app.register_blueprint(member_blueprint)
 
     # Handler Error
     app.register_error_handler(404, handlers.not_found_error)

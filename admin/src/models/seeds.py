@@ -1,4 +1,5 @@
 from src.models import auth
+from src.models import club
 
 
 def run():
@@ -45,3 +46,12 @@ def run():
         last_name="Benitez",
         roles=[role_2, role_3],
     )
+
+    member_1 = club.create_member(
+        first_name="César",
+        last_name="Amiconi",
+        document_type="DNI",
+        document_number="24953316",
+        gender="M",
+        address="La Plata",  
+        )

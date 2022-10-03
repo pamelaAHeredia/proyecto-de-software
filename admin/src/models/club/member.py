@@ -16,6 +16,6 @@ class Member(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     phone_number = db.Column(db.String(100))
     email = db.Column(db.String(50))
-    creation_date = db.Column(db.Datetime, default=datetime.now())
+    creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
    
