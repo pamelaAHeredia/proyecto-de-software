@@ -24,6 +24,19 @@ def discipline_add():
         "days_and_schedules": request.form.get("days_and_schedules"),
         "amount": request.form.get("amount"),
     }
-    create_discipline(**data_discipline)
-    flash("Disciplina guardada con éxito!")
+    
+    if int(data_discipline["amount"]) <= 0:
+        flash("Se debe agregar un monto mayor a 0", "error")
+        return discipline_index()
+    
+    discipline = Discipline.find_discipline(
+        data_discipline["name"], data_discipline["category"]
+    )
+
+    if not discipline:
+        create_discipline(**data_discipline)
+        flash("Disciplina guardada con éxito!", "success")
+        return discipline_index(), 200
+
+    flash("Ya existe la disciplina", "error")
     return discipline_index()
