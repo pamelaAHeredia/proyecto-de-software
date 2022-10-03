@@ -38,9 +38,12 @@ class Discipline(db.Model):
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     deleted = db.Column(db.Boolean, default=False)
-
-    @classmethod
-    def find_discipline(cls, name, category):
-        return Discipline.query.filter_by(
-            name=name, category=category
-        ).first()
+    
+    def __init__(self, name, category, instructor_first_name, instructor_last_name, days_and_schedules, amount=0, is_active=True):
+        self.name = name
+        self.category = category
+        self.instructor_first_name = instructor_first_name
+        self.instructor_last_name = instructor_last_name
+        self.days_and_schedules = days_and_schedules
+        self.amount = amount
+        self.is_active = is_active

@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template, flash
-from src.models.club.discipline import Discipline
-from src.models.club import list_disciplines, create_discipline
+from src.services.discipline import DisciplineService
 
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
@@ -9,7 +8,7 @@ discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplina
 @discipline_blueprint.get("/")
 def discipline_index():
     """Render de la lista de usuarios"""
-    disciplines = list_disciplines()
+    disciplines = DisciplineService.list_disciplines()
 
     return render_template("disciplines/index.html", disciplines=disciplines)
 
@@ -24,17 +23,17 @@ def discipline_add():
         "days_and_schedules": request.form.get("days_and_schedules"),
         "amount": request.form.get("amount"),
     }
-    
-    if int(data_discipline["amount"]) <= 0:
-        flash("Se debe agregar un monto mayor a 0", "error")
+
+    if int(data_discipline["amount"]) < 0:
+        flash("Se debe agregar un monto mayor o igual a 0", "error")
         return discipline_index()
-    
-    discipline = Discipline.find_discipline(
+
+    discipline = DisciplineService.find_discipline(
         data_discipline["name"], data_discipline["category"]
     )
 
     if not discipline:
-        create_discipline(**data_discipline)
+        DisciplineService.create_discipline(**data_discipline)
         flash("Disciplina guardada con éxito!", "success")
         return discipline_index(), 200
 
