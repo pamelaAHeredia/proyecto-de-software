@@ -31,3 +31,7 @@ def create_permission(*args):
     db.session.add(permission)
     db.session.commit()
     return permission
+
+def find_user_by_mail_and_pass(email, password):
+    """Función que retorna si existe un usuario que coincida el email y contraseña"""
+    return User.query.filter_by(email=email, password=password).first()

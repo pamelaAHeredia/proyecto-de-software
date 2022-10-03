@@ -2,12 +2,14 @@ from flask import Blueprint, request, render_template, flash
 from src.models.auth.user import User
 from src.models import auth
 from src.models.auth.utils import hash_pass
+from src.web.helpers.auth import login_required
 
 # Se define Blueprint de Usuario
 user_blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 
 @user_blueprint.get("/")
+@login_required
 def users_index():
     """Render de la lista de usuarios """
     users = auth.list_users()
@@ -17,6 +19,7 @@ def users_index():
 
 @user_blueprint.post("/add")
 def users_add():
+    """Agrega usuarios mediante el formulario"""
     data_user = {
         "email": request.form.get("email"),
         "username": request.form.get("username"),
