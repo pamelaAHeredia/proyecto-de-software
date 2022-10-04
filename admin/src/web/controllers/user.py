@@ -18,6 +18,7 @@ def users_index():
 
 
 @user_blueprint.post("/add")
+@login_required
 def users_add():
     """Agrega usuarios mediante el formulario"""
     data_user = {
