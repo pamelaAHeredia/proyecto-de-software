@@ -10,13 +10,11 @@
     {% endblock %}
   </head>
   <body>
-
-    {% include('partials/_navbar.html') %}
-
-    <!-- <div id="navbar">
+    <div id="navbar">
+      {% include('partials/_navbar.html') %}
       {% block navbar %}
       {% endblock %}
-    </div> -->
+    </div>
     <div id="main">
       {% include('partials/messages.html')%}
       {% block content %}
@@ -26,5 +24,10 @@
       {% block footer %}
       {% endblock %}
     </div>
+
+    <!--Scripts -->
+    <!-- JavaScript - necesario para que funcionen las alertas -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
   </body>
 </html> 

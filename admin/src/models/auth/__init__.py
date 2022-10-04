@@ -31,3 +31,47 @@ def create_permission(*args):
     db.session.add(permission)
     db.session.commit()
     return permission
+
+
+# perteneciente a usuarios
+
+#Buscar usuario por mail 
+def find_user_byEmail(mail):
+    user = db.session.query(User) \
+        .filter(User.email == mail) \
+        .first()
+    return user
+
+#función que valida que el mail ingresado no existe en la bd
+def mail_not_exists(mail):
+    user = find_user_byEmail(mail)
+    return user == None
+
+#Buscar usuario por username 
+def find_user_byUsername(userName):
+    user = db.session.query(User) \
+        .filter(User.username == userName) \
+        .first()
+    return user 
+
+#función que valida que el nombre de usuario ingresado no existe en la bd
+def username_not_exists(userName):
+    user = find_user_byUsername(userName)
+    return user == None
+
+def delete_user(id):
+    user = find_user(id)
+    db.session.delete(user)
+    db.session.commit()
+
+def find_user(id):
+    user = db.session.query(User) \
+        .filter(User.id == id) \
+        .first()
+    return user
+
+def update_user(id, **kwargs):
+    user = find_user(id)
+    for key, value in kwargs.items():
+        setattr(user, key, value)
+    db.session.commit()
