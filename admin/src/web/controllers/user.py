@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, flash
 from src.models.auth.user import User
 from src.models import auth
-from src.models.auth.utils import hash_pass
+from src.services.utils import hash_pass
 from src.web.helpers.auth import login_required
 
 # Se define Blueprint de Usuario

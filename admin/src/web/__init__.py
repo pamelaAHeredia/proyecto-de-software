@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash
 from flask_session import Session
-from web.helpers.auth import is_authenticated
+from src.web.helpers.auth import is_authenticated
 from src.web.helpers import handlers
 from src.web.helpers import auth
 from src.models import database

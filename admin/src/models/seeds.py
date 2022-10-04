@@ -1,5 +1,5 @@
 from src.models import auth
-from src.models.auth.utils import hash_pass
+from src.services.utils import hash_pass
 
 
 def run():
