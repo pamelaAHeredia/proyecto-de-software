@@ -30,3 +30,21 @@ def users_add():
     flash("Usuario guardado con éxito!")
     return redirect(url_for("users.users_index"))
 
+
+@user_blueprint.put("/update/<id>")
+def users_update():
+    print(request.form)
+    return True
+
+    """Por metodo POST toma del request los datos y se los pasa al modelo para que agregue un Usuario
+    data_user = {
+        "email": request.form.get("email"),
+        "username": request.form.get("username"),
+        "password": hash_pass(request.form.get("email")),
+        "first_name": request.form.get("first_name"),
+        "last_name": request.form.get("last_name"),
+    }
+    auth.create_user(**data_user)
+    flash("Usuario guardado con éxito!")
+    return redirect(url_for("users.users_index")) """   
+

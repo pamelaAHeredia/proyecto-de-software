@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
-from src.models.club.member import Member
-from src.models import club
+from src.services.member import MemberService 
 
 
 # Se define Blueprint de Socio
@@ -11,14 +10,14 @@ member_blueprint = Blueprint("members", __name__, url_prefix="/socios")
 @member_blueprint.get("/")
 def members_index():
     """Por metodo GET pide la lista total de socios al modelo y lo renderiza en la vista"""
-    members = club.list_members()
-
+    members = MemberService.list_members()
     return render_template("members/index.html", members=members)
 
 
 @member_blueprint.post("/add")
 def members_add():
-    """Por metodo POST toma del request los datos y se los pasa al modelo para que agregue un Socio"""
+    """Por metodo POST toma del request los datos y se los pasa al modelo para que agregue un Socio,
+       si no lo puede agregar lo informa"""
     data_member = {
         "first_name": request.form.get("first_name"),
         "last_name": request.form.get("last_name"),
@@ -29,7 +28,18 @@ def members_add():
         "email": request.form.get("email"),
         "phone_number": request.form.get("phone_number"),
     }
-    club.create_member(**data_member)
-    flash("Socio guardado con éxito!")
+    added_member = MemberService.create_member(**data_member)
+    if added_member:
+        flash("Socio guardado con éxito!")
+    else:
+        flash("El socio con ese tipo y N° de documento ya se encuentra registrado")
     return redirect(url_for("members.members_index"))
+
+
+@member_blueprint.get("/update/<id>")
+def members_get_update(id):
+    member = MemberService.get_by_membership_number(id)
+    return render_template("members/update.html", member=member)
+
+
 

@@ -1,5 +1,5 @@
 from src.models import auth
-from src.models import club
+from src.services.member import MemberService
 
 
 def run():
@@ -47,11 +47,11 @@ def run():
         roles=[role_2, role_3],
     )
 
-    member_1 = club.create_member(
+    member_1 =  MemberService.create_member(
         first_name="César",
         last_name="Amiconi",
         document_type="DNI",
         document_number="24953316",
         gender="M",
-        address="La Plata",  
+        address="La Plata",
         )
