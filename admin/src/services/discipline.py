@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from src.models.database import db
 from src.models.club.discipline import Discipline
 
@@ -16,7 +18,7 @@ class DisciplineService:
         instructor_first_name,
         instructor_last_name,
         days_and_schedules,
-        amount,
+        amount
     ):
         """Función que instancia un Usuario, lo agrega a la Base de Datos y lo retorna"""
         discipline = Discipline(
@@ -25,7 +27,7 @@ class DisciplineService:
             instructor_first_name,
             instructor_last_name,
             days_and_schedules,
-            amount,
+            Decimal(amount)
         )
         db.session.add(discipline)
         db.session.commit()

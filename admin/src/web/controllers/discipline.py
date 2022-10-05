@@ -1,5 +1,7 @@
+from decimal import Decimal
 from flask import Blueprint, request, render_template, flash
 from src.services.discipline import DisciplineService
+from src.web.forms.discipline.forms import CreateDisciplineForm
 
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
@@ -8,13 +10,15 @@ discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplina
 @discipline_blueprint.get("/")
 def discipline_index():
     """Render de la lista de usuarios"""
+    form = CreateDisciplineForm()
     disciplines = DisciplineService.list_disciplines()
 
-    return render_template("disciplines/index.html", disciplines=disciplines)
+    return render_template("disciplines/index.html", disciplines=disciplines, form=form)
 
 
 @discipline_blueprint.post("/add")
 def discipline_add():
+
     data_discipline = {
         "name": request.form.get("name"),
         "category": request.form.get("category"),
@@ -24,7 +28,7 @@ def discipline_add():
         "amount": request.form.get("amount"),
     }
 
-    if int(data_discipline["amount"]) < 0:
+    if Decimal(data_discipline["amount"]) < 0:
         flash("Se debe agregar un monto mayor o igual a 0", "error")
         return discipline_index()
 

@@ -35,14 +35,21 @@
     </tbody>
 </table>
 <form action="{{ url_for('discipline.discipline_add')}}" method="post">
-    <input type="text" name="name" placeholder="Ingrese el nombre de la disciplina" required="true">
-    <input type="text" name="category" placeholder="Ingrese la categoria" required="true">
-    <input type="text" name="instructor_first_name" placeholder="Ingrese el nombre del instructor" required="true">
-    <input type="text" name="instructor_last_name" placeholder="Ingrese el apellido del instructor" required="true">
-    <input type="text" name="days_and_schedules" placeholder="Ingrese dias y horarios" required="true">
-    <input type="number" name="amount" placeholder="Ingrese monto" required="true">
+{{ form.csrf_token }}
+{{ form.name.label }}
+{{ form.name }}
+{{ form.category.label }}
+{{ form.category }}
+{{ form.instructor_first_name.label }}
+{{ form.instructor_first_name }}
+{{ form.instructor_last_name.label }}
+{{ form.instructor_last_name }}
+{{ form.days_and_schedules.label }}
+{{ form.days_and_schedules }}
+{{ form.amount.label }}
+{{ form.amount }}
+<input type="submit" value="Enviar" class="btn btn-success">
 
-    <button class="btn btn-primary">Enviar</button>
 </form>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
