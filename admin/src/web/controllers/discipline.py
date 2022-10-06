@@ -3,6 +3,7 @@ from flask import Blueprint, request, render_template, flash
 from src.services.discipline import DisciplineService
 from src.web.forms.discipline.forms import CreateDisciplineForm
 from src.errors import database
+from src.web.helpers.auth import login_required
 
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
@@ -10,6 +11,7 @@ service = DisciplineService()
 
 
 @discipline_blueprint.get("/")
+@login_required
 def discipline_index():
     """Render de la lista de usuarios"""
     form = CreateDisciplineForm()
@@ -19,6 +21,7 @@ def discipline_index():
 
 
 @discipline_blueprint.post("/add")
+@login_required
 def discipline_add():
 
     name = request.form.get("name")
