@@ -1,5 +1,6 @@
 from src.models import auth
 from src.services.member import MemberService
+from src.services.discipline import DisciplineService 
 
 
 def run():
@@ -46,7 +47,18 @@ def run():
         last_name="Benitez",
         roles=[role_2, role_3],
     )
+    
+    service = DisciplineService()
 
+    discipline = service.create_discipline(
+        name="Basquet",
+        category="Pre mini",
+        instructor_first_name = "Juan",
+        instructor_last_name = "De Los Palotes",
+        days_and_schedules = "Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
+        amount = 600.00,
+    )
+    
     member_1 =  MemberService.create_member(
         first_name="César",
         last_name="Amiconi",
