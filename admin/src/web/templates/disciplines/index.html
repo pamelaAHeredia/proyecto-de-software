@@ -34,22 +34,24 @@
         {% endfor %}
     </tbody>
 </table>
-<form action="{{ url_for('discipline.discipline_add')}}" method="post">
-{{ form.csrf_token }}
-{{ form.name.label }}
-{{ form.name }}
-{{ form.category.label }}
-{{ form.category }}
-{{ form.instructor_first_name.label }}
-{{ form.instructor_first_name }}
-{{ form.instructor_last_name.label }}
-{{ form.instructor_last_name }}
-{{ form.days_and_schedules.label }}
-{{ form.days_and_schedules }}
-{{ form.amount.label }}
-{{ form.amount }}
-<input type="submit" value="Enviar" class="btn btn-success">
+<div class="container">
+    <form action="{{ url_for('discipline.discipline_add')}}" method="post">
+        {{ form.csrf_token }}
+        {{ form.name.label }}
+        {{ form.name }}
+        {{ form.category.label }}
+        {{ form.category }}
+        {{ form.instructor_first_name.label }}
+        {{ form.instructor_first_name }}
+        {{ form.instructor_last_name.label }}
+        {{ form.instructor_last_name }}
+        {{ form.days_and_schedules.label }}
+        {{ form.days_and_schedules }}
+        {{ form.amount.label }}
+        {{ form.amount }}
+        <input type="submit" value="Enviar" class="btn btn-success">
 
-</form>
+    </form>
+</div>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
