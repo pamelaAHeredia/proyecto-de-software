@@ -1,5 +1,7 @@
 from decimal import Decimal
-from flask import Blueprint, request, render_template, flash
+from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import session
+from werkzeug.datastructures import MultiDict
 from src.services.discipline import DisciplineService
 from src.web.forms.discipline.forms import CreateDisciplineForm
 from src.errors import database
@@ -12,18 +14,28 @@ service = DisciplineService()
 
 @discipline_blueprint.get("/")
 @login_required
-def discipline_index():
-    """Render de la lista de usuarios"""
-    form = CreateDisciplineForm()
+def index():
+    """Render de la lista de disciplinas"""
     disciplines = service.list_disciplines()
 
-    return render_template("disciplines/index.html", disciplines=disciplines, form=form)
+    return render_template("disciplines/index.html", disciplines=disciplines)
 
 
-@discipline_blueprint.post("/add")
+@discipline_blueprint.get("/add")
 @login_required
-def discipline_add():
+def add_form():
+    form_data = session.get('formdata', None)
+    if form_data:
+        form = CreateDisciplineForm(MultiDict(form_data))
+        session.pop('formdata')
+    else:
+        form = CreateDisciplineForm()
+    return render_template("disciplines/create.html", form=form)
 
+
+@discipline_blueprint.post("/create")
+@login_required
+def create():
     name = request.form.get("name")
     category = request.form.get("category")
     instructor_first_name = request.form.get("instructor_first_name")
@@ -42,7 +54,11 @@ def discipline_add():
         )
     except database.AmountValueError as e:
         flash(e, "error")
-        return discipline_index()
+        session['formdata'] = request.form
+        return redirect(request.referrer)
     except database.ExistingData as e:
         flash(e, "error")
-        return discipline_index()
+        session['formdata'] = request.form
+        return redirect(request.referrer)
+
+    return redirect(url_for("discipline.index"))

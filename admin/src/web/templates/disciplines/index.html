@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 
-<h1>Consultas</h1>
+<h1>Disciplinas</h1>
 
 <table class="index-table box">
     <thead>
@@ -36,4 +36,5 @@
     </tbody>
 </table>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
+<a class="btn btn-secondary" href="{{url_for('discipline.add_form')}}">Alta de una disciplina</a>
 {% endblock %}
