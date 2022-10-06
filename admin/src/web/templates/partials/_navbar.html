@@ -9,9 +9,18 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('issues_index')}}">Issues</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('users.users_index')}}">Users</a>
-          </li>
+          {% if is_authenticated(session) %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('users.users_index')}}">Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.logout')}}">Cerrar sesión</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
+            </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('discipline.discipline_index')}}">Disciplinas</a>
           </li>
