@@ -7,10 +7,12 @@ from src.services.member import MemberService
 member_blueprint = Blueprint("members", __name__, url_prefix="/socios")
 
 
+service = MemberService()
+
 @member_blueprint.get("/")
 def members_index():
     """Por metodo GET pide la lista total de socios al modelo y lo renderiza en la vista"""
-    members = MemberService.list_members()
+    members = service.list_members()
     return render_template("members/index.html", members=members)
 
 
@@ -28,7 +30,7 @@ def members_add():
         "email": request.form.get("email"),
         "phone_number": request.form.get("phone_number"),
     }
-    added_member = MemberService.create_member(**data_member)
+    added_member = service.create_member(**data_member)
     if added_member:
         flash("Socio guardado con éxito!")
     else:
@@ -38,7 +40,7 @@ def members_add():
 
 @member_blueprint.get("/update/<id>")
 def members_get_update(id):
-    member = MemberService.get_by_membership_number(id)
+    member = service.get_by_membership_number(id)
     return render_template("members/update.html", member=member)
 
 

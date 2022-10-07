@@ -59,7 +59,9 @@ def run():
         amount = 600.00,
     )
     
-    member_1 =  MemberService.create_member(
+    service = MemberService()
+
+    member_1 =  service.create_member(
         first_name="César",
         last_name="Amiconi",
         document_type="DNI",
