@@ -15,6 +15,11 @@ def run():
         "member_destroy",
         "member_update",
         "member_show",
+        "discipline_index",
+        "discipline_new",
+        "discipline_destroy",
+        "discipline_update",
+        "discipline_show",
     ]
 
     members_perms = [auth.create_permission(perm) for perm in perms]

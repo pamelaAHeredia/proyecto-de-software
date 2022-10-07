@@ -8,7 +8,7 @@
 
 <div class="container">
     <form action="{{ url_for('discipline.create')}}" method="post">
-        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
         {{ form.name.label }}
         {{ form.name }}
         {{ form.category.label }}
