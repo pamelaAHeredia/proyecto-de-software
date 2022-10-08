@@ -1,10 +1,12 @@
 from src.models.database import db
 
+# Define la tabla que relaciona Usuarios con Roles
 user_has_role = db.Table('user_has_role',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True)
 )
 
+# Define la clase Usuario
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -14,6 +16,24 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     first_name = db.Column(db.String(75), nullable=False)
     last_name = db.Column(db.String(75), nullable=False)
-    deleted = db.Column(db.Boolean, default=False)
+    blocked = db.Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=user_has_role, lazy='subquery',
         backref=db.backref('users', lazy=True))
+
+    def __init__(
+        self,
+        email,
+        username,
+        password,
+        is_active,
+        first_name,
+        last_name,
+        blocked
+    ):
+        self.email = email
+        self.username = username
+        self.password = password
+        self.is_active = is_active
+        self.first_name = first_name
+        self.last_name = last_name
+        self.blocked = blocked
