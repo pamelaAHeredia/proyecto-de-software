@@ -6,15 +6,24 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('users.users_index')}}">Usuarios</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('members.members_index')}}">Socios</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('discipline.discipline_index')}}">Disciplinas</a>
-          </li>
+          {% if is_authenticated(session) %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('users.users_index')}}">Usuarios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('members.members_index')}}">Socios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.logout')}}">Cerrar sesión</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

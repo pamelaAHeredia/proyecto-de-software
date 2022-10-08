@@ -16,6 +16,7 @@
       <th>Email</th>
       <th>Nombre de Usuario</th>
       <th>Esta Activo ?</th>
+      <th>Está Bloqueado ?</th>
       <th>Nombre</th>
       <th>Apellido</th>
       <th>Operaciones</th>
@@ -31,10 +32,14 @@
         {%else -%}
         {{"No"}}
         {% endif %}</th>
+      <th>{%if user.blocked -%} {{"Si"}}
+        {%else -%}
+        {{"No"}}
+        {% endif %}</th>  
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
       <th><a href="{{url_for('users.users_update', id=user.id)}}" class="btn btn-secondary"> Editar </a></th>
-      <th><a href="{{url_for('users.users_delete', id=user.id)}}" class="btn btn-danger"> Eliminar </a></th> 
+      <th><a href="{{url_for('users.users_block', id=user.id)}}" class="btn btn-secondary"> bloquear/desbloquear </a></th>  
     </tr>
     {% endfor %}
   </tbody>

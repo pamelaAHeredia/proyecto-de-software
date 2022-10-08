@@ -47,3 +47,6 @@ class Discipline(db.Model):
         self.days_and_schedules = days_and_schedules
         self.amount = amount
         self.is_active = is_active
+    
+    def __repr__(self):
+        return f'<Disciplina {self.name} {self.category}>'
