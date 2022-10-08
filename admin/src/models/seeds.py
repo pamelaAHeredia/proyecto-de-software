@@ -7,12 +7,22 @@ from src.services.user import UserService
 
 def run():
     """Hacemos un seed de informacion en la BBDD"""
+
     perms = [
         "member_index",
-        "member_new",
+        "member_create",
         "member_destroy",
         "member_update",
         "member_show",
+        "discipline_index",
+        "discipline_create",
+        "discipline_destroy",
+        "discipline_update",
+        "discipline_show",
+        "pays_index",
+        "pays_show",
+        "pays_import",
+        "pays_destroy",
     ]
 
     members_perms = [auth.create_permission(perm) for perm in perms]

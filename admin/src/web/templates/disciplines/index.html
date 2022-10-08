@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 
-<h1>Consultas</h1>
+<h1>Disciplinas</h1>
 
 <table class="index-table box">
     <thead>
@@ -16,6 +16,7 @@
             <th>Instructores</th>
             <th>Dias y Horarios</th>
             <th>Monto</th>
+            <th>Activa</th>
         </tr>
     </thead>
     <tbody>
@@ -34,22 +35,13 @@
         {% endfor %}
     </tbody>
 </table>
-<form action="{{ url_for('discipline.discipline_add')}}" method="post">
-{{ form.csrf_token }}
-{{ form.name.label }}
-{{ form.name }}
-{{ form.category.label }}
-{{ form.category }}
-{{ form.instructor_first_name.label }}
-{{ form.instructor_first_name }}
-{{ form.instructor_last_name.label }}
-{{ form.instructor_last_name }}
-{{ form.days_and_schedules.label }}
-{{ form.days_and_schedules }}
-{{ form.amount.label }}
-{{ form.amount }}
-<input type="submit" value="Enviar" class="btn btn-success">
-
-</form>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
+<a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
+<br>
+{% if prev_url %}
+<a href="{{ prev_url }}">Anterior</a>
+{% endif %}
+{% if next_url %}
+<a href="{{ next_url }}">Siguiente</a>
+{% endif %}
 {% endblock %}
