@@ -38,10 +38,4 @@ def members_add():
     return redirect(url_for("members.members_index"))
 
 
-@member_blueprint.get("/update/<id>")
-def members_get_update(id):
-    member = service.get_by_membership_number(id)
-    return render_template("members/update.html", member=member)
-
-
 

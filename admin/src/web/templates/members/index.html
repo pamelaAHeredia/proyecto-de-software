@@ -38,9 +38,6 @@
       <th>{{ member.email }}</th>
       <th>{{ member.phone_number }}</th>
     </tr>
-    <tr>
-      <a href="{{ url_for('members.members_get_update', id=member.membership_number) }}">Update</a>
-    </tr>
     {% endfor %}
   </tbody>
 </table> 
