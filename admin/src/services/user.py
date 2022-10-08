@@ -1,5 +1,6 @@
 from src.models.database import db
 from src.models.auth.user import User
+from src.services.utils import verify_pass
 
 
 class UserService:
@@ -33,6 +34,14 @@ class UserService:
 
     def find_user_byEmail(self, email):
         return User.query.filter_by(email=email).first()
+
+    def find_user_by_mail_and_pass (self, email, password):
+        """Función que retorna si existe un usuario que coincida el email y contraseña"""
+        user = self.find_user_byEmail(email)
+        if user and verify_pass(user.password,password):
+            return user
+        else:
+            return None
 
     def find_user_byUsername(self, username):
         return User.query.filter_by(username=username).first()

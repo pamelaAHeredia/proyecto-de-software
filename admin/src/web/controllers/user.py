@@ -5,7 +5,7 @@ from src.services.utils import hash_pass
 from src.web.helpers.auth import login_required
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from src.services.user import UserService
-from src.models.auth.utils import hash_pass
+from src.services.utils import hash_pass
 
 
 user_blueprint = Blueprint("users", __name__, url_prefix="/users")
@@ -21,16 +21,10 @@ def users_index():
     return render_template("users/index.html", users=users)
 
 
-<<<<<<< admin/src/web/controllers/user.py
-@user_blueprint.post("/add")
+@user_blueprint.route("/add", methods=["POST"])
 @login_required
 def users_add():
     """Agrega usuarios mediante el formulario"""
-=======
-@user_blueprint.route("/add", methods=["POST"])
-def users_add():
-
->>>>>>> admin/src/web/controllers/user.py
     data_user = {
         "email": request.form.get("email"),
         "username": request.form.get("username"),
