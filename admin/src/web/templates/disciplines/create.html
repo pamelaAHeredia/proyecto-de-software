@@ -7,6 +7,7 @@
 <h1>Crear Disciplina</h1>
 
 <div class="container">
+    <!-- <form action="{{ url_for('discipline.create')}}" method="post"> -->
     <form action="{{ url_for('discipline.create')}}" method="post">
         {{ form.hidden_tag() }}
         {{ form.name.label }}
@@ -26,5 +27,11 @@
     </form>
 </div>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
-
+{% if form.name.errors %}
+    <ul class="errors">
+    {% for error in form.name.errors %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

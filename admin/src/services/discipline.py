@@ -7,11 +7,7 @@ from src.services.paginator import Paginator
 
 
 class DisciplineService:
-    """Clase que representa el servicio para el manejo de disciplinas
-
-    Returns:
-        _type_: _description_
-    """
+    """Clase que representa el servicio para el manejo de disciplinas"""
 
     _instance = None
 

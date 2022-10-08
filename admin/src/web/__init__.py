@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import Flask, render_template, request, flash
 from flask_session import Session
 from src.web.helpers.auth import is_authenticated
@@ -26,6 +28,9 @@ def create_app(env="development", static_folder="static"):
     database.init_app(app)
 
     # Configura sesion de backend
+    app.config["SESSION_PERMANENT"] = True
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=2) 
+    app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
 
     # Define home
@@ -40,6 +45,7 @@ def create_app(env="development", static_folder="static"):
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)
+    app.register_error_handler(403, handlers.forbidden)
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
     

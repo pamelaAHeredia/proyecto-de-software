@@ -16,7 +16,6 @@ service = DisciplineService()
 @login_required
 def index():
     """Render de la lista de disciplinas con paginación"""
-
     page = request.args.get("page", 1, type=int)
     discipline_paginator = service.list_paginated_disciplines(
         page, 2, "discipline.index"
@@ -30,47 +29,44 @@ def index():
     )
 
 
-@discipline_blueprint.get("/add")
+@discipline_blueprint.route("/create", methods=["GET", "POST"])
 @login_required
 @verify_permission("discipline_create")
-def add_form():
+def create():
     form_data = session.get("formdata", None)
+
     if form_data:
         form = CreateDisciplineForm(MultiDict(form_data))
         session.pop("formdata")
     else:
         form = CreateDisciplineForm()
+
+    if form.validate_on_submit():
+
+        name = form.name.data
+        category = form.category.data
+        instructor_first_name = form.instructor_first_name.data
+        instructor_last_name = form.instructor_last_name.data
+        days_and_schedules = form.days_and_schedules.data
+        amount = form.amount.data
+
+        try:
+            service.create_discipline(
+                name=name,
+                category=category,
+                instructor_first_name=instructor_first_name,
+                instructor_last_name=instructor_last_name,
+                days_and_schedules=days_and_schedules,
+                amount=amount,
+            )
+            flash("Disciplina creada con éxito", "success")
+        except database.AmountValueError as e:
+            flash(e, "error")
+            session["formdata"] = request.form
+            return redirect(request.referrer)
+        except database.ExistingData as e:
+            flash(e, "error")
+            session["formdata"] = request.form
+            return redirect(request.referrer)
+        return redirect(url_for("discipline.index"))
     return render_template("disciplines/create.html", form=form)
-
-
-@discipline_blueprint.post("/create")
-@login_required
-@verify_permission("discipline_create")
-def create():
-    name = request.form.get("name")
-    category = request.form.get("category")
-    instructor_first_name = request.form.get("instructor_first_name")
-    instructor_last_name = request.form.get("instructor_last_name")
-    days_and_schedules = request.form.get("days_and_schedules")
-    amount = request.form.get("amount")
-
-    try:
-        service.create_discipline(
-            name=name,
-            category=category,
-            instructor_first_name=instructor_first_name,
-            instructor_last_name=instructor_last_name,
-            days_and_schedules=days_and_schedules,
-            amount=amount,
-        )
-        flash("Disciplina creada con éxito", "success")
-    except database.AmountValueError as e:
-        flash(e, "error")
-        session["formdata"] = request.form
-        return redirect(request.referrer)
-    except database.ExistingData as e:
-        flash(e, "error")
-        session["formdata"] = request.form
-        return redirect(request.referrer)
-
-    return redirect(url_for("discipline.index"))
