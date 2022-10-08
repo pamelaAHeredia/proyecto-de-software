@@ -1,4 +1,5 @@
 from src.models import auth
+from src.services.utils import hash_pass
 from src.services.member import MemberService
 from src.services.discipline import DisciplineService
 from src.services.user import UserService
@@ -48,7 +49,7 @@ def run():
     user_1 = service.create_user(
         email="carlos.solari@gmail.com",
         username="Indio49",
-        password="carlos.solari@gmail.com",
+        password=hash_pass("carlos.solari@gmail.com"),
         first_name="Carlos",
         last_name="Solari",
         roles=[role_1],
@@ -57,7 +58,7 @@ def run():
     user_2 = service.create_user(
         email="skay.beili@gmail.com",
         username="Skay52",
-        password="skay.beili@gmail.com",
+        password=hash_pass("skay.beili@gmail.com"),
         first_name="Eduardo",
         last_name="Beilinson",
         roles=[role_2],
@@ -66,7 +67,7 @@ def run():
     user_3 = auth.create_user(
         email="rockera75@gmail.com",
         username="Rocka75",
-        password="rockera75@gmail.com",
+        password=hash_pass("rockera75@gmail.com"),
         is_active=False,
         first_name="Nadia",
         last_name="Benitez",

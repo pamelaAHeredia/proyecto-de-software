@@ -1,3 +1,8 @@
+from flask import Blueprint, request, render_template, flash
+from src.models.auth.user import User
+from src.models import auth
+from src.services.utils import hash_pass
+from src.web.helpers.auth import login_required
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from src.services.user import UserService
 from src.models.auth.utils import hash_pass
@@ -9,15 +14,23 @@ service = UserService()
 
 
 @user_blueprint.get("/")
+@login_required
 def users_index():
     """Por metodo GET pide la lista total de usuarios al modelo y lo renderiza en la vista"""
     users = service.list_users()
     return render_template("users/index.html", users=users)
 
 
+<<<<<<< admin/src/web/controllers/user.py
+@user_blueprint.post("/add")
+@login_required
+def users_add():
+    """Agrega usuarios mediante el formulario"""
+=======
 @user_blueprint.route("/add", methods=["POST"])
 def users_add():
 
+>>>>>>> admin/src/web/controllers/user.py
     data_user = {
         "email": request.form.get("email"),
         "username": request.form.get("username"),

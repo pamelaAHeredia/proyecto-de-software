@@ -19,11 +19,14 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
     )
-
+    # Sesion valores
+    SESSION_TYPE = "filesystem"
+    SESSION_COOKIE_SECURE = True
 
 class DevelopmentConfig(Config):
     """Development configuration."""
 
+    # Valores de la DB
     DEBUG = True
     DB_USER = environ.get("DB_USER", "postgres")
     DB_PASS = environ.get("DB_PASS", "postgres")
@@ -33,6 +36,8 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
     )
+    # Sesion valores
+    SESSION_TYPE = "filesystem"
 
 
 class TestingConfig(Config):
