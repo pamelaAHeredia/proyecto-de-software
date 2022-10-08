@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from flask import Flask, render_template, request, flash
 from flask_session import Session
 from src.web.helpers.auth import is_authenticated
@@ -30,9 +28,6 @@ def create_app(env="development", static_folder="static"):
     database.init_app(app)
 
     # Configura sesion de backend
-    app.config["SESSION_PERMANENT"] = True
-    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=2) 
-    app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
 
     # Define home

@@ -1,4 +1,5 @@
 from os import environ
+from datetime import timedelta
 
 
 class Config(object):
@@ -7,7 +8,9 @@ class Config(object):
     SECRET_KEY = "secret"
     DEBUG = False
     TESTING = False
-
+    SESSION_PERMANENT = True
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15) 
+    SESSION_TYPE = "filesystem"
 
 class ProductionConfig(Config):
     """Production configuration."""
