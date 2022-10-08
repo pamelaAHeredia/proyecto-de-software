@@ -18,30 +18,21 @@ def index():
     """Render de la lista de disciplinas con paginación"""
 
     page = request.args.get("page", 1, type=int)
-    
-    disciplines = service.list_disciplines(page)
-    
-    next_url = (
-        url_for("discipline.index", page=disciplines.next_num)
-        if disciplines.has_next
-        else None
+    discipline_paginator = service.list_paginated_disciplines(
+        page, 2, "discipline.index"
     )
-    prev_url = (
-        url_for("discipline.index", page=disciplines.prev_num)
-        if disciplines.has_prev
-        else None
-    )
+
     return render_template(
         "disciplines/index.html",
-        disciplines=disciplines.items,
-        next_url=next_url,
-        prev_url=prev_url,
+        disciplines=discipline_paginator.items,
+        next_url=discipline_paginator.next_url,
+        prev_url=discipline_paginator.prev_url,
     )
 
 
 @discipline_blueprint.get("/add")
 @login_required
-@verify_permission("discipline_new")
+@verify_permission("discipline_create")
 def add_form():
     form_data = session.get("formdata", None)
     if form_data:
@@ -54,6 +45,7 @@ def add_form():
 
 @discipline_blueprint.post("/create")
 @login_required
+@verify_permission("discipline_create")
 def create():
     name = request.form.get("name")
     category = request.form.get("category")

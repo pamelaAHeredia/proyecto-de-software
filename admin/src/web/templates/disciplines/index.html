@@ -22,10 +22,8 @@
     <tbody>
         {% for discipline in disciplines %}
         <tr>
-            {% if role == 'OP' %}
-                <th>{{ discipline.id }}</th>
-            {% endif %}
-                <th>{{ discipline.name }}</th>
+            <th>{{ discipline.id }}</th>
+            <th>{{ discipline.name }}</th>
             <th>{{ discipline.category }}</th>
             <th>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </th>
             <th>{{ discipline.days_and_schedules }}</th>

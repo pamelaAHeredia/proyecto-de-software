@@ -3,6 +3,7 @@ from decimal import Decimal
 from src.models.database import db
 from src.models.club.discipline import Discipline
 from src.errors import database
+from src.services.paginator import Paginator
 
 
 class DisciplineService:
@@ -19,12 +20,18 @@ class DisciplineService:
             cls._instance = super(DisciplineService, cls).__new__(cls)
         return cls._instance
 
-    def list_disciplines(self, page):
+    def list_disciplines(self):
         """
         Función que retorna la lista de todas las disciplinas cargadas en la Base de Datos
-        y las devuelve paginadas
         """
-        return Discipline.query.paginate(page, 2, False)
+        return Discipline.query.all()
+
+    def list_paginated_disciplines(self, page, items_per_page, endpoint):
+        """
+        Función que retorna el paginador con las disciplinas cargadas en el sistema.
+        """
+        disciplines = Discipline.query
+        return Paginator(disciplines, page, items_per_page, endpoint)
 
     def create_discipline(
         self,

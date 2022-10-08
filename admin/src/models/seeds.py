@@ -4,22 +4,26 @@ from src.models import club
 from src.services import discipline
 
 
-def run(): 
+def run():
     """Hacemos un seed de informacion en la BBDD"""
-    
+
     discipline_service = discipline.DisciplineService()
-    
+
     perms = [
         "member_index",
-        "member_new",
+        "member_create",
         "member_destroy",
         "member_update",
         "member_show",
         "discipline_index",
-        "discipline_new",
+        "discipline_create",
         "discipline_destroy",
         "discipline_update",
         "discipline_show",
+        "pays_index",
+        "pays_show",
+        "pays_import",
+        "pays_destroy",
     ]
 
     members_perms = [auth.create_permission(perm) for perm in perms]
@@ -59,8 +63,8 @@ def run():
     discipline_service.create_discipline(
         name="Basquet",
         category="Pre mini",
-        instructor_first_name = "Juan",
-        instructor_last_name = "De Los Palotes",
-        days_and_schedules = "Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
-        amount = 600.00
+        instructor_first_name="Juan",
+        instructor_last_name="De Los Palotes",
+        days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
+        amount=600.00,
     )
