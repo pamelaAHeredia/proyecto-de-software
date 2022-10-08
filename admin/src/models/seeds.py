@@ -50,26 +50,31 @@ def run():
         email="carlos.solari@gmail.com",
         username="Indio49",
         password=hash_pass("carlos.solari@gmail.com"),
+        is_active=True,
         first_name="Carlos",
         last_name="Solari",
-        roles=[role_1],
+        blocked=False,
+        #roles=[role_1],
     )
 
     user_2 = service.create_user(
         email="skay.beili@gmail.com",
         username="Skay52",
         password=hash_pass("skay.beili@gmail.com"),
+        is_active=True,
         first_name="Eduardo",
         last_name="Beilinson",
-        roles=[role_2],
+        blocked=False,
+        #roles=[role_2],
     )
 
-    user_3 = auth.create_user(
+    user_3 = service.create_user(
         email="rockera75@gmail.com",
         username="Rocka75",
         password=hash_pass("rockera75@gmail.com"),
         is_active=False,
         first_name="Nadia",
         last_name="Benitez",
-        roles=[role_2, role_3],
+        blocked=False,
     )
+#         roles=[role_2, role_3],

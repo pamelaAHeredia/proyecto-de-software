@@ -39,25 +39,18 @@ def create_app(env="development", static_folder="static"):
    
     # Registro de Blueprints
     app.register_blueprint(user_blueprint)
-<<<<<<< admin/src/web/__init__.py
     app.register_blueprint(auth_blueprint)
-=======
     app.register_blueprint(member_blueprint)
     app.register_blueprint(discipline_blueprint)
->>>>>>> admin/src/web/__init__.py
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
     
-<<<<<<< admin/src/web/__init__.py
     #Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
-
-=======
     # Command Flask
->>>>>>> admin/src/web/__init__.py
     @app.cli.command(name="resetdb")
     def resetdb():
         database.reset_db()

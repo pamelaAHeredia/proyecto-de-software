@@ -5,9 +5,10 @@ from flask import flash
 from flask import redirect
 from flask import url_for
 from flask import session
-from src.services.login import find_user_by_mail_and_pass
+from src.services.user import UserService
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
+service = UserService()
 
 
 @auth_blueprint.get("/")
@@ -19,7 +20,7 @@ def login ():
 def authenticate():
     """Verifica si los datos son correctos y logea o vuelve a pantalla login"""
     params = request.form
-    user = find_user_by_mail_and_pass(params["email"], params["password"])
+    user = service.find_user_by_mail_and_pass(params["email"], params["password"])
     if not user:
         flash("Email o clave incorrecta", "error")
         return redirect(url_for("auth.login"))
