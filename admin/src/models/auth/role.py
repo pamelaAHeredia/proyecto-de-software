@@ -1,12 +1,12 @@
 from src.models.database import db
 
-
+# Define la tabla que relaciona Roles con Permisos
 role_has_permission = db.Table('role_has_permission',
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True),
     db.Column('permission_id', db.Integer, db.ForeignKey('permission.id'), primary_key=True)
 )
 
-
+# Define la clase Rol
 class Role(db.Model):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True, unique=True)

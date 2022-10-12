@@ -1,20 +1,6 @@
 from src.models.database import db
-from src.models.auth.user import User
 from src.models.auth.role import Role
 from src.models.auth.permission import Permission
-
-
-def list_users():
-    """Función que retorna la lista de todos los Usuarios de la Base de Datos"""
-    return User.query.all()
-
-
-def create_user(**kwargs):
-    """Función que instancia un Usuario, lo agrega a la Base de Datos y lo retorna"""
-    user = User(**kwargs)
-    db.session.add(user)
-    db.session.commit()
-    return user
 
 
 def create_role(**kwargs):

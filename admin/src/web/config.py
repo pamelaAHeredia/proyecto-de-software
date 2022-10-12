@@ -1,4 +1,5 @@
 from os import environ
+from datetime import timedelta
 
 
 class Config(object):
@@ -7,7 +8,9 @@ class Config(object):
     SECRET_KEY = "secret"
     DEBUG = False
     TESTING = False
-
+    SESSION_PERMANENT = True
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15) 
+    SESSION_TYPE = "filesystem"
 
 class ProductionConfig(Config):
     """Production configuration."""
@@ -19,11 +22,14 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
     )
-
+    # Sesion valores
+    SESSION_TYPE = "filesystem"
+    SESSION_COOKIE_SECURE = True
 
 class DevelopmentConfig(Config):
     """Development configuration."""
 
+    # Valores de la DB
     DEBUG = True
     DB_USER = environ.get("DB_USER", "postgres")
     DB_PASS = environ.get("DB_PASS", "postgres")
@@ -33,6 +39,8 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
     )
+    # Sesion valores
+    SESSION_TYPE = "filesystem"
 
 
 class TestingConfig(Config):

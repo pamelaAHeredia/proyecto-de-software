@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Actualización Socio{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<h1>Actualización</h1>
+
+
+<form action="{{ url_for('members.members_update', id=member.membership_number)}}" method="post">
+  <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true" value="{{member.first_name}}"/>
+  <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true" value="{{member.last_name}}"/>
+  Tipo de Documento: 
+  <select name="document_type">
+    <option value="DNI"selected>DNI</option>
+    <option value="LE">LE</option> 
+    <option value="LC">LC</option>
+    <option value="PASAPORTE">PASAPORTE</option>
+  </select>
+  <input type="text" name="document_number" placeholder="Ingrese N° de documento" required="true" value="{{member.document_number}}"/> 
+  <p>
+    Genero:
+    <input type="radio" name="gender" value="M" checked /> Masculino
+    <input type="radio" name="gender" value="F" /> Femenino
+    <input type="radio" name="gender" value="Otro" /> Otro
+  </p>
+  <input type="text" name="address" placeholder="Ingrese el Domicilio" required="true" value="{{member.address}}"/>
+  <input type="email" name="email" placeholder="Ingrese el email" value="{{member.email}}"/>
+  <input type="tel" name="phone_number" placeholder="Ingrese el telefono" value="{{member.phone_number}}"/> 
+  <button class="btn btn-primary">Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}

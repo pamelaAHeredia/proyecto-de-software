@@ -5,17 +5,21 @@
 {% endblock %}
 {% block content %}
 
-<h1>Consultas</h1>
 
-<table class="index-table box">
+<h1>Usuarios</h1>
+
+{% if users %}
+<table class="table table-hover table-sm">
   <thead>
     <tr>
       <th>#</th>
       <th>Email</th>
       <th>Nombre de Usuario</th>
       <th>Esta Activo ?</th>
+      <th>Está Bloqueado ?</th>
       <th>Nombre</th>
       <th>Apellido</th>
+      <th>Operaciones</th>
     </tr>
   </thead>
   <tbody>
@@ -25,20 +29,42 @@
       <th>{{ user.email }}</th>
       <th>{{ user.username }}</th>
       <th>{%if user.is_active -%} {{"Si"}}
-        {%else -%}{{"No"}}
+        {%else -%}
+        {{"No"}}
         {% endif %}</th>
+      <th>{%if user.blocked -%} {{"Si"}}
+        {%else -%}
+        {{"No"}}
+        {% endif %}</th>  
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
+      <th><a href="{{url_for('users.users_update', id=user.id)}}" class="btn btn-secondary"> Editar </a></th>
+      <th><a href="{{url_for('users.users_block', id=user.id)}}" class="btn btn-secondary"> bloquear/desbloquear </a></th>  
     </tr>
     {% endfor %}
   </tbody>
 </table>
-<form action="{{ url_for('users.users_add')}}" method="post">
-  <input type="email" name="email" placeholder="Ingrese el email" required="true">
-  <input type="text" name="username" placeholder="Ingrese el usuario" required="true">
-  <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true">
-  <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true">
-  <button class="btn btn-primary">Enviar</button>
-</form>
+{% else %}
+  <h2>No hay usuarios para mostrar</h2>
+{% endif %}
+<div class="container">
+  <form action="{{ url_for('users.users_add')}}" method="post">
+    <input type="email" name="email" placeholder="Ingrese el email" required="true">
+    <input type="text" name="username" placeholder="Ingrese el usuario" required="true">
+    <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true">
+    <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true">
+    <button class="btn btn-success">Agregar Usuario</button>
+  </form>
+
+</div>
+
+
+<!-- <div>
+  <form class="d-flex" role="search">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+  </form>
+</div> -->
+
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}

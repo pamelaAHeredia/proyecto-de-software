@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Disciplinas{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<h1>Disciplinas</h1>
+
+<table class="index-table box">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Disciplina</th>
+            <th>Categoria</th>
+            <th>Instructores</th>
+            <th>Dias y Horarios</th>
+            <th>Monto</th>
+            <th>Activa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for discipline in disciplines %}
+        <tr>
+            <th>{{ discipline.id }}</th>
+            <th>{{ discipline.name }}</th>
+            <th>{{ discipline.category }}</th>
+            <th>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </th>
+            <th>{{ discipline.days_and_schedules }}</th>
+            <th>{{ discipline.amount }}</th>
+            <th>{%if discipline.is_active -%} {{"Si"}}
+                {%else -%}{{"No"}}
+                {% endif %}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+<a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
+<br>
+{% if prev_url %}
+<a href="{{ prev_url }}">Anterior</a>
+{% endif %}
+{% if next_url %}
+<a href="{{ next_url }}">Siguiente</a>
+{% endif %}
+{% endblock %}
