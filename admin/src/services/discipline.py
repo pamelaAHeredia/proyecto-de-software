@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 
 from src.models.database import db
 from src.models.club.discipline import Discipline
@@ -68,10 +68,10 @@ class DisciplineService:
            Una disciplina.
         """
 
-        if Decimal(amount) < 0:
+        if amount < 0:
             raise database.AmountValueError()
 
-        discipline = self.find_discipline(name, category)
+        discipline = self.find_discipline(name=name, category=category)
         if not discipline:
             discipline = Discipline(
                 name,
@@ -79,7 +79,7 @@ class DisciplineService:
                 instructor_first_name,
                 instructor_last_name,
                 days_and_schedules,
-                Decimal(amount),
+                amount,
             )
             db.session.add(discipline)
             db.session.commit()
@@ -87,25 +87,34 @@ class DisciplineService:
             raise database.ExistingData(message="ya existen en la base de datos")
         return discipline
 
-    def find_discipline(self, name: str, category: str) -> Discipline:
-        """Función que busca una disciplina por nombre y categoria y la retorna.
-        
+    def find_discipline(
+        self,
+        id: Optional[int] = None,
+        name: Optional[str] = None,
+        category: Optional[str] = None,
+    ) -> Discipline:
+        """Función que busca una disciplina por id o nombre y categoria y la retorna.
+
+
         Args:
+           id: Número identificador de la disciplina.
            name: Nombre de la disciplina a buscar.
            category: Categoria de la disciplina a buscar.
-           
+
         Returns:
            Una disciplina.
         """
+        if id:
+            return Discipline.query.filter_by(id=id).first()
         return Discipline.query.filter_by(name=name, category=category).first()
 
-    def find_discipline(self, id: int) -> Discipline:
-        """Función que busca una disciplina por id y la retorna.
-        
-        Args:
-           id: Id de la disciplina a buscar.
-        
-        Returns:
-           Una disciplina
-        """
-        return Discipline.query.filter_by(id=id).first()
+    # def find_discipline(self, id: int) -> Discipline:
+    #     """Función que busca una disciplina por id y la retorna.
+
+    #     Args:
+    #        id: Id de la disciplina a buscar.
+
+    #     Returns:
+    #        Una disciplina
+    #     """
+    #     return Discipline.query.filter_by(id=id).first()

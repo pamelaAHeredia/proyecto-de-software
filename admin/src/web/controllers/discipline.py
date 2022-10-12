@@ -33,13 +33,7 @@ def index():
 @login_required
 @verify_permission("discipline_create")
 def create():
-    form_data = session.get("formdata", None)
-
-    if form_data:
-        form = CreateDisciplineForm(MultiDict(form_data))
-        session.pop("formdata")
-    else:
-        form = CreateDisciplineForm()
+    form = CreateDisciplineForm()
 
     if form.validate_on_submit():
 
@@ -60,13 +54,10 @@ def create():
                 amount=amount,
             )
             flash("Disciplina creada con éxito", "success")
+            return redirect(url_for("discipline.index"))
         except database.AmountValueError as e:
-            flash(e, "error")
-            session["formdata"] = request.form
-            return redirect(request.referrer)
+            flash(str(e), "danger")
         except database.ExistingData as e:
-            flash(e, "error")
-            session["formdata"] = request.form
-            return redirect(request.referrer)
-        return redirect(url_for("discipline.index"))
+            flash(f"La disciplina: {name} - {category} ya existe.", "danger")
+
     return render_template("disciplines/create.html", form=form)
