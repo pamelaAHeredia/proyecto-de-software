@@ -35,6 +35,10 @@ class UserService:
     def find_user_byEmail(self, email):
         return User.query.filter_by(email=email).first()
 
+    def is_active(self, email):
+        user = self.find_user_byEmail(email)
+        return user.is_active
+
     def find_user_by_mail_and_pass (self, email, password):
         """Función que retorna si existe un usuario que coincida el email y contraseña"""
         user = self.find_user_byEmail(email)

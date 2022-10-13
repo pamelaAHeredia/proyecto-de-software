@@ -5,7 +5,7 @@ from werkzeug.datastructures import MultiDict
 from src.services.discipline import DisciplineService
 from src.web.forms.discipline.forms import CreateDisciplineForm
 from src.errors import database
-from src.web.helpers.auth import login_required, verify_permission
+from src.web.helpers.auth import login_required, verify_permission, is_active
 
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
@@ -14,6 +14,7 @@ service = DisciplineService()
 
 @discipline_blueprint.get("/")
 @login_required
+@is_active
 def index():
     """Render de la lista de disciplinas con paginación"""
     page = request.args.get("page", 1, type=int)
@@ -31,6 +32,7 @@ def index():
 
 @discipline_blueprint.route("/create", methods=["GET", "POST"])
 @login_required
+@is_active
 @verify_permission("discipline_create")
 def create():
     form = CreateDisciplineForm()

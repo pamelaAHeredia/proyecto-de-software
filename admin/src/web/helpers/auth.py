@@ -1,10 +1,24 @@
 from functools import wraps
 from flask import session, abort
+from flask import redirect, url_for
 from src.models.auth.user import User
+from src.services.user import UserService
+
+user_service = UserService()
 
 
 def is_authenticated(session):
     return session.get("user") != None
+
+
+def is_active(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not user_service.is_active(session["user"]):
+            return redirect(url_for("auth.logout"))
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 def login_required(f):
@@ -27,5 +41,7 @@ def verify_permission(perms):
                     if p.name == perms:
                         return f(*args, **kwargs)
             return abort(403)
+
         return wrapper
+
     return decorate
