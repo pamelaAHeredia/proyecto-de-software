@@ -21,6 +21,8 @@
         {{ form.instructor_last_name }}
         {{ form.days_and_schedules.label }}
         {{ form.days_and_schedules }}
+        {{ form.registration_quota.label }}
+        {{ form.registration_quota }}
         {{ form.amount.label }}
         {{ form.amount }}
         {{ form.submit(class="btn btn-success") }}
@@ -28,11 +30,4 @@
     </form>
 </div>
 <a href="{{url_for('home')}}"> Volver al inicio </a>
-{% if form.name.errors %}
-    <ul class="errors">
-    {% for error in form.name.errors %}
-        <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
 {% endblock %}

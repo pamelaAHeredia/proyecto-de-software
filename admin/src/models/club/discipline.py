@@ -19,6 +19,8 @@ class Discipline(db.Model):
         Días y horarios en la que la disciplina se dicta.
     amount : Decimal(10, 2)
         Precio de la disciplina.
+    registration_quota : Integer
+        Cantidad máxima de inscripcione sposibles en la disciplina.
     is_active : Boolean
         Indica si la disciplina esta activa para la inscripción.
     deleted : Boolean
@@ -36,6 +38,7 @@ class Discipline(db.Model):
     instructor_last_name = db.Column(db.String(75), nullable=False)
     days_and_schedules = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    registration_quota = db.Column(db.Integer, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     deleted = db.Column(db.Boolean, default=False)
 
@@ -47,7 +50,9 @@ class Discipline(db.Model):
         instructor_last_name,
         days_and_schedules,
         amount=0,
+        registration_quota=0,
         is_active=True,
+        deleted=False,
     ):
         self.name = name
         self.category = category
@@ -55,7 +60,9 @@ class Discipline(db.Model):
         self.instructor_last_name = instructor_last_name
         self.days_and_schedules = days_and_schedules
         self.amount = amount
+        self.registration_quota = registration_quota
         self.is_active = is_active
+        self.deleted = deleted
 
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"

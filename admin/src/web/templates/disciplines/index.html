@@ -16,6 +16,7 @@
             <th>Instructores</th>
             <th>Dias y Horarios</th>
             <th>Monto</th>
+            <th>Cupo</th>
             <th>Activa</th>
         </tr>
     </thead>
@@ -28,6 +29,7 @@
             <th>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </th>
             <th>{{ discipline.days_and_schedules }}</th>
             <th>{{ discipline.amount }}</th>
+            <th>{{ discipline.registration_quota }}</th>
             <th>{%if discipline.is_active -%} {{"Si"}}
                 {%else -%}{{"No"}}
                 {% endif %}</th>

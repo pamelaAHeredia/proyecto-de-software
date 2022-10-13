@@ -19,7 +19,7 @@ class ExistingData(DbError):
             msg = f"Los datos ya existen"
         return msg
 
-class AmountValueError(DbError):
+class MinValueValueError(DbError):
     def __init__(
         self,
         message="El monto no puede ser menor que 0"

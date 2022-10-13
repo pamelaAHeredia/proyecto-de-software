@@ -52,6 +52,7 @@ class DisciplineService:
         instructor_first_name: str,
         instructor_last_name: str,
         days_and_schedules: str,
+        registration_quota: int,
         amount: Decimal,
     ) -> Discipline:
         """Función que instancia una Disciplina, la agrega a la Base de Datos y la retorna
@@ -69,8 +70,11 @@ class DisciplineService:
         """
 
         if amount < 0:
-            raise database.AmountValueError()
-
+            raise database.MinValueValueError()
+        
+        if registration_quota < 0:
+            raise database.MinValueValueError(message="El cupo no puede ser menor que 1")
+        
         discipline = self.find_discipline(name=name, category=category)
         if not discipline:
             discipline = Discipline(
@@ -80,6 +84,7 @@ class DisciplineService:
                 instructor_last_name,
                 days_and_schedules,
                 amount,
+                registration_quota,
             )
             db.session.add(discipline)
             db.session.commit()

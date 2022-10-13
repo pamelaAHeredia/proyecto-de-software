@@ -42,6 +42,7 @@ def create():
         instructor_first_name = form.instructor_first_name.data
         instructor_last_name = form.instructor_last_name.data
         days_and_schedules = form.days_and_schedules.data
+        registration_quota = form.registration_quota.data
         amount = form.amount.data
 
         try:
@@ -51,13 +52,13 @@ def create():
                 instructor_first_name=instructor_first_name,
                 instructor_last_name=instructor_last_name,
                 days_and_schedules=days_and_schedules,
+                registration_quota=registration_quota,
                 amount=amount,
             )
             flash("Disciplina creada con éxito", "success")
             return redirect(url_for("discipline.index"))
-        except database.AmountValueError as e:
+        except database.MinValueValueError as e:
             flash(str(e), "danger")
         except database.ExistingData as e:
             flash(f"La disciplina: {name} - {category} ya existe.", "danger")
-
     return render_template("disciplines/create.html", form=form)
