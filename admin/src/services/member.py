@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import A4
 
 from src.models.database import db
 from src.models.club.member import Member
+from src.errors import database
 
 
 class MemberService:
@@ -30,8 +31,8 @@ class MemberService:
         phone_number="",
         email="",
     ):
-        """Función que instancia un Socio, lo agrega a la Base de Datos y lo retorna solo en caso 
-           de que no exista el tipo y numero de documento"""
+        """Función que instancia un Socio, lo agrega a la Base de Datos y lo retorna solo en caso
+        de que no exista el tipo y numero de documento"""
 
         if not self.find_member(document_type, document_number):
             member = Member(
@@ -47,7 +48,9 @@ class MemberService:
             db.session.add(member)
             db.session.commit()
             return member
-        return None
+        raise database.ExistingData(info="ATENCION!!!",
+            message="Ya existe el Socio con ese tipo y numero de documento"
+        )
 
     def find_member(self, document_type, document_number):
         """Funcion que busca un socio en la base de datos por tipo y numero de documento"""
@@ -86,7 +89,9 @@ class MemberService:
             member.email = email
             db.session.commit()
             return member
-        return None
+        raise database.ExistingData(info="ATENCION!!!",
+            message="Ya existe el Socio con ese tipo y numero de documento"
+        )
 
     def deactivate_member(self, id):
         """Función que pone inactivo a un Socio"""
@@ -104,28 +109,45 @@ class MemberService:
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado"""
         return Member.query.filter_by(is_active=active).all()
+    
 
-    def export_list_to_pdf(self, members):
+    def header_pdf(self, pdf):
+        """Función que define el encabezado de las paginas del pdf"""
+        pdf.drawImage('../admin/public/logoclub.jpg', 5, 790 , width=50, height=50)
+        pdf.setFont("Helvetica", 20)
+        pdf.setLineWidth(0.3)
+        pdf.drawCentredString(300, 800, "Reporte de Asociados")
+        pdf.setFontSize(15)
+        pdf.drawString(5, 750, "#")
+        pdf.drawString(60, 750, "Apellido")
+        pdf.drawString(200, 750, "Nombre")
+        pdf.drawString(350, 750, "Tipo y numero de documento")
+        pdf.line(1, 740, 600, 740)
+        return pdf
+
+
+
+    def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
         pdf = canvas.Canvas("report.pdf", pagesize=A4)
-        pdf.setFontSize(20)
-        pdf.setLineWidth(.3)
-        pdf.drawCentredString(300, 780, 'Reporte de Asociados')
-        pdf.setFontSize(15)
-        pdf.drawString(5, 750, '#')
-        pdf.drawString(60, 750, 'Apellido')
-        pdf.drawString(200, 750, 'Nombre')
-        pdf.drawString(350, 750, 'Tipo y numero de documento')
-        pdf.line(1,740,600,740)
+        members_per_page = 0
+        members_total = 0
+        self.header_pdf(pdf)
         pdf.setFontSize(12)
-        y=710
+        y = 725
         for member in members:
             pdf.drawString(5, y, str(member.membership_number))
             pdf.drawString(60, y, member.last_name)
             pdf.drawString(200, y, member.first_name)
-            pdf.drawString(350, y, member.document_type +' '+ member.document_number)
-            #pdf.drawString(400, y, member.document_number)
-            y=y-20
-        pdf.showPage()
+            pdf.drawString(350, y, member.document_type + " " + member.document_number)
+            y = y - 20
+            members_per_page = members_per_page + 1
+            members_total = members_total + 1
+            if (line_per_page == members_per_page) and (members_total < len(members)):
+               pdf.showPage()
+               members_per_page = 0
+               self.header_pdf(pdf)
+               pdf.setFontSize(12)
+               y = 725
         pdf.save()
-        return True
+        return pdf

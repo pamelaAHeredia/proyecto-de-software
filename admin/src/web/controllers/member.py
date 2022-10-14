@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
-from src.services.member import MemberService 
+from src.services.member import MemberService
+from src.errors import database 
 
 
 # Se define Blueprint de Socio
@@ -30,11 +31,11 @@ def members_add():
         "email": request.form.get("email"),
         "phone_number": request.form.get("phone_number"),
     }
-    added_member = service.create_member(**data_member)
-    if added_member:
-        flash("Socio guardado con éxito!")
-    else:
-        flash("El socio con ese tipo y N° de documento ya se encuentra registrado")
+    try:
+        service.create_member(**data_member)
+        flash("Socio guardado con éxito!", "success")
+    except database.ExistingData as e:
+        flash(e,"danger")
     return redirect(url_for("members.members_index"))
 
 
