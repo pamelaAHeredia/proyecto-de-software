@@ -57,6 +57,7 @@
             {% endfor %}
         </tbody>
     </table>
+    {% include('partials/paginator.html') %}
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
             <a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
@@ -70,6 +71,6 @@
 </div>
 
 
-{% include('partials/paginator.html') %}
+
 
 {% endblock %}

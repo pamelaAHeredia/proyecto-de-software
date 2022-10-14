@@ -20,7 +20,6 @@ def index():
     discipline_paginator = service.list_paginated_disciplines(
         page, 2, "discipline.index"
     )
-
     return render_template(
         "disciplines/index.html",
         paginator=discipline_paginator,

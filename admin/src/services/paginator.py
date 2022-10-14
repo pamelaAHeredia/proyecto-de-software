@@ -57,6 +57,8 @@ class Paginator:
 
     @property
     def pages(self):
+        if not list(self._query.iter_pages()):
+            return None
         return self._query.iter_pages()
 
     @property
