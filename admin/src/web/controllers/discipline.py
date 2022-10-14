@@ -3,7 +3,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 from werkzeug.datastructures import MultiDict
 from src.services.discipline import DisciplineService
-from src.web.forms.discipline.forms import CreateDisciplineForm
+from src.web.forms.discipline import CreateDisciplineForm
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
