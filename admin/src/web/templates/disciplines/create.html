@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Editar Usuario{% endblock %}
+{% block title %}Alta de Disciplina{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
@@ -61,7 +61,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12 d-flex justify-content-center">
-                <a href="{{url_for('home')}}"> Volver al inicio </a>
+                <a href="{{url_for('discipline.index')}}"> Volver </a>
             </div>
         </div>
     </form>
