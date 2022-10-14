@@ -10,4 +10,4 @@ class CreateDisciplineForm(FlaskForm):
     days_and_schedules = StringField("Día y Horario", validators=[InputRequired()])
     registration_quota = IntegerField("Cupos", validators=[InputRequired(), NumberRange(min=1)])
     amount = DecimalField("Precio", validators=[InputRequired(), NumberRange(min=0)])
-    submit = SubmitField('Enviar')
+    submit = SubmitField('Guardar')
