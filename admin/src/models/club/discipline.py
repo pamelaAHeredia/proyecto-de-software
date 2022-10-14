@@ -3,26 +3,28 @@ from src.models.database import db
 
 class Discipline(db.Model):
     """
-    A class used to represent a Discipline
+    Clase useda para representar unaa Disciplina
 
-    Attributes
+    Atributos
     ---------
     name : str
-        Discipline name.
+        Nombre de la disciplina.
     category : str
-        Category name. It's a subdivision of the discipline.
+        Nombre de la categoria. Es una subdivisión de la disciplina.
     instructor_first_name : str
-        Name of the instructor who teaches the discipline.
+        Nombre del instructor que enseña la disciplina.
     instructor_last_name : str
-        Last name of the instructor who teaches the discipline.
+        Apellido del instructor que enseña la disciplina.
     days_and_schedules : str
-        Days and times that the discipline is practiced.
+        Días y horarios en la que la disciplina se dicta.
     amount : Decimal(10, 2)
-        Amount to pay for practicing the discipline.
+        Precio de la disciplina.
+    registration_quota : Integer
+        Cantidad máxima de inscripcione sposibles en la disciplina.
     is_active : Boolean
-        Discipline activity status. True for active.
+        Indica si la disciplina esta activa para la inscripción.
     deleted : Boolean
-        If the discipline is deleted (logical) then True.
+        Indica si la disciplina se sigue dando o no.
     """
 
     __tablename__ = "discipline"
@@ -36,17 +38,31 @@ class Discipline(db.Model):
     instructor_last_name = db.Column(db.String(75), nullable=False)
     days_and_schedules = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    registration_quota = db.Column(db.Integer, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     deleted = db.Column(db.Boolean, default=False)
-    
-    def __init__(self, name, category, instructor_first_name, instructor_last_name, days_and_schedules, amount=0, is_active=True):
+
+    def __init__(
+        self,
+        name,
+        category,
+        instructor_first_name,
+        instructor_last_name,
+        days_and_schedules,
+        amount=0,
+        registration_quota=0,
+        is_active=True,
+        deleted=False,
+    ):
         self.name = name
         self.category = category
         self.instructor_first_name = instructor_first_name
         self.instructor_last_name = instructor_last_name
         self.days_and_schedules = days_and_schedules
         self.amount = amount
+        self.registration_quota = registration_quota
         self.is_active = is_active
-    
+        self.deleted = deleted
+
     def __repr__(self):
-        return f'<Disciplina {self.name} {self.category}>'
+        return f"<Disciplina {self.name} {self.category}>"

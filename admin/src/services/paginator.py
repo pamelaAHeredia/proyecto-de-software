@@ -46,10 +46,20 @@ class Paginator:
         return self._query.prev_num
 
     @property
+    def page(self):
+        return self._page
+
+    @property
     def next_url(self):
         if not self._next_page():
             return None
         return url_for(self._endpoint, page=self._next_page())
+
+    @property
+    def pages(self):
+        if not list(self._query.iter_pages()):
+            return None
+        return self._query.iter_pages()
 
     @property
     def prev_url(self):
