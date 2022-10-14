@@ -1,0 +1,38 @@
+<nav aria-label="...">
+    <ul class="pagination">
+        {% if paginator.prev_url %}
+        <li class="page-item"></li>
+        <a class=page-link href="{{ paginator.prev_url }}">Anterior</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Anterior</a>
+        </li>
+        {% endif %}
+        {% for page in paginator.pages %}
+        {% if page != paginator.page %}
+        <li class="page-item">
+            <a class="page-link" href={{ url_for("discipline.index", page=page) }}>
+                {{ page }}
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link">{{ page }}</a>
+        </li>
+        {% endif %}
+
+        {% endfor %}
+
+
+        {% if paginator.next_url %}
+        <li class="page-item">
+            <a class=page-link href={{ paginator.next_url }}>Siguiente</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Siguiente</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

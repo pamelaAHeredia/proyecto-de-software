@@ -36,21 +36,21 @@
                 <td>{{ discipline.registration_quota }}</td>
                 <td>
                     <div class="row">
-                    {% if discipline.is_active %}
+                        {% if discipline.is_active %}
                         <span class="btn btn-sm btn-success rounded-pill d-inline">Activa</span>
-                    {% else %}
+                        {% else %}
                         <span class="btn btn-sm btn-dark rounded-pill d-inline">Inactiva</span>
-                    {% endif %}
+                        {% endif %}
                     </div>
                 </td>
                 <td>
                     <div class="btn-group mb-3">
-                            <a class="btn btn-sm btn-success rounded-pill d-inline" href="#" role="button">
-                                Editar
-                            </a>
-                            <a class="btn btn-sm btn-danger rounded-pill d-inline" href="#" role="button">
-                                Borrar
-                            </a>
+                        <a class="btn btn-sm btn-success rounded-pill d-inline" href="#" role="button">
+                            Editar
+                        </a>
+                        <a class="btn btn-sm btn-danger rounded-pill d-inline" href="#" role="button">
+                            Borrar
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -69,26 +69,7 @@
     </div>
 </div>
 
-  <div class=pagination>
-    {% if paginator.prev_url %}
-        <a href="{{ paginator.prev_url }}">Anterior</a>
-    {% endif %}
-    {% for page in paginator.pages %}
-      {% if page %}
-        {% if page != paginator.page %}
-          <a href="{{ url_for("discipline.index", page=page) }}">{{ page }}</a>
-        {% else %}
-          <strong>{{ page }}</strong>
-        {% endif %}
-      {% else %}
-        <span class=ellipsis>…</span>
-      {% endif %}
-    {% endfor %}
-    {% if paginator.next_url %}
-        <a href="{{ paginator.next_url }}">Siguiente</a>
-    {% endif %}
-  </div>
 
-
+{% include('partials/paginator.html') %}
 
 {% endblock %}
