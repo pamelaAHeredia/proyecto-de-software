@@ -23,9 +23,11 @@ def index():
 
     return render_template(
         "disciplines/index.html",
-        disciplines=discipline_paginator.items,
-        next_url=discipline_paginator.next_url,
-        prev_url=discipline_paginator.prev_url,
+        paginator=discipline_paginator,
+        # disciplines=discipline_paginator.items,
+        # next_url=discipline_paginator.next_url,
+        # prev_url=discipline_paginator.prev_url,
+        # cant_pages=discipline_paginator.pages,
     )
 
 
