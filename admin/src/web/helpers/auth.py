@@ -39,7 +39,6 @@ def is_administrator(f):
             if r.name == "Administrador":
                 return f(*args, **kwargs)
         return abort(403)
-    print(decorated_function)
     return decorated_function
 
 def is_operator(f):

@@ -13,7 +13,13 @@ class Settings(db.Model):
     amount_monthly = db.Column(db.Integer, default=100)
     percentage_surcharge = db.Column(db.Integer, default=0)
 
-    def __init__(self, items_per_page, enable_paytable, contact_info, text_header_payment, amount_monthly, percentage_surcharge):  
+    def __init__(self, 
+                items_per_page, 
+                enable_paytable, 
+                contact_info, 
+                text_header_payment, 
+                amount_monthly, 
+                percentage_surcharge):  
         self.items_per_page = items_per_page
         self.enable_paytable = enable_paytable
         self.contact_info = contact_info

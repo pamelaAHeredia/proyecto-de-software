@@ -11,7 +11,7 @@ service = SettingsService()
 @login_required
 @is_administrator
 def index():
-
+    """Metodo donde se modifica las configuraciones"""
     form = SettingsForm()
 
     if (request.method=="GET"):
@@ -31,7 +31,12 @@ def index():
             amountMonthly = form.amount_monthly.data
             percentageSurcharge = form.percentage_surcharge.data
 
-            service.load_settings(itemsPerPage=itemsPerPage, enablePaytable=enablePaytable, contactInfo=contactInfo, textHeaderPayment=textHeaderPayment, amountMonthly=amountMonthly, percentageSurcharge=percentageSurcharge)
+            service.load_settings(itemsPerPage=itemsPerPage, 
+                                enablePaytable=enablePaytable, 
+                                contactInfo=contactInfo, 
+                                textHeaderPayment=textHeaderPayment, 
+                                amountMonthly=amountMonthly, 
+                                percentageSurcharge=percentageSurcharge)
             flash("Configuraciones actualizadas.", "success")
 
     return render_template("settings/settings.html",form=form)

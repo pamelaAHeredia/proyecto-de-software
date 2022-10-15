@@ -12,10 +12,22 @@ class SettingsService:
             cls._instance = super(SettingsService, cls).__new__(cls)
         return cls._instance
 
-    def load_settings(self,itemsPerPage,enablePaytable,contactInfo,textHeaderPayment,amountMonthly,percentageSurcharge):
+    def load_settings(self,
+                    itemsPerPage,
+                    enablePaytable,
+                    contactInfo,
+                    textHeaderPayment,
+                    amountMonthly,
+                    percentageSurcharge):
         """Metodo que carga las configuraciones"""
         if (Settings.query.get(1) is None):
-            settings = Settings(itemsPerPage,enablePaytable,contactInfo,textHeaderPayment,amountMonthly,percentageSurcharge)
+            settings = Settings(
+                                itemsPerPage,
+                                enablePaytable,
+                                contactInfo,
+                                textHeaderPayment,
+                                amountMonthly,
+                                percentageSurcharge)
             db.session.add(settings)
         else:
             settings = Settings.query.get(1)
