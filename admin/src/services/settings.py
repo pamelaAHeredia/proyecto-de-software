@@ -42,3 +42,20 @@ class SettingsService:
     def get_settings(self):
         return Settings.query.get(1)
     
+    def get_items_per_page(self):
+        return Settings.query.get(1).items_per_page
+
+    def get_enable_paytable(self):
+        return Settings.query.get(1).enable_paytable
+
+    def get_contact_info(self):
+        return Settings.query.get(1).contact_info
+
+    def get_text_header_payment(self):
+        return Settings.query.get(1).text_header_payment
+
+    def get_amount_monthly(self):
+        return Settings.query.get(1).amount_monthly
+
+    def get_percentage_surcharge(self):
+        return Settings.query.get(1).percentage_surcharge
