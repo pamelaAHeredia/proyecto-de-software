@@ -15,14 +15,15 @@ class UserBaseForm(FlaskForm):
     last_name = StringField(
         "Apellido", validators=[DataRequired(), Length(max=75, min=3)]
     )
+
+    
+
+class CreateUserForm(UserBaseForm):
     roles = SelectField(
         "Rol",
         choices=[("Administrador", "Administrador"), ("Operador", "Operador")],
         validators=[DataRequired()],
     )
-    
-
-class CreateUserForm(UserBaseForm):
     submit = SubmitField("Crear usuario")
 
 class UpdateUserForm(UserBaseForm):

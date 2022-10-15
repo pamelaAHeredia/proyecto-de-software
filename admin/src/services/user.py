@@ -22,7 +22,6 @@ class UserService:
 
     def create_user(self, email, username, password, first_name, last_name, roles):
         """Función que instancia un usuario, si no existe en la BD, y lo retorna"""
-
         if not self.find_user_byEmail(email):
             if not self.find_user_byUsername(username):
                 user = User(email, username, password, first_name, last_name, [])

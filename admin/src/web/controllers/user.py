@@ -53,7 +53,7 @@ def users_add():
         first_name = form.first_name.data
         password = hash_pass(form.email.data)
         last_name = form.last_name.data
-        roles = role
+        roles = [role]
 
         try:
             service.create_user(
@@ -62,7 +62,7 @@ def users_add():
                 password=password,
                 first_name=first_name,
                 last_name=last_name,
-                roles=roles,
+                roles=roles
             )
             flash("Usuario creado con éxito!", "success")
         except database.ExistingData as e:
@@ -76,7 +76,6 @@ def users_update(id):
     form = UpdateUserForm()
     user = service.find_user_by_id(id)
     if request.method == "POST":
-
         if form.validate_on_submit():
             email = form.email.data
             username = form.username.data
