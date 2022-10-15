@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Editar Usuario{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h1>Configuraciones</h1>
+
+<div class="container">
+    <form action="{{ url_for('settings.index')}}" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.items_per_page.label(class="form-label") }}
+        {{ form.items_per_page(class="form-control") }}
+        <div class="form-check">
+            {{ form.enable_paytable.label(class="form-check-label") }}
+            {{ form.enable_paytable(class="form-check-input ") }}
+        </div>
+        {{ form.contact_info.label(class="form-label") }}
+        {{ form.contact_info(class="form-control") }}
+        {{ form.text_header_payment.label(class="form-label") }}
+        {{ form.text_header_payment(class="form-control") }}
+        {{ form.amount_monthly.label(class="form-label") }}
+        {{ form.amount_monthly(class="form-control") }}
+        {{ form.percentage_surcharge.label(class="form-label") }}
+        {{ form.percentage_surcharge(class="form-control") }}
+        <input type="submit" value="Cambiar" class="btn btn-success">
+
+    </form>
+</div>
+{% endblock %}

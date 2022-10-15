@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash
 from flask_session import Session
-from src.web.helpers.auth import is_authenticated
 from src.web.helpers import handlers
 from src.web.helpers import auth
 from src.models import database
@@ -8,6 +7,7 @@ from src.models import seeds
 from src.web.controllers.user import user_blueprint
 from src.web.controllers.member import member_blueprint
 from src.web.controllers.discipline import discipline_blueprint
+from src.web.controllers.settings import settings_blueprint
 from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
 
@@ -42,6 +42,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(member_blueprint)
     app.register_blueprint(discipline_blueprint)
+    app.register_blueprint(settings_blueprint)
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)
@@ -51,6 +52,7 @@ def create_app(env="development", static_folder="static"):
     
     #Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
+    app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
     # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():
