@@ -40,6 +40,7 @@ def run():
         instructor_first_name="Juan",
         instructor_last_name="De Los Palotes",
         days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
+        registration_quota=50,
         amount=600.00,
     )
 

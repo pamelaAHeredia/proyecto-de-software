@@ -1,3 +1,4 @@
+from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 
@@ -111,8 +112,8 @@ class MemberService:
         return Member.query.filter_by(is_active=active).all()
     
 
-    def header_pdf(self, pdf):
-        """Función que define el encabezado de las paginas del pdf"""
+    def format_pdf(self, pdf):
+        """Función que define el formato de las paginas del pdf"""
         pdf.drawImage('../admin/public/logoclub.jpg', 5, 790 , width=50, height=50)
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
@@ -123,6 +124,9 @@ class MemberService:
         pdf.drawString(200, 750, "Nombre")
         pdf.drawString(350, 750, "Tipo y numero de documento")
         pdf.line(1, 740, 600, 740)
+        pdf.setFontSize(12)
+        pdf.drawString(490, 820, "Fecha: "+ date.today().strftime("%d/%m/%Y"))
+        pdf.drawString(520, 10, "Página " + str(pdf.getPageNumber()))
         return pdf
 
 
@@ -132,8 +136,7 @@ class MemberService:
         pdf = canvas.Canvas("report.pdf", pagesize=A4)
         members_per_page = 0
         members_total = 0
-        self.header_pdf(pdf)
-        pdf.setFontSize(12)
+        self.format_pdf(pdf)
         y = 725
         for member in members:
             pdf.drawString(5, y, str(member.membership_number))
@@ -146,8 +149,7 @@ class MemberService:
             if (line_per_page == members_per_page) and (members_total < len(members)):
                pdf.showPage()
                members_per_page = 0
-               self.header_pdf(pdf)
-               pdf.setFontSize(12)
+               self.format_pdf(pdf)
                y = 725
         pdf.save()
         return pdf
