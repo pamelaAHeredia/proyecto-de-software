@@ -42,13 +42,8 @@ def users_index():
 @login_required
 def users_add():
     """Agrega usuarios mediante el formulario"""
-    form_data = session.get("formdata", None)
 
-    if form_data:
-        form = CreateUserForm(MultiDict(form_data))
-        session.pop("formdata")
-    else:
-        form = CreateUserForm()
+    form = CreateUserForm()
 
     if form.validate_on_submit():
 
@@ -72,18 +67,14 @@ def users_add():
             flash("Usuario creado con éxito!", "success")
         except database.ExistingData as e:
             flash(e, "danger")
-            session["formdata"] = request.form
-            return redirect(request.referrer)
     return render_template("users/add_user.html", form=form)
 
 
 @user_blueprint.route("/update/<id>", methods=["POST", "GET"])
 @login_required
 def users_update(id):
-
-    user = service.find_user_by_id(id)
     form = UpdateUserForm()
-
+    user = service.find_user_by_id(id)
     if request.method == "POST":
 
         if form.validate_on_submit():
@@ -102,8 +93,7 @@ def users_update(id):
                 flash("Usuario actualizado con éxito!", "success")
             except database.ExistingData as e:
                 flash(e, "danger")
-                session["formdata"] = request.form
-                return redirect(request.referrer)
+
         return render_template("users/update.html", user=user, form=form)
     else:
         return render_template("users/update.html", user=user, form=form)
@@ -118,7 +108,9 @@ def users_block(id):
         service.block_user(id)
     except database.PermissionDenied as e:
         flash(e, "danger")
-    return render_template("users/user_info.html", user=user, delete_roles_form=delete_roles_form)
+    return render_template(
+        "users/user_info.html", user=user, delete_roles_form=delete_roles_form
+    )
 
 
 @user_blueprint.route("/search_user", methods=["POST"])
@@ -130,7 +122,10 @@ def users_search():
         email = search_form.email.data
         user = service.find_user_byEmail(email)
         return render_template(
-            "users/user_info.html", user=user, search_form=search_form, delete_roles_form=delete_roles_form
+            "users/user_info.html",
+            user=user,
+            search_form=search_form,
+            delete_roles_form=delete_roles_form,
         )
 
 
@@ -193,9 +188,9 @@ def users_add_roles(id):
 @user_blueprint.route("/delete_roles/<id>", methods=["POST", "GET"])
 @login_required
 def users_delete_roles(id):
+    delete_roles_form = DeleteRolesForm()
     user = service.find_user_by_id(id)
     roles = service.list_user_roles(id)
-    delete_roles_form = DeleteRolesForm()
     if request.method == "POST":
         if delete_roles_form.validate_on_submit:
             try:

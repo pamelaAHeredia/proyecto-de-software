@@ -25,7 +25,9 @@ class UserService:
 
         if not self.find_user_byEmail(email):
             if not self.find_user_byUsername(username):
-                user = User(email, username, password, first_name, last_name, [roles])
+                user = User(email, username, password, first_name, last_name, [])
+                for role in roles:
+                    user.roles.append(role)
                 db.session.add(user)
                 db.session.commit()
             else:
@@ -125,7 +127,6 @@ class UserService:
             user.is_active = True
         db.session.commit()
         return user
-
 
     def create_role(self, name):
         """Función que instancia un Rol, lo agrega a la Base de Datos y lo retorna"""
