@@ -10,3 +10,4 @@ def find_user_by_mail_and_pass(email, password):
         return user
     else:
         return None
+

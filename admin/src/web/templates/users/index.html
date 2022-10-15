@@ -7,6 +7,17 @@
 
 
 <h1>Usuarios</h1>
+<div class="container">
+  <h3>Filtrar listado por: </h3>
+  <form action="{{ url_for('users.users_filter_by')}}" method="post">
+      <div class="form group">
+          {{ filter_form.filter(class="")}}
+          {{filter_form.hidden_tag()}}
+      </div>
+      <button class="btn btn btn-primary block" type="submit">filtar</button>
+      
+  </form>
+</div>
 
 {% if users %}
 <table class="table table-hover table-sm">
@@ -15,7 +26,6 @@
       <th>#</th>
       <th>Email</th>
       <th>Nombre de Usuario</th>
-      <th>Esta Activo ?</th>
       <th>Está Bloqueado ?</th>
       <th>Nombre</th>
       <th>Apellido</th>
@@ -28,43 +38,30 @@
       <th>{{ user.id }}</th>
       <th>{{ user.email }}</th>
       <th>{{ user.username }}</th>
-      <th>{%if user.is_active -%} {{"Si"}}
-        {%else -%}
-        {{"No"}}
-        {% endif %}</th>
       <th>{%if user.blocked -%} {{"Si"}}
         {%else -%}
         {{"No"}}
-        {% endif %}</th>  
+        {% endif %}</th>
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
       <th><a href="{{url_for('users.users_update', id=user.id)}}" class="btn btn-secondary"> Editar </a></th>
-      <th><a href="{{url_for('users.users_block', id=user.id)}}" class="btn btn-secondary"> bloquear/desbloquear </a></th>  
+      </th>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 {% else %}
-  <h2>No hay usuarios para mostrar</h2>
+<h2>No hay usuarios para mostrar</h2>
 {% endif %}
+
 <div class="container">
-  <form action="{{ url_for('users.users_add')}}" method="post">
-    <input type="email" name="email" placeholder="Ingrese el email" required="true">
-    <input type="text" name="username" placeholder="Ingrese el usuario" required="true">
-    <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true">
-    <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true">
-    <button class="btn btn-success">Agregar Usuario</button>
+  <h2> Buscar usuario</h2>
+  <form class="d-flex" role="search" action="{{ url_for('users.users_search')}}" method="post">
+    {{ search_form.email(class="form-control me-2", placeholder="Email")}}
+    {{search_form.hidden_tag()}}
+    <button class="btn btn-outline-success" type="submit">Buscar Usuario</button> 
   </form>
-
 </div>
-
-
-<!-- <div>
-  <form class="d-flex" role="search">
-    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Buscar</button>
-  </form>
-</div> -->
 
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
