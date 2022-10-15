@@ -170,14 +170,3 @@ class DisciplineService:
         if id:
             return Discipline.query.get(id)
         return Discipline.query.filter_by(name=name, category=category).first()
-
-    # def find_discipline(self, id: int) -> Discipline:
-    #     """Función que busca una disciplina por id y la retorna.
-
-    #     Args:
-    #        id: Id de la disciplina a buscar.
-
-    #     Returns:
-    #        Una disciplina
-    #     """
-    #     return Discipline.query.filter_by(id=id).first()
