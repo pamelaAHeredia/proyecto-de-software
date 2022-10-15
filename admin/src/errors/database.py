@@ -3,11 +3,7 @@ class DbError(Exception):
 
 
 class ExistingData(DbError):
-    def __init__(
-        self,
-        info="",
-        message=""
-    ):
+    def __init__(self, info="", message=""):
         self.info = info
         self.message = message
         super().__init__(self.message)
@@ -19,11 +15,9 @@ class ExistingData(DbError):
             msg = f"Los datos ya existen"
         return msg
 
-class AmountValueError(DbError):
-    def __init__(
-        self,
-        message="El monto no puede ser menor que 0"
-    ):
+
+class MinValueValueError(DbError):
+    def __init__(self, message="El monto no puede ser menor que 0"):
         self.message = message
         super().__init__(self.message)
 
