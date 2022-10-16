@@ -45,6 +45,7 @@ def create():
         days_and_schedules = form.days_and_schedules.data
         registration_quota = form.registration_quota.data
         amount = form.amount.data
+        is_active = form.is_active
 
         try:
             service.create_discipline(
@@ -55,6 +56,7 @@ def create():
                 days_and_schedules=days_and_schedules,
                 registration_quota=registration_quota,
                 amount=amount,
+                is_active=is_active,
             )
             flash("Disciplina creada con éxito", "success")
             return redirect(url_for("discipline.index"))
@@ -79,7 +81,9 @@ def update(discipline_id):
         form.days_and_schedules.data = discipline.days_and_schedules
         form.registration_quota.data = discipline.registration_quota
         form.amount.data = discipline.amount
+        form.is_active.data = discipline.is_active
         discipline_id = discipline_id
+        
 
     else:
         if form.validate_on_submit():
@@ -91,6 +95,7 @@ def update(discipline_id):
             days_and_schedules = form.days_and_schedules.data
             registration_quota = form.registration_quota.data
             amount = form.amount.data
+            is_active = form.is_active.data
 
             try:
                 service.update_discipline(
@@ -102,6 +107,7 @@ def update(discipline_id):
                     days_and_schedules=days_and_schedules,
                     registration_quota=registration_quota,
                     amount=amount,
+                    is_active=is_active
                 )
                 flash("Disciplina creada con éxito", "success")
                 return redirect(url_for("discipline.index"))

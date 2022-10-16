@@ -42,6 +42,7 @@
         <div class="form-group mb-3">
             {{ form.days_and_schedules(class_="form-control", placeholder="Días y horarios")}}
         </div>
+
         <div class="row justify-content-md-center">
             <div class="col-lg-4 col-md-4 col-12">
                 <div class="form-group mb-3">
@@ -52,6 +53,12 @@
                 <div class="form-group mb-3">
                     {{ form.amount(class_="form-control", placeholder="Valor")}}
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                {{ form.is_active.label }}
+                {{ form.is_active(class_="form-check-input", value="n") }}
             </div>
         </div>
         <div class="row">

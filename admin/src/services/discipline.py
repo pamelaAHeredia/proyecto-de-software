@@ -55,6 +55,7 @@ class DisciplineService:
         days_and_schedules: str,
         registration_quota: int,
         amount: Decimal,
+        is_active: bool,
     ) -> Discipline:
         """Función que instancia una Disciplina, la agrega a la Base de Datos y la retorna
 
@@ -65,6 +66,7 @@ class DisciplineService:
            instructor_last_name: Apellido del instructor que dicta la disciplina.
            days_and_schedule: Días y horarios en que se da la disciplina.
            amount: Monto a pagar por practicar la disciplina.
+           is_active: ¿La disciplina esta activa?
 
         Returns:
            Una disciplina.
@@ -88,6 +90,7 @@ class DisciplineService:
                 days_and_schedules,
                 amount,
                 registration_quota,
+                is_active,
             )
             db.session.add(discipline)
             db.session.commit()
@@ -105,6 +108,7 @@ class DisciplineService:
         days_and_schedules: str,
         registration_quota: int,
         amount: Decimal,
+        is_active: bool,
     ) -> Discipline:
         """Función que instancia una Disciplina, la modifica en la Base de Datos y la retorna
 
@@ -131,12 +135,15 @@ class DisciplineService:
 
         discipline_to_update = self.find_discipline(id=id)
 
-        if discipline_to_update.name != name or discipline_to_update.category != category:
+        if (
+            discipline_to_update.name != name
+            or discipline_to_update.category != category
+        ):
             discipline_in_db = self.find_discipline(name=name, category=category)
 
         if discipline_in_db:
             raise database.ExistingData(message="ya existen en la base de datos")
-        
+
         discipline_to_update.name = name
         discipline_to_update.category = category
         discipline_to_update.instructor_first_name = instructor_first_name
@@ -144,6 +151,7 @@ class DisciplineService:
         discipline_to_update.days_and_schedules = days_and_schedules
         discipline_to_update.amount = amount
         discipline_to_update.registration_quota = registration_quota
+        discipline_to_update.is_active = is_active
 
         db.session.add(discipline_to_update)
         db.session.flush()
