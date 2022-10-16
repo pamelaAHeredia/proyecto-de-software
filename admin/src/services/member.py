@@ -5,6 +5,7 @@ from reportlab.lib.pagesizes import A4
 from src.models.database import db
 from src.models.club.member import Member
 from src.errors import database
+from src.services.paginator import Paginator
 
 
 class MemberService:
@@ -20,6 +21,24 @@ class MemberService:
     def list_members(self):
         """Función que retorna la lista de todos los Socios de la Base de Datos"""
         return Member.query.all()
+
+    def list_paginated_members(
+        self, page: int, items_per_page: int, endpoint: str
+    ) -> Paginator:
+        """Función que retorna el paginador con los socios del sistema.
+
+        Args:
+           page: Número de pagina.
+           items_per_page: cantidad de registros por página.
+           endpoint: endpoint para el armado del url_for.
+
+        Returns:
+           Un paginador.
+        """
+        members = Member.query
+        return Paginator(members, page, items_per_page, endpoint)
+
+
 
     def create_member(
         self,
