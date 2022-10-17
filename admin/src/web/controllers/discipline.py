@@ -45,7 +45,7 @@ def create():
         days_and_schedules = form.days_and_schedules.data
         registration_quota = form.registration_quota.data
         amount = form.amount.data
-        is_active = form.is_active
+        is_active = form.is_active.data
 
         try:
             service.create_discipline(

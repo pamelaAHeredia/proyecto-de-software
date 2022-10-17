@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, SubmitField, IntegerField, BooleanField
-from wtforms.validators import InputRequired, NumberRange, Length
+from wtforms.validators import InputRequired, NumberRange, Length, Optional
 
 
 class DisciplineBaseForm(FlaskForm):
@@ -17,7 +17,7 @@ class DisciplineBaseForm(FlaskForm):
         "Cupos", validators=[InputRequired(), NumberRange(min=1)]
     )
     amount = DecimalField("Precio", validators=[InputRequired(), NumberRange(min=0)])
-    is_active = BooleanField("¿Activa?", validators=[InputRequired()])
+    is_active = BooleanField("¿Activa?", default=True, validators=[Optional()])
 
 
 class CreateDisciplineForm(DisciplineBaseForm):

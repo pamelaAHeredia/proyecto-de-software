@@ -140,9 +140,8 @@ class DisciplineService:
             or discipline_to_update.category != category
         ):
             discipline_in_db = self.find_discipline(name=name, category=category)
-
-        if discipline_in_db:
-            raise database.ExistingData(message="ya existen en la base de datos")
+            if discipline_in_db:
+                raise database.ExistingData(message="ya existen en la base de datos")
 
         discipline_to_update.name = name
         discipline_to_update.category = category
