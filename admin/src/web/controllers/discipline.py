@@ -109,7 +109,7 @@ def update(discipline_id):
                     amount=amount,
                     is_active=is_active
                 )
-                flash("Disciplina creada con éxito", "success")
+                flash("Disciplina actualizada con éxito", "success")
                 return redirect(url_for("discipline.index"))
             except database.MinValueValueError as e:
                 flash(str(e), "danger")
