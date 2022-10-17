@@ -56,14 +56,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 d-flex justify-content-center">
-                {{ form.is_active.label }}
-                {{ form.is_active(class_="form-check-input", value="n") }}
+            <div class="form-group mb-3">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    {{ form.is_active.label }}
+                    {{ form.is_active(class_="form-check-input", value="n") }}
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 d-flex justify-content-center">
-                {{ form.submit(class="btn btn-success") }}
+            <div class="form-group mb-3">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    {{ form.submit(class="btn btn-success") }}
+                </div>
             </div>
         </div>
         <div class="row">
