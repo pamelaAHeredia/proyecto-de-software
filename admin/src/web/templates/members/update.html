@@ -1,34 +1,91 @@
 {% extends "layout.html" %}
-{% block title %}Actualización Socio{% endblock %}
+{% block title %}Actualizar Socio{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
 {% block content %}
 
-<h1>Actualización</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Actualización de Socio N° {{ member_id }}</h1>
+        </div>
+    </div>
+    <form action="{{ url_for('members.update', member_id=member_id)}}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col">
+                <div class="from-group mb-3">
+                    {{ form.first_name.label}}
+                    {{ form.first_name(class_="form-control", placeholder="Nombre")}}
+                </div>
+            </div>
+        </div>
+        <div class="row">    
+            <div class="col">
+                <div class="from-group mb-3">
+                    {{ form.last_name.label}}
+                    {{ form.last_name(class_="form-control", placeholder="Apellido")}}
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.document_type.label}}
+                    {{ form.document_type(class_="form-control")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.document_number.label}}
+                    {{ form.document_number(class_="form-control", placeholder="Número de Documento")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.gender.label }}
+                    {{ form.gender(class_="form-control")}}
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.address.label }}
+                    {{ form.address(class_="form-control", placeholder="Domicilio")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.email.label }}
+                    {{ form.email(class_="form-control", placeholder="Email")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.phone_number.label }}
+                    {{ form.phone_number(class_="form-control", placeholder="Télefono")}}
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                {{ form.submit(class="btn btn-success", value="Actualizar") }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <a href="{{url_for('members.index')}}"> Volver </a>
+            </div>
+        </div>
+    </form>
+</div>
 
 
-<form action="{{ url_for('members.members_update', id=member.membership_number)}}" method="post">
-  <input type="text" name="first_name" placeholder="Ingrese el Nombre" required="true" value="{{member.first_name}}"/>
-  <input type="text" name="last_name" placeholder="Ingrese el Apellido" required="true" value="{{member.last_name}}"/>
-  Tipo de Documento: 
-  <select name="document_type">
-    <option value="DNI"selected>DNI</option>
-    <option value="LE">LE</option> 
-    <option value="LC">LC</option>
-    <option value="PASAPORTE">PASAPORTE</option>
-  </select>
-  <input type="text" name="document_number" placeholder="Ingrese N° de documento" required="true" value="{{member.document_number}}"/> 
-  <p>
-    Genero:
-    <input type="radio" name="gender" value="M" checked /> Masculino
-    <input type="radio" name="gender" value="F" /> Femenino
-    <input type="radio" name="gender" value="Otro" /> Otro
-  </p>
-  <input type="text" name="address" placeholder="Ingrese el Domicilio" required="true" value="{{member.address}}"/>
-  <input type="email" name="email" placeholder="Ingrese el email" value="{{member.email}}"/>
-  <input type="tel" name="phone_number" placeholder="Ingrese el telefono" value="{{member.phone_number}}"/> 
-  <button class="btn btn-primary">Enviar</button>
-</form>
-<a href="{{url_for('home')}}"> Volver al inicio </a>
+
 {% endblock %}

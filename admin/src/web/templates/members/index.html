@@ -36,16 +36,19 @@
                 <td>{{ member.gender }}</td>
                 <td>
                     <div class="row">
-                        {% if member.is_active %}
-                        <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
-                        {% else %}
-                        <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
-                        {% endif %}
-                    </div>
+                        <div class="btn-group mb-3">
+                            {% if member.is_active %}
+                            <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
+                            {% else %}
+                            <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
+                            {% endif %}
+                        </div>
+                    </div>    
                 </td>
                 <td>
                     <div class="btn-group mb-3">
-                        <a class="btn btn-sm btn-success rounded-pill d-inline" href="#" role="button">
+                        <a class="btn btn-sm btn-warning rounded-pill d-inline" href="{{ url_for('members.update',
+                         member_id=member.membership_number)}}" role="button">
                             Editar
                         </a>
                     </div>
@@ -57,7 +60,7 @@
     {% include('partials/paginator.html') %}
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
-            <a class="btn btn-success btn-lg" href="{{url_for('members.create')}}">Agregar Socio</a>
+            <a class="btn btn-secondary btn-lg" href="{{url_for('members.create')}}">Agregar Socio</a>
         </div>
     </div>
     <br />

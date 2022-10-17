@@ -35,7 +35,7 @@ class MemberService:
         Returns:
            Un paginador.
         """
-        members = Member.query
+        members = Member.query.order_by(Member.membership_number)
         return Paginator(members, page, items_per_page, endpoint)
 
 

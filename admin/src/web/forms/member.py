@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, SelectField, EmailField
 from wtforms.validators import InputRequired, Email, Optional
 
 
-class CreateMemberForm(FlaskForm):
+class MemberForm(FlaskForm):
     first_name = StringField("Nombre", validators=[InputRequired()])
     last_name = StringField("Apellido", validators=[InputRequired()])
     document_type = SelectField("Tipo de Documento", choices=["DNI","LE","LC","PASAPORTE"])
