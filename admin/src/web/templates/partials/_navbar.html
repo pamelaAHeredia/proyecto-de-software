@@ -52,6 +52,27 @@
         </li>
         {% endif %}
       </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('members.index')}}">Socios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
+            </li>
+            {% if is_administrator(session) %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.logout')}}">Cerrar sesión</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

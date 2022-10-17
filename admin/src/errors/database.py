@@ -16,7 +16,7 @@ class ExistingData(DbError):
         return msg
 
 
-class AmountValueError(DbError):
+class MinValueValueError(DbError):
     def __init__(self, message="El monto no puede ser menor que 0"):
         self.message = message
         super().__init__(self.message)

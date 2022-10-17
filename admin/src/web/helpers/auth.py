@@ -31,3 +31,37 @@ def verify_permission(perms):
         return wrapper
     return decorate
 
+
+def is_administrator(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = User.query.filter_by(email=session.get("user")).first()
+        for r in user.roles:
+            if r.name == "Administrador":
+                return f(*args, **kwargs)
+        return abort(403)
+    return decorated_function
+
+def is_operator(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = User.query.filter_by(email=session.get("user")).first()
+        for r in user.roles:
+            if r.name == "Operador":
+                return f(*args, **kwargs)
+        return abort(403)
+    return decorated_function
+
+def is_administrator_template(session):
+    user = User.query.filter_by(email=session.get("user")).first()
+    for r in user.roles:
+        if r.name == "Administrador":
+            return True
+    return False
+
+def is_operator_template(session):
+    user = User.query.filter_by(email=session.get("user")).first()
+    for r in user.roles:
+        if r.name == "Operador":
+            return True
+    return False

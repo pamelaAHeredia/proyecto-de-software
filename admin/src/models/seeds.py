@@ -16,6 +16,7 @@ def run():
         instructor_first_name="Juan",
         instructor_last_name="De Los Palotes",
         days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
+        registration_quota=50,
         amount=600.00,
     )
 
@@ -32,6 +33,7 @@ def run():
 
     service = UserService()
 
+<<<<<<< HEAD
     perms = [
         "member_index",
         "member_create",
@@ -55,6 +57,18 @@ def run():
     role_1.permissions = members_perms
     role_2 = service.create_role(name="Operador")
     role_3 = service.create_role(name="Socio")
+=======
+    admin = service.create_user(
+        email="admin@gmail.com",
+        username="admin",
+        password=hash_pass("admin"),
+        is_active=True,
+        first_name="José",
+        last_name="Administrador",
+        blocked=False,
+        #roles=[role_1],
+    )
+>>>>>>> development
 
     user_1 = service.create_user(
         email="carlos.solari@gmail.com",
