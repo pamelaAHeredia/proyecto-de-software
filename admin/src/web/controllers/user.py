@@ -30,11 +30,14 @@ def users_index():
     search_form = SearchUserForm()
     """Por metodo GET pide la lista total de usuarios al modelo y lo renderiza en la vista"""
     users = service.list_users()
+    page = request.args.get("page", 1, type=int)
+    users_paginator = service.list_paginated_users(page, 2, "users.users_index")
     return render_template(
         "users/index.html",
         users=users,
         filter_form=filter_form,
         search_form=search_form,
+        paginator=users_paginator,
     )
 
 
@@ -62,7 +65,7 @@ def users_add():
                 password=password,
                 first_name=first_name,
                 last_name=last_name,
-                roles=roles
+                roles=roles,
             )
             flash("Usuario creado con éxito!", "success")
         except database.ExistingData as e:
@@ -101,31 +104,40 @@ def users_update(id):
 @user_blueprint.route("/block_user/<id>", methods=["GET"])
 @login_required
 def users_block(id):
-    delete_roles_form = DeleteRolesForm()
+
     user = service.find_user_by_id(id)
     try:
+        delete_roles_form = DeleteRolesForm()
+        add_roles_form = AddRolesForm()
         service.block_user(id)
     except database.PermissionDenied as e:
         flash(e, "danger")
     return render_template(
-        "users/user_info.html", user=user, delete_roles_form=delete_roles_form
+        "users/user_info.html",
+        user=user,
+        add_roles_form=add_roles_form,
+        delete_roles_form=delete_roles_form,
     )
 
 
-@user_blueprint.route("/search_user", methods=["POST"])
+@user_blueprint.route("/search_user", methods=["POST","GET"])
 @login_required
 def users_search():
     search_form = SearchUserForm()
-    delete_roles_form = DeleteRolesForm()
-    if search_form.validate_on_submit():
-        email = search_form.email.data
-        user = service.find_user_byEmail(email)
-        return render_template(
-            "users/user_info.html",
-            user=user,
-            search_form=search_form,
-            delete_roles_form=delete_roles_form,
-        )
+    if request.method == "POST":
+        delete_roles_form = DeleteRolesForm()
+        add_roles_form = AddRolesForm()
+        if search_form.validate_on_submit():
+            email = search_form.email.data
+            user = service.find_user_byEmail(email)
+            return render_template(
+                "users/user_info.html",
+                user=user,
+                add_roles_form=add_roles_form,
+                delete_roles_form=delete_roles_form,
+            )
+    else:
+        return render_template("users/search.html", search_form=search_form)
 
 
 @user_blueprint.route("/filter_users_by", methods=["POST"])
@@ -150,17 +162,24 @@ def users_filter_by():
         )
 
 
-@user_blueprint.route("/deactivate_user/<id>", methods=["GET"])
+@user_blueprint.route("/user_info/<id>", methods=["GET", "POST"])
 @login_required
-def users_deactivate(id):
+def user_info(id):
+    delete_roles_form = DeleteRolesForm()
+    add_roles_form = AddRolesForm()
     user = service.find_user_by_id(id)
-    service.deactivate_user(id)
-    return render_template("users/user_info.html", user=user)
+    return render_template(
+        "users/user_info.html",
+        user=user,
+        add_roles_form=add_roles_form,
+        delete_roles_form=delete_roles_form,
+    )
 
 
 @user_blueprint.route("/add_roles/<id>", methods=["POST", "GET"])
 @login_required
 def users_add_roles(id):
+    delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
     user = service.find_user_by_id(id)
     if request.method == "POST":
@@ -172,15 +191,17 @@ def users_add_roles(id):
             except database.ExistingData as e:
                 flash(e, "danger")
         return render_template(
-            "users/add_roles.html",
+            "users/roles.html",
             user=user,
             add_roles_form=add_roles_form,
+            delete_roles_form=delete_roles_form,
         )
     else:
         return render_template(
-            "users/add_roles.html",
+            "users/roles.html",
             user=user,
             add_roles_form=add_roles_form,
+            delete_roles_form=delete_roles_form,
         )
 
 
@@ -188,6 +209,7 @@ def users_add_roles(id):
 @login_required
 def users_delete_roles(id):
     delete_roles_form = DeleteRolesForm()
+    add_roles_form = AddRolesForm()
     user = service.find_user_by_id(id)
     roles = service.list_user_roles(id)
     if request.method == "POST":
@@ -199,8 +221,9 @@ def users_delete_roles(id):
             except database.PermissionDenied as e:
                 flash(e, "danger")
     return render_template(
-        "users/user_info.html",
+        "users/roles.html",
         user=user,
         roles=roles,
         delete_roles_form=delete_roles_form,
+        add_roles_form=add_roles_form,
     )

@@ -1,18 +1,25 @@
 {% extends "layout.html" %}
 {% block title %} Login {% endblock %}
 {% block head %}
-    {{ super() }}
+{{ super() }}
 {% endblock %}
 {% block content %}
 <form action="{{ url_for('auth.authenticate') }}" method="POST">
     <h1 class="w-25 mx-auto"> Iniciar sesión</h1>
     <div class="form-outline mb-4 w-25 mx-auto">
-        <label class="form-label">Correo electronico</label>
-        <input type="email" class="form-control" name="email" placeholder="Ingresa un correo valido" required />
+        {{login_form.hidden_tag()}}
+        {{login_form.email.label}}
+        {{login_form.email(class="form-control", placeholder="Ingresa un correo valido")}}
+        {% for message in login_form.email.errors %}
+        {{ message }}
+        {% endfor %}
     </div>
     <div class="form-outline mb-4 w-25 mx-auto">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-control" name="password" placeholder="Ingresa una contraseña" required />
+        {{login_form.password.label}}
+        {{login_form.password(class="form-control", placeholder="Ingresa una contraseña")}}
+        {% for message in login_form.password.errors %}
+        {{ message }}
+        {% endfor %}
     </div>
     <div class="w-25 mx-auto">
         <input class="btn btn-primary w-100" type="submit" value="Login" />

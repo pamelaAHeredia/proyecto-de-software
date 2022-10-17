@@ -1,7 +1,7 @@
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, EmailField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SelectField, SubmitField, EmailField, PasswordField
+from wtforms.validators import DataRequired, Length, Email
 
 
 class UserBaseForm(FlaskForm):
@@ -16,7 +16,6 @@ class UserBaseForm(FlaskForm):
         "Apellido", validators=[DataRequired(), Length(max=75, min=3)]
     )
 
-    
 
 class CreateUserForm(UserBaseForm):
     roles = SelectField(
@@ -25,6 +24,7 @@ class CreateUserForm(UserBaseForm):
         validators=[DataRequired()],
     )
     submit = SubmitField("Crear usuario")
+
 
 class UpdateUserForm(UserBaseForm):
     submit = SubmitField("Actualizar usuario")
@@ -41,7 +41,7 @@ class FilterUsersForm(FlaskForm):
         choices=[
             ("activo", "activo"),
             ("bloqueado", "bloqueado"),
-            ("ninguno", "ninguno"),
+            ("mostrar todos", "mostrar todos"),
         ],
         validators=[DataRequired()],
     )
@@ -60,6 +60,13 @@ class AddRolesForm(FlaskForm):
     )
     submit = SubmitField("Crear usuario")
 
+
 class DeleteRolesForm(FlaskForm):
     role = StringField("role", validators=[DataRequired()])
     submit = SubmitField("Eliminar rol")
+
+
+class LoginForm(FlaskForm):
+    email = EmailField("email", validators=[DataRequired(), Length(max=50, min=3)])
+    password = PasswordField("password", validators=[DataRequired()])
+    submit = SubmitField("Login")

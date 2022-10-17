@@ -82,27 +82,3 @@ def run():
         last_name="Benitez",
         roles=[role_2, role_3],
     )
-    
-    # perms = [
-    #     "member_index",
-    #     "member_create",
-    #     "member_destroy",
-    #     "member_update",
-    #     "member_show",
-    #     "discipline_index",
-    #     "discipline_create",
-    #     "discipline_destroy",
-    #     "discipline_update",
-    #     "discipline_show",
-    #     "pays_index",
-    #     "pays_show",
-    #     "pays_import",
-    #     "pays_destroy",
-    # ]
-
-    # members_perms = [service.create_permission(perm) for perm in perms]
-
-    # role_1 = service.create_role(name="Administrador")
-    # role_1.permissions = members_perms
-    # role_2 = service.create_role(name="Operador")
-    # role_3 = service.create_role(name="Socio")

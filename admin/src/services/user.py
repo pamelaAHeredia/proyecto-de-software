@@ -1,7 +1,9 @@
 from src.models.database import db
 from src.models.auth.user import User
 from src.models.auth.role import Role
+
 from src.models.auth.permission import Permission
+from src.services.paginator import Paginator
 from src.services.utils import verify_pass
 from src.errors import database
 
@@ -17,11 +19,23 @@ class UserService:
         return cls._instance
 
     def list_users(self):
-        """Retorna la lista de todos los Usuarios de la Base de Datos"""
+        """
+        Retorna la lista de todos los Usuarios de la Base de Datos
+        """
         return User.query.all()
 
+    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str):
+        """
+        Retorna el paginador de los usuarios del sistema
+        """
+
+        users = User.query
+        return Paginator(users, page, items_per_page, endpoint)
+
     def create_user(self, email, username, password, first_name, last_name, roles):
-        """Función que instancia un usuario, si no existe en la BD, y lo retorna"""
+        """
+        Función que instancia un usuario, si no existe en la BD, y lo retorna
+        """
         if not self.find_user_byEmail(email):
             if not self.find_user_byUsername(username):
                 user = User(email, username, password, first_name, last_name, [])
@@ -43,7 +57,9 @@ class UserService:
         return User.query.filter_by(email=email).first()
 
     def find_user_by_mail_and_pass(self, email, password):
-        """Función que retorna si existe un usuario que coincida el email y contraseña"""
+        """
+        Función que retorna si existe un usuario que coincida el email y contraseña
+        """
         user = self.find_user_byEmail(email)
         if user:
             if verify_pass(user.password, password):
@@ -173,5 +189,7 @@ class UserService:
         return user
 
     def list_user_roles(self, id):
+        """Retorna todos los roles de un usuario."""
         user = self.find_user_by_id(id)
         return user.roles
+

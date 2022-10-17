@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import session, abort
 from src.models.auth.user import User
+from src.services.user import UserService
 
 
 def is_authenticated(session):
@@ -29,3 +30,4 @@ def verify_permission(perms):
             return abort(403)
         return wrapper
     return decorate
+

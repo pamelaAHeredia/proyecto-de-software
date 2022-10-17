@@ -1,60 +1,63 @@
-{% extends "layout.html" %}
-{% block title %}Consultas Usuarios{% endblock %}
+{% extends "users/roles.html" %}
+{% block title %}Información de usuario{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
 {% block content %}
 
-
 <h1>Información de usuario</h1>
 
 {% if user %}
 <table class="table table-hover table-sm">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Email</th>
-            <th>Nombre de Usuario</th>
-            <th>Está Bloqueado ?</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Roles</th>
-            <th>Operaciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th>{{ user.id }}</th>
-            <th>{{ user.email }}</th>
-            <th>{{ user.username }}</th>
-            <th>{%if user.blocked -%} {{"Si"}}
-                {%else -%}
-                {{"No"}}
-                {% endif %}</th>
-            <th>{{ user.first_name }}</th>
-            <th>{{ user.last_name }}</th>
-            <th>
-                {% for role in user.roles %}
-        <tr>
-            <th>{{ role.name }}</th>
-            <th><form action="{{url_for('users.users_delete_roles', id=user.id)}}"  method="post">
-                <div class="form-group">
-                    {{ delete_roles_form.hidden_tag() }}
-                    {{ delete_roles_form.role(type="hidden", value=role.name) }}
-                </div>   
-                <button type="submit" class="btn btn-danger"> Eliminar Rol</button>     
-                </form></th>
-        </tr>
-        {% endfor %}
-        </th>
-        <th><a href="{{url_for('users.users_update', id=user.id)}}" class="btn btn-secondary"> Editar </a></th>
-        <th><a href="{{url_for('users.users_add_roles', id=user.id)}}" class="btn btn-secondary">agregar Rol </a></th>
-        <th><a href="{{url_for('users.users_block', id=user.id)}}" class="btn btn-secondary"> Bloquear/Desbloquear </a>
-        </th>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>#ID </th>
+      <th>Email</th>
+      <th>Usuario</th>
+      <th>Estado</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Operaciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>{{ user.id }}</th>
+      <th>{{ user.email }}</th>
+      <th>{{ user.username }}</th>
+      <th>{%if user.blocked -%} {{"Bloqueado"}}
+        {%else -%}
+        {{"Activo"}}
+        {% endif %}</th>
+      <th>{{ user.first_name }}</th>
+      <th>{{ user.last_name }}</th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Operaciones
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
+            <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
+                {%if user.blocked%}
+                {{"Desbloquear"}}
+                {% else %}
+                {{"Bloquear"}}
+                {% endif %}</a>
+            </li>
+          </ul>
+        </div>
+      </th>
+      </th>
+    </tr>
+  </tbody>
 </table>
 {% else %}
 <h2>Usuario Inexistente</h2>
 {% endif %}
+{%block roles%}
+{{ super() }}
+{% endblock %}
+<a href="{{url_for('users.users_index')}}"> Volver </a>
 {% endblock %}
