@@ -57,6 +57,17 @@ def run():
 
     service = UserService()
 
+    admin = service.create_user(
+        email="admin@gmail.com",
+        username="admin",
+        password=hash_pass("admin"),
+        is_active=True,
+        first_name="José",
+        last_name="Administrador",
+        blocked=False,
+        #roles=[role_1],
+    )
+
     user_1 = service.create_user(
         email="carlos.solari@gmail.com",
         username="Indio49",
