@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import flash
-from flask import redirect
+from flask import redirect, render_template
 from flask import url_for
 from flask import session
 from src.services.user import UserService
@@ -29,12 +29,13 @@ def authenticate():
             email = login_form.email.data
             password = login_form.password.data
             user = service.find_user_by_mail_and_pass(email, password)
-            session["user"] = user.email
+            #se podría usar el user id? el email es un dato sensible
+            session["user"] = user.id
+            print(session["user"])
             flash("La sesión se inicio correctamente.", "success")
         except database.PermissionDenied as e:
             flash(e, "danger")
             return redirect(url_for("auth.login"))
-
     return redirect(url_for("home"))
 
 

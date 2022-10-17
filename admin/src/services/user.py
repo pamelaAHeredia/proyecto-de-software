@@ -106,18 +106,26 @@ class UserService:
             info="Error", message="El Email que intenta agregar ya existe."
         )
 
-    def block_user(self, id):
+    def block_user(self, id, user_session):
+        blocker_id = self.find_user_by_id(user_session)
         user = self.find_user_by_id(id)
         role = self.find_role_by_name("Administrador")
 
         """Si el usuario no es un administrador y está bloqueado lo desbloquea, y viceversa"""
 
         if not user.roles.__contains__(role):
-            if user.blocked:
-                user.blocked = False
+            if not blocker_id == user.id: 
+                print(blocker_id, user.id)
+                if user.blocked:
+                    user.blocked = False
+                else:
+                    user.blocked = True
+                db.session.commit()
             else:
-                user.blocked = True
-            db.session.commit()
+                raise database.PermissionDenied(
+                info="Permiso Denegado",
+                message="No se puede bloquear a sí mismo.",
+            )
         else:
             raise database.PermissionDenied(
                 info="Permiso Denegado",
@@ -133,6 +141,7 @@ class UserService:
         """Retorna todos los usuarios, que están bloqueados."""
         return User.query.filter_by(blocked=True)
 
+    #No va? 
     def deactivate_user(self, id):
         user = self.find_user_by_id(id)
         """Si el usuario está activo lo desbloquea, y viceversa"""
@@ -142,6 +151,16 @@ class UserService:
             user.is_active = True
         db.session.commit()
         return user
+
+    def delete(self, id, session_id):
+        user = self.find_user_by_id(id)
+        if user.id != session_id:
+            db.session.delete(user)
+            db.session.commit()
+        else: 
+            raise database.PermissionDenied(
+                info="Permiso Denegado", message="No puede eliminar su propio usuario."
+            )
 
     def create_role(self, name):
         """Función que instancia un Rol, lo agrega a la Base de Datos y lo retorna"""
@@ -192,4 +211,3 @@ class UserService:
         """Retorna todos los roles de un usuario."""
         user = self.find_user_by_id(id)
         return user.roles
-

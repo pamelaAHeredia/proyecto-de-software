@@ -1,3 +1,4 @@
+from logging.config import IDENTIFIER
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 
@@ -36,7 +37,6 @@ def users_index():
         "users/index.html",
         users=users,
         filter_form=filter_form,
-        search_form=search_form,
         paginator=users_paginator,
     )
 
@@ -109,7 +109,12 @@ def users_block(id):
     try:
         delete_roles_form = DeleteRolesForm()
         add_roles_form = AddRolesForm()
-        service.block_user(id)
+        user_session = session["user"]
+        service.block_user(id, user_session)
+        if user.blocked == True:
+            flash("Usuario bloqueado con éxito", "success")
+        else:
+            flash("Usuario desbloqueado con éxito", "success")
     except database.PermissionDenied as e:
         flash(e, "danger")
     return render_template(
@@ -120,7 +125,7 @@ def users_block(id):
     )
 
 
-@user_blueprint.route("/search_user", methods=["POST","GET"])
+@user_blueprint.route("/search_user", methods=["POST", "GET"])
 @login_required
 def users_search():
     search_form = SearchUserForm()
@@ -227,3 +232,32 @@ def users_delete_roles(id):
         delete_roles_form=delete_roles_form,
         add_roles_form=add_roles_form,
     )
+
+
+@user_blueprint.route("/profile", methods=["GET"])
+@login_required
+def profile():
+    delete_roles_form = DeleteRolesForm()
+    add_roles_form = AddRolesForm()
+    id = session["user"]
+    user = service.find_user_by_id(id)
+    return render_template(
+        "users/profile.html",
+        user=user,
+        delete_roles_form=delete_roles_form,
+        add_roles_form=add_roles_form,
+    )
+
+
+@user_blueprint.route("/delete/<id>", methods=["POST"])
+@login_required
+def delete(id):
+    filter_form = FilterUsersForm()
+    session_id = session["user"]
+    try:
+        service.delete(id, session_id)
+        flash("Usuario eliminado con éxito!", "success")
+    except database.PermissionDenied as e:
+        flash(e, "danger")
+    users = service.list_users()
+    return render_template("users/index.html", users=users, filter_form=filter_form)

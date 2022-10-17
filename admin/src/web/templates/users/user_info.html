@@ -39,6 +39,8 @@
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
+            {% for role in user.roles %}
+            {% if not role.name == "Administrador" %}
             <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
                 {%if user.blocked%}
                 {{"Desbloquear"}}
@@ -46,6 +48,8 @@
                 {{"Bloquear"}}
                 {% endif %}</a>
             </li>
+            {% endif %}
+            {% endfor %}
           </ul>
         </div>
       </th>
@@ -59,5 +63,36 @@
 {%block roles%}
 {{ super() }}
 {% endblock %}
+
+<!-- Button trigger modal -->
+<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Eliminar Usuario
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuario</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¡ATENCIÓN!
+        Esta acción es irreversible.
+        Está seguro que de desea eliminar el usuario {{user.email}}? 
+      </div>
+      <form action="{{url_for('users.delete', id=user.id)}}" method="post">
+   
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Eliminar</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
 <a href="{{url_for('users.users_index')}}"> Volver </a>
 {% endblock %}
