@@ -31,8 +31,8 @@ def index():
 
 
 @discipline_blueprint.route("/create", methods=["GET", "POST"])
-@login_required
-@verify_permission("discipline_create")
+#@login_required
+#@verify_permission("discipline_create")
 def create():
     form = CreateDisciplineForm()
 

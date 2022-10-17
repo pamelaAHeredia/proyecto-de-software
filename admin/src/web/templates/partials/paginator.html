@@ -3,7 +3,7 @@
         {% if paginator.pages %}
             {% if paginator.prev_url %}
             <li class="page-item"></li>
-            <a class=page-link href="{{ paginator.prev_url }}">Anterior</a>
+            <a class=page-link href="{{ paginator.prev_url }}">Anterior </a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -13,8 +13,8 @@
             {% for page in paginator.pages %}
             {% if page != paginator.page %}
             <li class="page-item">
-                <a class="page-link" href={{ url_for("discipline.index", page=page) }}>
-                    {{ page }}
+                <a class="page-link" href={{ url_for(paginator._endpoint, page=page) }}>
+                    {{ page }} 
                 </a>
             </li>
             {% else %}

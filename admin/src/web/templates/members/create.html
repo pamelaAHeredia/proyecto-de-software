@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Actualizar Socio{% endblock %}
+{% block title %}Agregar Socio{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
@@ -9,10 +9,10 @@
 <div class="container">
     <div class="row">
         <div class="col-12 text-center">
-            <h1>Actualización de Socio N° {{ member_id }}</h1>
+            <h1>Agregar Socio</h1>
         </div>
     </div>
-    <form action="{{ url_for('members.update', member_id=member_id)}}" method="post">
+    <form action="{{ url_for('members.create') }}" method="post">
         {{ form.hidden_tag() }}
         <div class="row">
             <div class="col">
@@ -74,7 +74,7 @@
         <br>
         <div class="row">
             <div class="col-sm-12 d-flex justify-content-center">
-                {{ form.submit(class="btn btn-success", value="Actualizar") }}
+                {{ form.submit(class="btn btn-success") }}
             </div>
         </div>
         <br>
