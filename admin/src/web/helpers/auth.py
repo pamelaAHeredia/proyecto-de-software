@@ -35,7 +35,8 @@ def verify_permission(perms):
 def is_administrator(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        user = User.query.filter_by(email=session.get("user")).first()
+        user = User.query.filter_by(id=session.get("user")).first()
+        print(user)
         for r in user.roles:
             if r.name == "Administrador":
                 return f(*args, **kwargs)
@@ -45,7 +46,7 @@ def is_administrator(f):
 def is_operator(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        user = User.query.filter_by(email=session.get("user")).first()
+        user = User.query.filter_by(id=session.get("user")).first()
         for r in user.roles:
             if r.name == "Operador":
                 return f(*args, **kwargs)
@@ -53,14 +54,15 @@ def is_operator(f):
     return decorated_function
 
 def is_administrator_template(session):
-    user = User.query.filter_by(email=session.get("user")).first()
+    user = User.query.filter_by(id=session.get("user")).first()
+    print(session.get("user"))
     for r in user.roles:
         if r.name == "Administrador":
             return True
     return False
 
 def is_operator_template(session):
-    user = User.query.filter_by(email=session.get("user")).first()
+    user = User.query.filter_by(id=session.get("user")).first()
     for r in user.roles:
         if r.name == "Operador":
             return True

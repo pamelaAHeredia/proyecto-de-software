@@ -33,7 +33,6 @@ def run():
 
     service = UserService()
 
-<<<<<<< HEAD
     perms = [
         "member_index",
         "member_create",
@@ -57,18 +56,17 @@ def run():
     role_1.permissions = members_perms
     role_2 = service.create_role(name="Operador")
     role_3 = service.create_role(name="Socio")
-=======
-    admin = service.create_user(
-        email="admin@gmail.com",
-        username="admin",
-        password=hash_pass("admin"),
-        is_active=True,
-        first_name="José",
-        last_name="Administrador",
-        blocked=False,
-        #roles=[role_1],
-    )
->>>>>>> development
+    
+    # admin = service.create_user(
+    #     email="admin@gmail.com",
+    #     username="admin",
+    #     password=hash_pass("admin"),
+    #     is_active=True,
+    #     first_name="José",
+    #     last_name="Administrador",
+    #     blocked=False,
+    #     roles=[role_1],
+    # )
 
     user_1 = service.create_user(
         email="carlos.solari@gmail.com",
