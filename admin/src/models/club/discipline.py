@@ -46,5 +46,33 @@ class Discipline(db.Model):
         self.instructor = instructor
         self.days_and_schedules = days_and_schedules
 
+    @property
+    def amount(self):
+        return self.membership.amount
+    
+    @property
+    def is_active(self):
+        return self.membership.is_active
+    
+    @is_active.setter
+    def is_active(self, v):
+        self.membership.is_active = v
+
+    @property
+    def pays_per_year(self):
+        return self.membership.pays_per_year
+    
+    @pays_per_year.setter
+    def pays_per_year(self, v):
+        self.membership.pays_per_year = v
+    
+    @property
+    def registration_quota(self):
+        return self.membership.registration_quota
+
+    @registration_quota.setter
+    def registration_quota(self, v):
+        self.membership.registration_quota = v
+    
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"

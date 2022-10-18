@@ -22,11 +22,7 @@ def index():
     )
     return render_template(
         "disciplines/index.html",
-        paginator=discipline_paginator,
-        # disciplines=discipline_paginator.items,
-        # next_url=discipline_paginator.next_url,
-        # prev_url=discipline_paginator.prev_url,
-        # cant_pages=discipline_paginator.pages,
+        paginator=discipline_paginator
     )
 
 
@@ -76,10 +72,10 @@ def update(discipline_id):
         discipline=service.find_discipline(id=discipline_id)
         form.name.data = discipline.name
         form.category.data = discipline.category
-        form.instructor_first_name.data = discipline.instructor_first_name
-        form.instructor_last_name.data = discipline.instructor_last_name
+        form.instructor.data = discipline.instructor
         form.days_and_schedules.data = discipline.days_and_schedules
         form.registration_quota.data = discipline.registration_quota
+        form.pays_per_year.data = discipline.pays_per_year
         form.amount.data = discipline.amount
         form.is_active.data = discipline.is_active
         discipline_id = discipline_id
@@ -87,13 +83,12 @@ def update(discipline_id):
 
     else:
         if form.validate_on_submit():
-            print(form.instructor_first_name.data)
             name = form.name.data
             category = form.category.data
-            instructor_first_name = form.instructor_first_name.data
-            instructor_last_name = form.instructor_last_name.data
+            instructor = form.instructor.data
             days_and_schedules = form.days_and_schedules.data
             registration_quota = form.registration_quota.data
+            pays_per_year = form.pays_per_year.data
             amount = form.amount.data
             is_active = form.is_active.data
 
@@ -102,10 +97,10 @@ def update(discipline_id):
                     id=discipline_id,
                     name=name,
                     category=category,
-                    instructor_first_name=instructor_first_name,
-                    instructor_last_name=instructor_last_name,
+                    instructor=instructor,
                     days_and_schedules=days_and_schedules,
                     registration_quota=registration_quota,
+                    pays_per_year=pays_per_year,
                     amount=amount,
                     is_active=is_active
                 )

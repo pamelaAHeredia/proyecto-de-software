@@ -1,5 +1,6 @@
 from decimal import Decimal
 from typing import List, Optional
+import datetime
 
 
 from src.models.database import db
@@ -108,10 +109,10 @@ class DisciplineService:
         id: int,
         name: str,
         category: str,
-        instructor_first_name: str,
-        instructor_last_name: str,
+        instructor: str,
         days_and_schedules: str,
         registration_quota: int,
+        pays_per_year: int,
         amount: Decimal,
         is_active: bool,
     ) -> Discipline:
@@ -150,14 +151,20 @@ class DisciplineService:
 
         discipline_to_update.name = name
         discipline_to_update.category = category
-        discipline_to_update.instructor_first_name = instructor_first_name
-        discipline_to_update.instructor_last_name = instructor_last_name
+        discipline_to_update.instructor = instructor
         discipline_to_update.days_and_schedules = days_and_schedules
-        discipline_to_update.amount = amount
+        discipline_to_update.pays_per_year = pays_per_year
         discipline_to_update.registration_quota = registration_quota
         discipline_to_update.is_active = is_active
-
-        db.session.add(discipline_to_update)
+        
+        if discipline_to_update.amount!=amount:
+            old_tarif = [t for t in discipline_to_update.membership.tariffs if t.date_to is None]
+            if old_tarif:
+                old_tarif[0].date_to = datetime.datetime.now()
+            new_tarif = Tariff(amount=amount)
+            new_tarif.membership = discipline_to_update.membership
+        
+        db.session.add_all([discipline_to_update, new_tarif])
         db.session.flush()
         db.session.commit()
         return discipline_to_update

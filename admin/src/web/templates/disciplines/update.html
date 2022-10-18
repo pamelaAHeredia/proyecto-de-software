@@ -22,31 +22,31 @@
             </div>
             <div class="col">
                 <div class="input-group mb-3">
-                    {{ form.category(class_="form-control", placeholder="Nombre de la categoria")}}
+                    {{ form.category(class_="form-control", placeholder="Nombre de la categoria") }}
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <div class="input-group mb-3">
-                    {{ form.instructor_first_name(class_="form-control", placeholder="Nombre del instructor")}}
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group mb-3">
-                    {{ form.instructor_last_name(class_="form-control", placeholder="Apellido del instructor")}}
+                    {{ form.instructor(class_="form-control", placeholder="Instructores") }}
                 </div>
             </div>
         </div>
 
         <div class="form-group mb-3">
-            {{ form.days_and_schedules(class_="form-control", placeholder="Días y horarios")}}
+            {{ form.days_and_schedules(class_="form-control", placeholder="Días y horarios") }}
         </div>
 
         <div class="row justify-content-md-center">
             <div class="col-lg-4 col-md-4 col-12">
                 <div class="form-group mb-3">
                     {{ form.registration_quota(class_="form-control", placeholder="Cupo")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.pays_per_year(class_="form-control", placeholder="Pagos por año")}}
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-12">
