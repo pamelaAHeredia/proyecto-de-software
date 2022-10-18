@@ -15,9 +15,10 @@ class Tariff(db.Model):
     deleted : Boolean
         Indica si la disciplina se sigue dando o no.
     """
+
     id = db.Column(db.Integer, primary_key=True, unique=True)
     date_from = db.Column(db.DateTime, default=datetime.datetime.now)
     date_to = db.Column(db.DateTime, nullable=True)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-    is_active = db.Column(db.Boolean, default=True)
-    pays_per_year = db.Column(db.Integer, default=12)
+    membership_id = db.Column(db.Integer, db.ForeignKey("membership.id"))
+    membership = db.relationship("Membership")

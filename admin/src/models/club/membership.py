@@ -14,7 +14,11 @@ class Membership(db.Model):
     deleted : Boolean
         Indica si la disciplina se sigue dando o no.
     """
+    __tablename__ = "membership"
     id = db.Column(db.Integer, primary_key=True, unique=True)
     is_active = db.Column(db.Boolean, default=True)
     registration_quota = db.Column(db.Integer, nullable=False)
     pays_per_year = db.Column(db.Integer, default=12)
+    discipline = db.relationship("Discipline", back_populates="membership", uselist=False)
+    tariffs = db.relationship("Tariff", back_populates="membership")
+    

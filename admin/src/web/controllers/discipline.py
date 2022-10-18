@@ -31,8 +31,8 @@ def index():
 
 
 @discipline_blueprint.route("/create", methods=["GET", "POST"])
-#@login_required
-#@verify_permission("discipline_create")
+@login_required
+@verify_permission("discipline_create")
 def create():
     form = CreateDisciplineForm()
 
@@ -40,10 +40,10 @@ def create():
 
         name = form.name.data
         category = form.category.data
-        instructor_first_name = form.instructor_first_name.data
-        instructor_last_name = form.instructor_last_name.data
+        instructor = form.instructor.data
         days_and_schedules = form.days_and_schedules.data
         registration_quota = form.registration_quota.data
+        pays_per_year = form.pays_per_year.data
         amount = form.amount.data
         is_active = form.is_active.data
 
@@ -51,10 +51,10 @@ def create():
             service.create_discipline(
                 name=name,
                 category=category,
-                instructor_first_name=instructor_first_name,
-                instructor_last_name=instructor_last_name,
+                instructor=instructor,
                 days_and_schedules=days_and_schedules,
                 registration_quota=registration_quota,
+                pays_per_year=pays_per_year,
                 amount=amount,
                 is_active=is_active,
             )

@@ -4,6 +4,8 @@ from typing import List, Optional
 
 from src.models.database import db
 from src.models.club.discipline import Discipline
+from src.models.club.membership import Membership
+from src.models.club.tariff import Tariff
 from src.errors import database
 from src.services.paginator import Paginator
 
@@ -50,10 +52,10 @@ class DisciplineService:
         self,
         name: str,
         category: str,
-        instructor_first_name: str,
-        instructor_last_name: str,
+        instructor: str,
         days_and_schedules: str,
         registration_quota: int,
+        pays_per_year: int,
         amount: Decimal,
         is_active: bool,
     ) -> Discipline:
@@ -72,7 +74,7 @@ class DisciplineService:
            Una disciplina.
         """
 
-        if amount < 0:
+        if 0 in [amount, pays_per_year]:
             raise database.MinValueValueError()
 
         if registration_quota < 0:
@@ -81,18 +83,21 @@ class DisciplineService:
             )
 
         discipline = self.find_discipline(name=name, category=category)
+        
+        
         if not discipline:
+            tariff = Tariff(amount=amount)
+            
             discipline = Discipline(
                 name,
                 category,
-                instructor_first_name,
-                instructor_last_name,
+                instructor,
                 days_and_schedules,
-                amount,
-                registration_quota,
-                is_active,
             )
-            db.session.add(discipline)
+            
+            membership = Membership(is_active=is_active, registration_quota=registration_quota, pays_per_year=pays_per_year, discipline=discipline)
+            tariff.membership = membership
+            db.session.add_all([tariff, discipline, membership])
             db.session.commit()
         else:
             raise database.ExistingData(message="ya existen en la base de datos")
