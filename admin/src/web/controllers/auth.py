@@ -26,10 +26,9 @@ def authenticate():
     login_form = LoginForm()
     if login_form.validate_on_submit:
         try:
-            email = login_form.email.data
+            username = login_form.username.data
             password = login_form.password.data
-            user = service.find_user_by_mail_and_pass(email, password)
-            #se podría usar el user id? el email es un dato sensible
+            user = service.find_by_username_and_pass(username, password)
             session["user"] = user.id
             print(session["user"])
             flash("La sesión se inicio correctamente.", "success")

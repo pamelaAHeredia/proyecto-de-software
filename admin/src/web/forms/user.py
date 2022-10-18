@@ -20,7 +20,7 @@ class UserBaseForm(FlaskForm):
 class CreateUserForm(UserBaseForm):
     roles = SelectField(
         "Rol",
-        choices=[("Administrador", "Administrador"), ("Operador", "Operador")],
+        choices=[("Administrador", "Administrador"), ("Operador", "Operador"), ("Socio", "Socio")],
         validators=[DataRequired()],
     )
     submit = SubmitField("Crear usuario")
@@ -67,6 +67,6 @@ class DeleteRolesForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = EmailField("email", validators=[DataRequired(), Length(max=50, min=3)])
+    username = StringField("username", validators=[DataRequired(),Length(max=30, min=3)])
     password = PasswordField("password", validators=[DataRequired()])
     submit = SubmitField("Login")

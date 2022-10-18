@@ -56,27 +56,27 @@ class UserService:
     def find_user_byEmail(self, email):
         return User.query.filter_by(email=email).first()
 
-    def find_user_by_mail_and_pass(self, email, password):
+    def find_by_username_and_pass(self, username, password):
         """
         Función que retorna si existe un usuario que coincida el email y contraseña
         """
-        user = self.find_user_byEmail(email)
+        user = self.find_user_byUsername(username)
         if user:
             if verify_pass(user.password, password):
                 if user.blocked != True:
                     return user
                 else:
                     raise database.PermissionDenied(
-                        info="Permiso Denegado",
+                        info="No se pudo iniciar sesión.",
                         message="El usuario se encuentra bloqueado. Contáctese con un administador para solucionarlo",
                     )
             else:
                 raise database.PermissionDenied(
-                    info="Permiso Denegado", message="Contraseña incorrecta."
+                    info="No se pudo iniciar sesión.", message="Contraseña incorrecta."
                 )
         else:
             raise database.PermissionDenied(
-                info="Permiso Denegado", message="Email incorrecto."
+                info="No se pudo iniciar sesión.", message="Usuario incorrecto."
             )
 
     def find_user_byUsername(self, username):

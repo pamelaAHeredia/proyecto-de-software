@@ -54,7 +54,7 @@
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
             <li><a class="dropdown-item" href="{{url_for('users.users_add_roles', id=user.id)}}">Ver roles</a></li>
             {% for role in user.roles %} 
-            {% if not role.name == "Administrador" %}
+              {% if not role.name == "Administrador" %}
             <li>
               <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
                 {% if user.blocked %}
