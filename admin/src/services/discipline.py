@@ -1,6 +1,7 @@
 from decimal import Decimal
 from typing import List, Optional
 
+
 from src.models.database import db
 from src.models.club.discipline import Discipline
 from src.errors import database
@@ -27,7 +28,7 @@ class DisciplineService:
           Lista de disciplinas
 
         """
-        return Discipline.query.all()
+        return Discipline.query.order_by(Discipline.id)
 
     def list_paginated_disciplines(
         self, page: int, items_per_page: int, endpoint: str
@@ -42,7 +43,7 @@ class DisciplineService:
         Returns:
            Un paginador.
         """
-        disciplines = Discipline.query
+        disciplines = self.list_disciplines()
         return Paginator(disciplines, page, items_per_page, endpoint)
 
     def create_discipline(
@@ -54,10 +55,65 @@ class DisciplineService:
         days_and_schedules: str,
         registration_quota: int,
         amount: Decimal,
+        is_active: bool,
     ) -> Discipline:
         """Función que instancia una Disciplina, la agrega a la Base de Datos y la retorna
 
         Args:
+           name: Nombre de la disciplina.
+           category: Categoria de la disciplina.
+           instructor_first_name: Nombre del instructor que dicta la disciplina.
+           instructor_last_name: Apellido del instructor que dicta la disciplina.
+           days_and_schedule: Días y horarios en que se da la disciplina.
+           amount: Monto a pagar por practicar la disciplina.
+           is_active: ¿La disciplina esta activa?
+
+        Returns:
+           Una disciplina.
+        """
+
+        if amount < 0:
+            raise database.MinValueValueError()
+
+        if registration_quota < 0:
+            raise database.MinValueValueError(
+                message="El cupo no puede ser menor que 1"
+            )
+
+        discipline = self.find_discipline(name=name, category=category)
+        if not discipline:
+            discipline = Discipline(
+                name,
+                category,
+                instructor_first_name,
+                instructor_last_name,
+                days_and_schedules,
+                amount,
+                registration_quota,
+                is_active,
+            )
+            db.session.add(discipline)
+            db.session.commit()
+        else:
+            raise database.ExistingData(message="ya existen en la base de datos")
+        return discipline
+
+    def update_discipline(
+        self,
+        id: int,
+        name: str,
+        category: str,
+        instructor_first_name: str,
+        instructor_last_name: str,
+        days_and_schedules: str,
+        registration_quota: int,
+        amount: Decimal,
+        is_active: bool,
+    ) -> Discipline:
+        """Función que instancia una Disciplina, la modifica en la Base de Datos y la retorna
+
+        Args:
+           id: Identificador unico de la disciplina.
            name: Nombre de la disciplina.
            category: Categoria de la disciplina.
            instructor_first_name: Nombre del instructor que dicta la disciplina.
@@ -71,26 +127,35 @@ class DisciplineService:
 
         if amount < 0:
             raise database.MinValueValueError()
-        
+
         if registration_quota < 0:
-            raise database.MinValueValueError(message="El cupo no puede ser menor que 1")
-        
-        discipline = self.find_discipline(name=name, category=category)
-        if not discipline:
-            discipline = Discipline(
-                name,
-                category,
-                instructor_first_name,
-                instructor_last_name,
-                days_and_schedules,
-                amount,
-                registration_quota,
+            raise database.MinValueValueError(
+                message="El cupo no puede ser menor que 1"
             )
-            db.session.add(discipline)
-            db.session.commit()
-        else:
-            raise database.ExistingData(message="ya existen en la base de datos")
-        return discipline
+
+        discipline_to_update = self.find_discipline(id=id)
+
+        if (
+            discipline_to_update.name != name
+            or discipline_to_update.category != category
+        ):
+            discipline_in_db = self.find_discipline(name=name, category=category)
+            if discipline_in_db:
+                raise database.ExistingData(message="ya existen en la base de datos")
+
+        discipline_to_update.name = name
+        discipline_to_update.category = category
+        discipline_to_update.instructor_first_name = instructor_first_name
+        discipline_to_update.instructor_last_name = instructor_last_name
+        discipline_to_update.days_and_schedules = days_and_schedules
+        discipline_to_update.amount = amount
+        discipline_to_update.registration_quota = registration_quota
+        discipline_to_update.is_active = is_active
+
+        db.session.add(discipline_to_update)
+        db.session.flush()
+        db.session.commit()
+        return discipline_to_update
 
     def find_discipline(
         self,
@@ -110,16 +175,5 @@ class DisciplineService:
            Una disciplina.
         """
         if id:
-            return Discipline.query.filter_by(id=id).first()
+            return Discipline.query.get(id)
         return Discipline.query.filter_by(name=name, category=category).first()
-
-    # def find_discipline(self, id: int) -> Discipline:
-    #     """Función que busca una disciplina por id y la retorna.
-
-    #     Args:
-    #        id: Id de la disciplina a buscar.
-
-    #     Returns:
-    #        Una disciplina
-    #     """
-    #     return Discipline.query.filter_by(id=id).first()
