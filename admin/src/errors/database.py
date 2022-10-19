@@ -31,3 +31,17 @@ class UpdateError(DbError):
 
     def __str__(self):
         return self.message
+
+
+class PermissionDenied(DbError):
+    def __init__(self, info="", message=""):
+        self.info = info
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        if self.info != "":
+            msg = f"{self.info} -> {self.message}"
+        else:
+            msg = f"No tiene permiso para realizar esta operación."
+        return msg

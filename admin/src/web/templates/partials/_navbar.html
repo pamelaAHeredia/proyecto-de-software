@@ -1,35 +1,62 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Club Deportivo Villa Elisa</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          {% if is_authenticated(session) %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('users.users_index')}}">Usuarios</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Club Deportivo Villa Elisa</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        {% if is_authenticated(session) %}
+        <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="{{url_for('users.users_index')}}" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Usuarios
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="{{url_for('users.users_index')}}" >Todos los usuarios</a></li>
+                <li><a class="dropdown-item" href="{{url_for('users.users_add')}}" method="post">Agregar nuevo usuario</a></li>
+                <li><a class="dropdown-item" href="{{url_for('users.users_search')}}">Buscar un Usuario</a></li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('members.index')}}">Socios</a>
+          </ul>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('members.index')}}">Socios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
+        </li>  
+        {% if is_administrator(session) %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
+        </li>
+        {% endif %}
+        <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="{{url_for('users.users_index')}}" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Mi perfil
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="{{url_for('users.profile')}}" >Ver mis Datos</a></li>
+                <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
-            </li>
-            {% if is_administrator(session) %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
-              </li>
-            {% endif %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('auth.logout')}}">Cerrar sesión</a>
-            </li>
-          {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
-            </li>
-          {% endif %}
-        </ul>
+          </ul>
+        </div>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
+        </li>
+        {% endif %}
+
+      </ul>
+
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
