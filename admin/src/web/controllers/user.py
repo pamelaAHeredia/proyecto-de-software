@@ -2,10 +2,8 @@ from logging.config import IDENTIFIER
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 
-from werkzeug.datastructures import MultiDict
-
 from src.services.utils import hash_pass
-from src.web.helpers.auth import login_required
+from src.web.helpers.auth import login_required, verify_permission
 from src.services.user import UserService
 from src.services.utils import hash_pass
 from src.web.forms.user import (
@@ -28,17 +26,38 @@ service = UserService()
 @login_required
 def users_index():
     filter_form = FilterUsersForm()
-    search_form = SearchUserForm()
-    """Por metodo GET pide la lista total de usuarios al modelo y lo renderiza en la vista"""
-    users = service.list_users()
+    """Render de la lista de usuarios paginada"""
     page = request.args.get("page", 1, type=int)
     users_paginator = service.list_paginated_users(page, 2, "users.users_index")
+    # users = service.list_users()
     return render_template(
         "users/index.html",
-        users=users,
+        # users=users,
         filter_form=filter_form,
         paginator=users_paginator,
     )
+
+
+@user_blueprint.route("/filter_users_by", methods=["POST"])
+@login_required
+def users_filter_by():
+    filter_form = FilterUsersForm()
+    search_form = SearchUserForm()
+    if filter_form.validate_on_submit:
+        filter = filter_form.filter.data
+        if filter == "activo":
+            users = service.find_active_users()
+        elif filter == "bloqueado":
+            users = service.find_blocked_users()
+        else:
+            users = service.list_users()
+        print(filter)
+        return render_template(
+            "users/index.html",
+            users=users,
+            filter_form=filter_form,
+            search_form=search_form,
+        )
 
 
 @user_blueprint.route("/add", methods=["POST", "GET"])
@@ -145,26 +164,7 @@ def users_search():
         return render_template("users/search.html", search_form=search_form)
 
 
-@user_blueprint.route("/filter_users_by", methods=["POST"])
-@login_required
-def users_filter_by():
-    filter_form = FilterUsersForm()
-    search_form = SearchUserForm()
-    if filter_form.validate_on_submit:
-        filter = filter_form.filter.data
-        if filter == "activo":
-            users = service.find_active_users()
-        elif filter == "bloqueado":
-            users = service.find_blocked_users()
-        else:
-            users = service.list_users()
-        print(filter)
-        return render_template(
-            "users/index.html",
-            users=users,
-            filter_form=filter_form,
-            search_form=search_form,
-        )
+
 
 
 @user_blueprint.route("/user_info/<id>", methods=["GET", "POST"])
@@ -249,8 +249,9 @@ def profile():
     )
 
 
-@user_blueprint.route("/delete/<id>", methods=["POST"])
+@user_blueprint.route("/delete/<id>", methods=["GET"])
 @login_required
+@verify_permission("member_destroy")
 def delete(id):
     filter_form = FilterUsersForm()
     session_id = session["user"]

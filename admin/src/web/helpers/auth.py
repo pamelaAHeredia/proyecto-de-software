@@ -22,7 +22,7 @@ def verify_permission(perms):
     def decorate(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            logged_user = User.query.filter_by(email=session.get("user")).first()
+            logged_user = User.query.filter_by(id=session.get("user")).first()
             for r in logged_user.roles:
                 for p in r.permissions:
                     if p.name == perms:
@@ -55,7 +55,6 @@ def is_operator(f):
 
 def is_administrator_template(session):
     user = User.query.filter_by(id=session.get("user")).first()
-    print(session.get("user"))
     for r in user.roles:
         if r.name == "Administrador":
             return True
@@ -67,3 +66,9 @@ def is_operator_template(session):
         if r.name == "Operador":
             return True
     return False
+
+def is_admin(id):
+    service = UserService()
+    user = service.find_user_by_id(id)
+    admin = service.find_role_by_name("Administrador")
+    return user.roles.__contains__(admin)

@@ -22,14 +22,14 @@ class UserService:
         """
         Retorna la lista de todos los Usuarios de la Base de Datos
         """
-        return User.query.all()
+        return User.query.order_by(User.id)
 
-    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str):
+    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str) -> Paginator:
         """
         Retorna el paginador de los usuarios del sistema
         """
-
-        users = User.query
+        users = self.list_users()
+        print(users)
         return Paginator(users, page, items_per_page, endpoint)
 
     def create_user(self, email, username, password, first_name, last_name, roles):
@@ -114,7 +114,7 @@ class UserService:
         """Si el usuario no es un administrador y está bloqueado lo desbloquea, y viceversa"""
 
         if not user.roles.__contains__(role):
-            if not blocker_id == user.id: 
+            if not blocker_id == user.id:
                 print(blocker_id, user.id)
                 if user.blocked:
                     user.blocked = False
@@ -123,9 +123,9 @@ class UserService:
                 db.session.commit()
             else:
                 raise database.PermissionDenied(
-                info="Permiso Denegado",
-                message="No se puede bloquear a sí mismo.",
-            )
+                    info="Permiso Denegado",
+                    message="No se puede bloquear a sí mismo.",
+                )
         else:
             raise database.PermissionDenied(
                 info="Permiso Denegado",
@@ -141,7 +141,7 @@ class UserService:
         """Retorna todos los usuarios, que están bloqueados."""
         return User.query.filter_by(blocked=True)
 
-    #No va? 
+    # No va?
     def deactivate_user(self, id):
         user = self.find_user_by_id(id)
         """Si el usuario está activo lo desbloquea, y viceversa"""
@@ -157,7 +157,7 @@ class UserService:
         if user.id != session_id:
             db.session.delete(user)
             db.session.commit()
-        else: 
+        else:
             raise database.PermissionDenied(
                 info="Permiso Denegado", message="No puede eliminar su propio usuario."
             )

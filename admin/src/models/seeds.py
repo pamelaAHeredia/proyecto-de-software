@@ -18,6 +18,7 @@ def run():
         days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
         registration_quota=50,
         amount=600.00,
+        is_active=True
     )
 
     service = MemberService()
@@ -47,16 +48,18 @@ def run():
         "pays_index",
         "pays_show",
         "pays_import",
-        "pays_destroy",
+        "pays_destroy"
     ]
 
-    members_perms = [service.create_permission(perm) for perm in perms]
+    member_perms = [service.create_permission(perm) for perm in perms]
+    
 
     role_1 = service.create_role(name="Administrador")
-    role_1.permissions = members_perms
+    role_1.permissions = member_perms
     role_2 = service.create_role(name="Operador")
     role_3 = service.create_role(name="Socio")
-    
+
+
     # admin = service.create_user(
     #     email="admin@gmail.com",
     #     username="admin",
@@ -92,5 +95,5 @@ def run():
         password=hash_pass("rockera75@gmail.com"),
         first_name="Nadia",
         last_name="Benitez",
-        roles=[role_2, role_3],
+        roles=[role_2, role_3]
     )

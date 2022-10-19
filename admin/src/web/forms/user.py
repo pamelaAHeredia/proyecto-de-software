@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length, Email
 
 
 class UserBaseForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired(), Length(max=50, min=3)])
+    email = EmailField("Email", validators=[DataRequired(), Length(max=50, min=3), Email()])
     username = StringField(
         "Usuario", validators=[DataRequired(), Length(max=30, min=3)]
     )
@@ -31,7 +31,7 @@ class UpdateUserForm(UserBaseForm):
 
 
 class SearchUserForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired(), Length(max=50, min=3)])
+    email = EmailField("Email", validators=[DataRequired(), Length(max=50, min=3), Email()])
     submit = SubmitField("Buscar usuario")
 
 

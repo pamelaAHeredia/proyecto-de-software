@@ -39,8 +39,7 @@
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
-            {% for role in user.roles %}
-            {% if not role.name == "Administrador" %}
+            {% if not is_admin(user.id) %}
             <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
                 {%if user.blocked%}
                 {{"Desbloquear"}}
@@ -49,7 +48,6 @@
                 {% endif %}</a>
             </li>
             {% endif %}
-            {% endfor %}
           </ul>
         </div>
       </th>
@@ -82,13 +80,13 @@
         Esta acción es irreversible.
         Está seguro que de desea eliminar el usuario {{user.email}}? 
       </div>
-      <form action="{{url_for('users.delete', id=user.id)}}" method="post">
-   
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Eliminar</button>
-      </div>
-    </form>
+      <form action="{{url_for('users.delete', id=user.id)}}">
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Eliminar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

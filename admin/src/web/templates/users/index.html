@@ -7,6 +7,8 @@
 
 <h1>Usuarios</h1>
 
+{% if users %}
+
 <div class="container">
   <h3>Filtrar listado por: </h3>
   <form action="{{ url_for('users.users_filter_by')}}" method="post">
@@ -18,7 +20,6 @@
   </form>
 </div>
 
-{% if users %}
 <table class="table table-hover table-sm">
   <thead>
     <tr>
@@ -32,7 +33,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for user in users %}
+    {% for user in paginator.items %}
     <tr>
       <th>{{ user.id }}</th>
       <th>{{ user.email }}</th>
@@ -44,7 +45,7 @@
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
       <th>
-        <div class="dropdown">
+      <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             Operaciones
@@ -53,8 +54,7 @@
             <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
             <li><a class="dropdown-item" href="{{url_for('users.users_add_roles', id=user.id)}}">Ver roles</a></li>
-            {% for role in user.roles %} 
-              {% if not role.name == "Administrador" %}
+            {% if not is_admin(user.id) %}
             <li>
               <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
                 {% if user.blocked %}
@@ -63,9 +63,8 @@
                 {{"Bloquear"}}
                 {% endif %}
             </a>
-          </li>
-          {% endif %}
-          {% endfor %}
+            </li>
+            {% endif %}
           </ul>
         </div>
       </th>
@@ -74,10 +73,12 @@
     {% endfor %}
   </tbody>
 </table>
+
+{% include('partials/paginator.html') %}
+
 {% else %}
 <h2>No hay usuarios para mostrar</h2>
+
 {% endif %}
-
-
 <a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
