@@ -1,4 +1,5 @@
 from src.models.database import db
+from src.models.club.suscription import Suscription
 
 
 class Membership(db.Model):
@@ -12,7 +13,7 @@ class Membership(db.Model):
     registration_quota : Integer
         Indica el cupo total de inscripciones.
     pays_per_year : Integer
-        Indica la periodicidad de los pagos. 
+        Indica la periodicidad de los pagos.
         Ejemplos:
             1 -> Anual.
             2 -> Bimestral.
@@ -38,9 +39,19 @@ class Membership(db.Model):
     discipline = db.relationship("Discipline", back_populates="membership")
 
     tariffs = db.relationship("Tariff", back_populates="membership")
+    suscriptions = db.relationship(
+        "Suscription", back_populates="membership", lazy="dynamic"
+    )
 
     @property
     def amount(self):
         for tariff in self.tariffs:
             if not tariff.date_to:
                 return tariff.amount
+
+    @property
+    def used_quota(self):
+        return self.suscriptions.filter(Suscription.date_to == None).count()
+
+    def __repr__(self):
+        return f"Membresia {self.id}"

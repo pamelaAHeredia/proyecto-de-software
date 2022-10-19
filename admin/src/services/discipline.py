@@ -24,6 +24,14 @@ class DisciplineService:
             cls._instance = super(DisciplineService, cls).__new__(cls)
         return cls._instance
 
+    def active(self, discipline_id):
+        discipline = self.find_discipline(id=discipline_id)
+        return discipline.is_active
+
+    def membership(self, discipline_id):
+        discipline = self.find_discipline(id=discipline_id)
+        return discipline.membership
+
     def list_disciplines(self) -> List[Discipline]:
         """Función que retorna la lista de todas las disciplinas cargadas en la Base de Datos
 
@@ -84,19 +92,23 @@ class DisciplineService:
             )
 
         discipline = self.find_discipline(name=name, category=category)
-        
-        
+
         if not discipline:
             tariff = Tariff(amount=amount)
-            
+
             discipline = Discipline(
                 name,
                 category,
                 instructor,
                 days_and_schedules,
             )
-            
-            membership = Membership(is_active=is_active, registration_quota=registration_quota, pays_per_year=pays_per_year, discipline=discipline)
+
+            membership = Membership(
+                is_active=is_active,
+                registration_quota=registration_quota,
+                pays_per_year=pays_per_year,
+                discipline=discipline,
+            )
             tariff.membership = membership
             db.session.add_all([tariff, discipline, membership])
             db.session.commit()
@@ -130,7 +142,6 @@ class DisciplineService:
         Returns:
            Una disciplina.
         """
-
         if amount < 0:
             raise database.MinValueValueError()
 
@@ -154,17 +165,26 @@ class DisciplineService:
         discipline_to_update.instructor = instructor
         discipline_to_update.days_and_schedules = days_and_schedules
         discipline_to_update.pays_per_year = pays_per_year
-        discipline_to_update.registration_quota = registration_quota
+
+        if discipline_to_update.membership.used_quota < registration_quota:
+            discipline_to_update.registration_quota = registration_quota
+        else:
+            raise database.MinValueValueError(
+                message="La cantidad de inscripciones activas son mayores al cupo nuevo"
+            )
         discipline_to_update.is_active = is_active
-        
-        if discipline_to_update.amount!=amount:
-            old_tarif = [t for t in discipline_to_update.membership.tariffs if t.date_to is None]
+
+        if discipline_to_update.amount != amount:
+            old_tarif = [
+                t for t in discipline_to_update.membership.tariffs if t.date_to is None
+            ]
             if old_tarif:
                 old_tarif[0].date_to = datetime.datetime.now()
             new_tarif = Tariff(amount=amount)
             new_tarif.membership = discipline_to_update.membership
-        
-        db.session.add_all([discipline_to_update, new_tarif])
+            db.session.add(new_tarif)
+
+        db.session.add(discipline_to_update)
         db.session.flush()
         db.session.commit()
         return discipline_to_update
