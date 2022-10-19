@@ -24,15 +24,15 @@ class Discipline(db.Model):
     __tablename__ = "discipline"
     __table_args__ = (
         db.UniqueConstraint("name", "category", name="unique_discipline_name_category"),
-        db.UniqueConstraint("membership_id", name="unique_membership_id"),
     )
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(50), nullable=False)
     category = db.Column(db.String(255), nullable=False)
     instructor = db.Column(db.String(255), nullable=False)
     days_and_schedules = db.Column(db.String(100), nullable=False)
-    membership_id = db.Column(db.Integer, db.ForeignKey("membership.id"))
-    membership = db.relationship("Membership", back_populates="discipline")
+    membership = db.relationship(
+        "Membership", back_populates="discipline", uselist=False
+    )
 
     def __init__(
         self,
