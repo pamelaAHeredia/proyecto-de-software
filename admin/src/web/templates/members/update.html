@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block title %}Actualizar Socio{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Actualización de Socio N° {{ member_id }}</h1>
+        </div>
+    </div>
+    <form action="{{ url_for('members.update', member_id=member_id)}}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col">
+                <div class="from-group mb-3">
+                    {{ form.first_name.label}}
+                    {{ form.first_name(class_="form-control", placeholder="Nombre")}}
+                </div>
+            </div>
+        </div>
+        <div class="row">    
+            <div class="col">
+                <div class="from-group mb-3">
+                    {{ form.last_name.label}}
+                    {{ form.last_name(class_="form-control", placeholder="Apellido")}}
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.document_type.label}}
+                    {{ form.document_type(class_="form-control")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.document_number.label}}
+                    {{ form.document_number(class_="form-control", placeholder="Número de Documento")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group mb-3">
+                    {{ form.gender.label }}
+                    {{ form.gender(class_="form-control")}}
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.address.label }}
+                    {{ form.address(class_="form-control", placeholder="Domicilio")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.email.label }}
+                    {{ form.email(class_="form-control", placeholder="Email")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.phone_number.label }}
+                    {{ form.phone_number(class_="form-control", placeholder="Télefono")}}
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                {{ form.submit(class="btn btn-success", value="Actualizar") }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <a href="{{url_for('members.index')}}"> Volver </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}

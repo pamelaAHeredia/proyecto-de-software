@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}Alta de Disciplina{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Alta de Disciplina</h1>
+        </div>
+    </div>
+    <form action="{{ url_for('discipline.create')}}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.name(class_="form-control", placeholder="Nombre de la disciplina", size=32)}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.category(class_="form-control", placeholder="Nombre de la categoria")}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.instructor_first_name(class_="form-control", placeholder="Nombre del instructor")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.instructor_last_name(class_="form-control", placeholder="Apellido del instructor")}}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.days_and_schedules(class_="form-control", placeholder="Días y horarios")}}
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.registration_quota(class_="form-control", placeholder="Cupo")}}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group mb-3">
+                    {{ form.amount(class_="form-control", placeholder="Valor")}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mb-3">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    {{ form.is_active.label }}
+                    {{ form.is_active(class_="form-check-input", value="n") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mb-3">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    {{ form.submit(class="btn btn-success") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <a href="{{url_for('discipline.index')}}"> Volver </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}
