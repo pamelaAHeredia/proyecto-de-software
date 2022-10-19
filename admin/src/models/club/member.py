@@ -23,6 +23,9 @@ class Member(db.Model):
     email = db.Column(db.String(50))
     creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+
 
     def __init__(
         self,

@@ -11,6 +11,13 @@
         <div class="col-12 text-center">
             <h1>Socios</h1>
         </div>
+        <form name="export" method="post" action="{{ url_for('members.export_pdf')}}">
+            <input name="items" type="hidden" value={{paginator.items}}> 
+            <div class="col-sm-12 d-flex justify-content-center">
+                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" value="Export">
+            </div>
+        </form>
+
     </div>
     <table class="table table-hover">
         <thead>

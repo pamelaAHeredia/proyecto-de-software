@@ -109,4 +109,10 @@ def deactivate(member_id):
     service.deactivate_member(member_id)
     return redirect(url_for("members.index"))
 
+@member_blueprint.post("/exportpdf") 
+def export_pdf():
+    list = request.form.items.__get__
+    print(list)
+    return redirect(url_for("members.index"))   
+
 

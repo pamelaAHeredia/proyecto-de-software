@@ -19,6 +19,7 @@ class User(db.Model):
     blocked = db.Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=user_has_role, lazy='subquery',
         backref=db.backref('users', lazy=True))
+    members = db.relationship("Member", back_populates="user")    
 
     def __init__(
         self,
