@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Buscar un Usuario{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h1> Buscar usuario </h1>
+
+<div class="container">
+    <form class="d-flex" role="search" action="{{ url_for('users.users_search')}}" method="post">
+      {{ search_form.email(class="form-control me-2", placeholder="Ingrese el email del usuario que desea buscar")}}
+      {{search_form.hidden_tag()}}
+      <button class="btn btn-outline-success" type="submit">Buscar Usuario</button> 
+    </form>
+  </div>
+
+<a href="{{url_for('users.users_index')}}"> Volver </a>
+{% endblock %}

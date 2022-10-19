@@ -6,15 +6,13 @@ from wtforms.validators import InputRequired, NumberRange, Length, Optional
 class DisciplineBaseForm(FlaskForm):
     name = StringField("Disciplina", validators=[InputRequired()])
     category = StringField("Categoria", validators=[InputRequired()])
-    instructor_first_name = StringField(
-        "Nombre del Instructor", validators=[InputRequired()]
-    )
-    instructor_last_name = StringField(
-        "Apellido del Instructor", validators=[InputRequired()]
-    )
+    instructor = StringField("Instructor/es", validators=[InputRequired()])
     days_and_schedules = StringField("Día y Horario", validators=[InputRequired()])
     registration_quota = IntegerField(
         "Cupos", validators=[InputRequired(), NumberRange(min=1)]
+    )
+    pays_per_year = IntegerField(
+        "Pagos por año", validators=[InputRequired(), NumberRange(min=1)]
     )
     amount = DecimalField("Precio", validators=[InputRequired(), NumberRange(min=0)])
     is_active = BooleanField("¿Activa?", default=True, validators=[Optional()])

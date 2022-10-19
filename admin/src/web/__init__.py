@@ -53,6 +53,8 @@ def create_app(env="development", static_folder="static"):
     #Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
+    app.jinja_env.globals.update(is_admin=auth.is_admin)
+    
     # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():

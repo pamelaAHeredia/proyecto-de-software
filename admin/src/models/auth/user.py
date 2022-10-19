@@ -1,9 +1,10 @@
 from src.models.database import db
 
 # Define la tabla que relaciona Usuarios con Roles
-user_has_role = db.Table('user_has_role',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True)
+user_has_role = db.Table(
+    "user_has_role",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column("role_id", db.Integer, db.ForeignKey("role.id"), primary_key=True),
 )
 
 # Define la clase Usuario
@@ -26,15 +27,13 @@ class User(db.Model):
         email,
         username,
         password,
-        is_active,
         first_name,
         last_name,
-        blocked
+        roles,
     ):
         self.email = email
         self.username = username
         self.password = password
-        self.is_active = is_active
         self.first_name = first_name
         self.last_name = last_name
-        self.blocked = blocked
+        self.roles = roles
