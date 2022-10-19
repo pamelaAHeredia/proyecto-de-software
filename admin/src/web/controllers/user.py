@@ -2,6 +2,7 @@ from logging.config import IDENTIFIER
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 
+from src.services.settings import SettingsService
 from src.services.utils import hash_pass
 from src.web.helpers.auth import login_required, verify_permission
 from src.services.user import UserService
@@ -26,9 +27,12 @@ service = UserService()
 @login_required
 def users_index():
     filter_form = FilterUsersForm()
+
     """Render de la lista de usuarios paginada"""
     page = request.args.get("page", 1, type=int)
-    users_paginator = service.list_paginated_users(page, 2, "users.users_index", "todos")
+    users_paginator = service.list_paginated_users(
+        page, 2, "users.users_index", "todos"
+    )
     return render_template(
         "users/index.html",
         filter_form=filter_form,
@@ -40,16 +44,31 @@ def users_index():
 @login_required
 def users_filter_by():
     filter_form = FilterUsersForm()
+
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
         if filter == "activo":
-            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "activo")
+            users_paginator = service.list_paginated_users(
+                page,
+                2,
+                "users.users_index",
+                "activo",
+            )
         elif filter == "bloqueado":
-            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "bloqueado")
+            users_paginator = service.list_paginated_users(
+                page,
+                2,
+                "users.users_index",
+                "bloqueado",
+            )
         else:
-            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "todos")
-        print(filter)
+            users_paginator = service.list_paginated_users(
+                page,
+                2,
+                "users.users_index",
+                "todos",
+            )
         return render_template(
             "users/index.html",
             paginator=users_paginator,

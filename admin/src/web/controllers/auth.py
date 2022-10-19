@@ -30,7 +30,6 @@ def authenticate():
             password = login_form.password.data
             user = service.find_by_username_and_pass(username, password)
             session["user"] = user.id
-            print(session["user"])
             flash("La sesión se inicio correctamente.", "success")
         except database.PermissionDenied as e:
             flash(e, "danger")
@@ -40,7 +39,6 @@ def authenticate():
 
 @auth_blueprint.get("/logout")
 def logout():
-    print("cerrando")
     """Cerrar sesion del sistema"""
     del session["user"]
     session.clear()

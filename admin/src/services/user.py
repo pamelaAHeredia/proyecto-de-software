@@ -24,7 +24,7 @@ class UserService:
         """
         return User.query.order_by(User.id)
 
-    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str, filter_by: str) -> Paginator:
+    def list_paginated_users(self, page, items_per_page, endpoint, filter_by): 
         """
         Retorna el paginador de los usuarios del sistema
         """
@@ -119,7 +119,6 @@ class UserService:
 
         if not user.roles.__contains__(role):
             if not blocker_id == user.id:
-                print(blocker_id, user.id)
                 if user.is_active:
                     user.is_active = False
                 else:
