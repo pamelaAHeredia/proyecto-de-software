@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Disciplinas{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Disciplinas</h1>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Disciplina</th>
+                <th>Categoria</th>
+                <th>Instructores</th>
+                <th>Dias y Horarios</th>
+                <th>Monto</th>
+                <th>Cupo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for discipline in paginator.items %}
+            <tr>
+                <td>{{ discipline.name }}</td>
+                <td>{{ discipline.category }}</td>
+                <td>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </td>
+                <td>{{ discipline.days_and_schedules }}</td>
+                <td>{{ discipline.amount }}</td>
+                <td>{{ discipline.registration_quota }}</td>
+                <td>
+                    <div class="row">
+                        {% if discipline.is_active %}
+                        <span class="btn btn-sm btn-success rounded-pill d-inline">Activa</span>
+                        {% else %}
+                        <span class="btn btn-sm btn-dark rounded-pill d-inline">Inactiva</span>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    <div class="btn-group mb-3">
+                        <a class="btn btn-sm btn-success rounded-pill d-inline" href="{{ url_for('discipline.update', discipline_id=discipline.id) }}" role="button">
+                            Editar
+                        </a>
+                        <a class="btn btn-sm btn-danger rounded-pill d-inline" href="#" role="button">
+                            Borrar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include('partials/paginator.html') %}
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a href="{{url_for('home')}}"> Volver </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

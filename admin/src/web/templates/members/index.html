@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}Modulo de Socios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Socios</h1>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>N° de Socio</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>N° de Documento</th>
+                <th>Género</th>
+                <th>Está Activo?</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in paginator.items %}
+            <tr>
+                <td>{{ member.membership_number }}</td>
+                <td>{{ member.first_name }}</td>
+                <td>{{ member.last_name }}</td>
+                <td>{{ member.document_type }}</td>
+                <td>{{ member.document_number}}</td>
+                <td>{{ member.gender }}</td>
+                <td>
+                    <div class="row">
+                        <div class="btn-group mb-3">
+                            {% if member.is_active %}
+                            <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
+                            {% else %}
+                            <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
+                            {% endif %}
+                        </div>
+                    </div>    
+                </td>
+                <td>
+                    <div class="btn-group mb-3">
+                        <a class="btn btn-sm btn-warning rounded-pill d-inline" href="{{ url_for('members.update',
+                         member_id=member.membership_number)}}" role="button">
+                            Editar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include('partials/paginator.html') %}
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-secondary btn-lg" href="{{url_for('members.create')}}">Agregar Socio</a>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-primary btn-sm" href="{{url_for('home')}}"> Volver </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
