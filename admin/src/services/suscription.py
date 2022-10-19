@@ -63,3 +63,6 @@ class SuscriptionService:
             and membership_active
             and membership_has_quota
         )
+    
+    def enroll(self, member_id, discipline_id):
+        pass

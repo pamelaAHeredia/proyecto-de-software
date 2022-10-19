@@ -31,4 +31,4 @@ class Suscription(db.Model):
     membership = db.relationship("Membership")
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
-    movements = db.relationship("Movement", back_populates="suscription")
+    # movements = db.relationship("Movement", back_populates="suscription")

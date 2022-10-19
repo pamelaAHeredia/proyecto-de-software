@@ -23,3 +23,11 @@ class MinValueValueError(DbError):
 
     def __str__(self):
         return self.message
+    
+class UpdateError(DbError):
+    def __init__(self, message="Hubo un problema al actualizar."):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return self.message

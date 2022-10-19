@@ -60,6 +60,7 @@ def create():
             flash(str(e), "danger")
         except database.ExistingData as e:
             flash(f"La disciplina: {name} - {category} ya existe.", "danger")
+
     return render_template("disciplines/create.html", form=form)
 
 @discipline_blueprint.route("/update/<int:discipline_id>", methods=["GET", "POST"])
@@ -110,5 +111,7 @@ def update(discipline_id):
                 flash(str(e), "danger")
             except database.ExistingData as e:
                 flash(f"La disciplina: {name} - {category} ya existe.", "danger")
-    
+            except database.UpdateError as e:
+                flash(str(e), "danger")
+
     return render_template("disciplines/update.html", form=form, discipline_id=discipline_id)

@@ -33,26 +33,27 @@ class DisciplineService:
         return discipline.membership
 
     def list_disciplines(self) -> List[Discipline]:
-        """Función que retorna la lista de todas las disciplinas cargadas en la Base de Datos
+        """Retorna todas las disciplinas
+
+        Retorna todas las disciplinas cargadas en la Base de Datos.
 
         Returns:
-          Lista de disciplinas
-
+            List[Discipline]: Una lista con todas las disciplinas
         """
         return Discipline.query.order_by(Discipline.id)
 
     def list_paginated_disciplines(
         self, page: int, items_per_page: int, endpoint: str
     ) -> Paginator:
-        """Función que retorna el paginador con las disciplinas cargadas en el sistema.
+        """Retorna un paginador con las disciplinas.
 
         Args:
-           page: Numero de pagina.
-           items_per_page: cantidad de registros por página.
-           endpoint: endpoint para el armado del url_for.
+            page (int): Numero de pagina.
+            items_per_page (int): cantidad de registros por página.
+            endpoint (str): endpoint para el armado del url_for.
 
         Returns:
-           Un paginador.
+            Paginator: Un paginador.
         """
         disciplines = self.list_disciplines()
         return Paginator(disciplines, page, items_per_page, endpoint)
@@ -68,28 +69,40 @@ class DisciplineService:
         amount: Decimal,
         is_active: bool,
     ) -> Discipline:
-        """Función que instancia una Disciplina, la agrega a la Base de Datos y la retorna
+        """Crea una disciplina.
+
+        Método que instancia una Disciplina, la agrega a la Base de Datos y la retorna
 
         Args:
-           name: Nombre de la disciplina.
-           category: Categoria de la disciplina.
-           instructor_first_name: Nombre del instructor que dicta la disciplina.
-           instructor_last_name: Apellido del instructor que dicta la disciplina.
-           days_and_schedule: Días y horarios en que se da la disciplina.
-           amount: Monto a pagar por practicar la disciplina.
-           is_active: ¿La disciplina esta activa?
+            name (str): Nombre de la disciplina.
+            category (str): Categoria de la disciplina.
+            instructor (str): Nombre/s de el/los instructor/es que dicta/n la disciplina.
+            days_and_schedules (str): Días y horarios en que se da la disciplina.
+            registration_quota (int): Cupo máximo de inscripciones.
+            pays_per_year (int): Cantidad de cuotas a pagar por año.
+            amount (Decimal): Monto a pagar por practicar la disciplina.
+            is_active (bool): True si la disciplina esta activa.
+
+        Raises:
+            database.MinValueValueError: Los pagos por año son menores a 0.
+            database.MinValueValueError: El cupo es menor a 0.
+            database.MinValueValueError: El monto es menor a 0.
+            database.ExistingData: La disciplina ya existe.
 
         Returns:
-           Una disciplina.
+            Discipline: Una disciplina.
         """
 
-        if 0 in [amount, pays_per_year]:
-            raise database.MinValueValueError()
-
-        if registration_quota < 0:
+        if pays_per_year <= 0:
             raise database.MinValueValueError(
-                message="El cupo no puede ser menor que 1"
+                message="Los pagos por año deben ser mayores a 0."
             )
+
+        if registration_quota <= 0:
+            raise database.MinValueValueError(message="El cupo debe ser mayor a 0.")
+
+        if amount <= 0:
+            raise database.MinValueValueError(message="El monto debe ser mayor a 0.")
 
         discipline = self.find_discipline(name=name, category=category)
 
@@ -128,27 +141,43 @@ class DisciplineService:
         amount: Decimal,
         is_active: bool,
     ) -> Discipline:
-        """Función que instancia una Disciplina, la modifica en la Base de Datos y la retorna
+        """Modifica una disciplina
+
+        Método que instancia una Disciplina, la modifica en la Base de Datos y la retorna
 
         Args:
-           id: Identificador unico de la disciplina.
-           name: Nombre de la disciplina.
-           category: Categoria de la disciplina.
-           instructor_first_name: Nombre del instructor que dicta la disciplina.
-           instructor_last_name: Apellido del instructor que dicta la disciplina.
-           days_and_schedule: Días y horarios en que se da la disciplina.
-           amount: Monto a pagar por practicar la disciplina.
+            id (int): Id de la disciplina a modificar.
+            name (str): Nombre de la disciplina.
+            category (str): Categoria de la disciplina.
+            instructor (str): Nombre/s de el/los instructor/es que dicta/n la disciplina.
+            days_and_schedules (str): Días y horarios en que se da la disciplina.
+            registration_quota (int): Cupo máximo de inscripciones.
+            pays_per_year (int): Cantidad de cuotas a pagar por año.
+            amount (Decimal): Monto a pagar por practicar la disciplina.
+            is_active (bool): True si la disciplina esta activa.
+
+        Raises:
+            database.MinValueValueError: Los pagos por año son menores a 0.
+            database.MinValueValueError: El cupo es menor a 0.
+            database.MinValueValueError: El monto es menor a 0.
+            database.ExistingData: La disciplina ya existe.
+            database.MinValueValueError: El nuevo cupo maximo es menor a la
+              cantidad actual de registros.
 
         Returns:
-           Una disciplina.
+            Discipline: Una disciplina.
         """
-        if amount < 0:
-            raise database.MinValueValueError()
 
-        if registration_quota < 0:
+        if pays_per_year <= 0:
             raise database.MinValueValueError(
-                message="El cupo no puede ser menor que 1"
+                message="Los pagos por año deben ser mayores a 0."
             )
+
+        if registration_quota <= 0:
+            raise database.MinValueValueError(message="El cupo debe ser mayor a 0.")
+
+        if amount <= 0:
+            raise database.MinValueValueError(message="El monto debe ser mayor a 0.")
 
         discipline_to_update = self.find_discipline(id=id)
 
@@ -172,6 +201,11 @@ class DisciplineService:
             raise database.MinValueValueError(
                 message="La cantidad de inscripciones activas son mayores al cupo nuevo"
             )
+        if not discipline_to_update.membership.used_quota == 0:
+            raise database.UpdateError(
+                message="La disciplina tiene inscriptos. No se puede deshabilitar"
+            )
+
         discipline_to_update.is_active = is_active
 
         if discipline_to_update.amount != amount:
