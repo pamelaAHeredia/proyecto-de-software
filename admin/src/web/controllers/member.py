@@ -103,7 +103,7 @@ def update(member_id):
     return render_template("members/update.html", form=form, member_id=member_id)
 
 
-@member_blueprint.get("/deactivate/<int:member_id>")
+@member_blueprint.post("/deactivate/<int:member_id>")
 @login_required
 def deactivate(member_id):
     service.deactivate_member(member_id)

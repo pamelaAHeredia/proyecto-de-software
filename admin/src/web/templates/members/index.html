@@ -36,14 +36,17 @@
                 <td>{{ member.gender }}</td>
                 <td>
                     <div class="row">
-                        <div class="btn-group mb-3">
-                            {% if member.is_active %}
-                            <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
-                            {% else %}
-                            <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
-                            {% endif %}
-                        </div>
-                    </div>    
+                        <form name="deactivate" method="post" action="{{ url_for('members.deactivate',
+                            member_id=member.membership_number)}}">
+                            <div class="btn-group mb-3">  
+                                {% if member.is_active %}
+                                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" value="Si">
+                                {% else %}
+                                <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
+                                {% endif %}
+                            </div>    
+                        </form>
+                    </div>
                 </td>
                 <td>
                     <div class="btn-group mb-3">

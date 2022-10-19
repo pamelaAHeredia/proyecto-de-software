@@ -19,8 +19,9 @@ class MemberService:
         return cls._instance
 
     def list_members(self):
-        """Función que retorna la lista de todos los Socios de la Base de Datos"""
-        return Member.query.all()
+        """Función que retorna la query de todos los Socios de la Base de Datos ordenada por 
+        Nro de Socio"""
+        return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
         self, page: int, items_per_page: int, endpoint: str
@@ -35,7 +36,7 @@ class MemberService:
         Returns:
            Un paginador.
         """
-        members = Member.query.order_by(Member.membership_number)
+        members = self.list_members()
         return Paginator(members, page, items_per_page, endpoint)
 
 
