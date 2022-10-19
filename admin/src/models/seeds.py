@@ -60,40 +60,38 @@ def run():
     role_3 = service.create_role(name="Socio")
 
 
-    # admin = service.create_user(
-    #     email="admin@gmail.com",
-    #     username="admin",
-    #     password=hash_pass("admin"),
-    #     is_active=True,
-    #     first_name="José",
-    #     last_name="Administrador",
-    #     blocked=False,
-    #     roles=[role_1],
-    # )
-
-    user_1 = service.create_user(
-        email="carlos.solari@gmail.com",
-        username="Indio49",
-        password=hash_pass("carlos.solari@gmail.com"),
-        first_name="Carlos",
-        last_name="Solari",
+    admin = service.create_user(
+        email="admin@gmail.com",
+        username="admin",
+        password=hash_pass("admin"),
+        first_name="José",
+        last_name="Administrador",
         roles=[role_1],
     )
 
+    user_1 = service.create_user(
+        email="operador@mail.com",
+        username="operador",
+        password=hash_pass("operador"),
+        first_name="Carlos",
+        last_name="operador",
+        roles=[role_2],
+    )
+
     user_2 = service.create_user(
-        email="skay.beili@gmail.com",
-        username="Skay52",
-        password=hash_pass("skay.beili@gmail.com"),
+        email="socio@mail.com",
+        username="socio",
+        password=hash_pass("socio"),
         first_name="Eduardo",
-        last_name="Beilinson",
+        last_name="socio",
         roles=[role_2],
     )
 
     user_3 = service.create_user(
-        email="rockera75@gmail.com",
-        username="Rocka75",
-        password=hash_pass("rockera75@gmail.com"),
+        email="socioperador@mail.com",
+        username="socioperador",
+        password=hash_pass("socioperador"),
         first_name="Nadia",
-        last_name="Benitez",
+        last_name="Socioperador",
         roles=[role_2, role_3]
     )

@@ -28,11 +28,9 @@ def users_index():
     filter_form = FilterUsersForm()
     """Render de la lista de usuarios paginada"""
     page = request.args.get("page", 1, type=int)
-    users_paginator = service.list_paginated_users(page, 2, "users.users_index")
-    # users = service.list_users()
+    users_paginator = service.list_paginated_users(page, 2, "users.users_index", "todos")
     return render_template(
         "users/index.html",
-        # users=users,
         filter_form=filter_form,
         paginator=users_paginator,
     )
@@ -42,21 +40,20 @@ def users_index():
 @login_required
 def users_filter_by():
     filter_form = FilterUsersForm()
-    search_form = SearchUserForm()
     if filter_form.validate_on_submit:
+        page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
         if filter == "activo":
-            users = service.find_active_users()
+            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "activo")
         elif filter == "bloqueado":
-            users = service.find_blocked_users()
+            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "bloqueado")
         else:
-            users = service.list_users()
+            users_paginator = service.list_paginated_users(page, 2, "users.users_index", "todos")
         print(filter)
         return render_template(
             "users/index.html",
-            users=users,
+            paginator=users_paginator,
             filter_form=filter_form,
-            search_form=search_form,
         )
 
 
@@ -162,9 +159,6 @@ def users_search():
             )
     else:
         return render_template("users/search.html", search_form=search_form)
-
-
-
 
 
 @user_blueprint.route("/user_info/<id>", methods=["GET", "POST"])

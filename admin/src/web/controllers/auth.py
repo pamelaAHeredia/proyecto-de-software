@@ -40,6 +40,7 @@ def authenticate():
 
 @auth_blueprint.get("/logout")
 def logout():
+    print("cerrando")
     """Cerrar sesion del sistema"""
     del session["user"]
     session.clear()

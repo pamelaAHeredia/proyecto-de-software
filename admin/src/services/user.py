@@ -24,12 +24,16 @@ class UserService:
         """
         return User.query.order_by(User.id)
 
-    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str) -> Paginator:
+    def list_paginated_users(self, page: int, items_per_page: int, endpoint: str, filter_by: str) -> Paginator:
         """
         Retorna el paginador de los usuarios del sistema
         """
-        users = self.list_users()
-        print(users)
+        if filter_by == "activo":
+            users = self.find_active_users()
+        elif filter_by == "bloqueado":
+             users = self.find_blocked_users()
+        else:
+            users = self.list_users()
         return Paginator(users, page, items_per_page, endpoint)
 
     def create_user(self, email, username, password, first_name, last_name, roles):
@@ -63,7 +67,7 @@ class UserService:
         user = self.find_user_byUsername(username)
         if user:
             if verify_pass(user.password, password):
-                if user.blocked != True:
+                if user.is_active == True:
                     return user
                 else:
                     raise database.PermissionDenied(
@@ -116,10 +120,10 @@ class UserService:
         if not user.roles.__contains__(role):
             if not blocker_id == user.id:
                 print(blocker_id, user.id)
-                if user.blocked:
-                    user.blocked = False
+                if user.is_active:
+                    user.is_active = False
                 else:
-                    user.blocked = True
+                    user.is_active = True
                 db.session.commit()
             else:
                 raise database.PermissionDenied(
@@ -135,11 +139,11 @@ class UserService:
 
     def find_active_users(self):
         """Retorna todos los usuarios, que no están bloqueados."""
-        return User.query.filter_by(blocked=False)
+        return User.query.filter_by(is_active=True)
 
     def find_blocked_users(self):
         """Retorna todos los usuarios, que están bloqueados."""
-        return User.query.filter_by(blocked=True)
+        return User.query.filter_by(is_active=False)
 
     # No va?
     def deactivate_user(self, id):

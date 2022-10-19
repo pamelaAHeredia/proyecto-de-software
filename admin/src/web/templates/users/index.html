@@ -7,8 +7,6 @@
 
 <h1>Usuarios</h1>
 
-{% if users %}
-
 <div class="container">
   <h3>Filtrar listado por: </h3>
   <form action="{{ url_for('users.users_filter_by')}}" method="post">
@@ -19,6 +17,8 @@
     </div>
   </form>
 </div>
+
+{% if paginator.items %}
 
 <table class="table table-hover table-sm">
   <thead>
@@ -38,9 +38,9 @@
       <th>{{ user.id }}</th>
       <th>{{ user.email }}</th>
       <th>{{ user.username }}</th>
-      <th>{%if user.blocked -%} {{"Bloqueado"}}
+      <th>{%if user.is_active -%} {{"Activo"}}
         {%else -%}
-        {{"Activo"}}
+        {{"Bloqueado"}}
         {% endif %}</th>
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
@@ -57,10 +57,10 @@
             {% if not is_admin(user.id) %}
             <li>
               <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
-                {% if user.blocked %}
-                {{"Desbloquear"}}
-                {% else %}
+                {% if user.is_active %}
                 {{"Bloquear"}}
+                {% else %}
+                {{"Desbloquear"}}
                 {% endif %}
             </a>
             </li>
