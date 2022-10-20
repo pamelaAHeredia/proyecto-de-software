@@ -46,29 +46,15 @@ def users_filter_by():
     filter_form = FilterUsersForm()
 
     if filter_form.validate_on_submit:
+        settings_service = SettingsService()
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
-        if filter == "activo":
-            users_paginator = service.list_paginated_users(
+        users_paginator = service.list_paginated_users(
                 page,
-                2,
+                settings_service.get_items_per_page(),
                 "users.users_index",
-                "activo",
-            )
-        elif filter == "bloqueado":
-            users_paginator = service.list_paginated_users(
-                page,
-                2,
-                "users.users_index",
-                "bloqueado",
-            )
-        else:
-            users_paginator = service.list_paginated_users(
-                page,
-                2,
-                "users.users_index",
-                "todos",
-            )
+                filter
+        )
         return render_template(
             "users/index.html",
             paginator=users_paginator,
@@ -275,3 +261,5 @@ def delete(id):
         flash(e, "danger")
     users = service.list_users()
     return render_template("users/index.html", users=users, filter_form=filter_form)
+
+
