@@ -70,7 +70,7 @@ class SuscriptionService:
         pass
     
     def associate_member(self, member_id):
-        social_quota = Membership.query.get(2)
+        social_quota = Membership.query.get(1) # Esto es una chanchada hay que mejorarlo
         member = self._member_service.get_by_membership_number(member_id)
         suscription = Suscription(membership=social_quota, member=member)
         db.session.add(suscription)
