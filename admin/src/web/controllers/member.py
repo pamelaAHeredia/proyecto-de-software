@@ -1,7 +1,8 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
-from src.web.forms.member import MemberForm
+from src.services.settings import SettingsService
+from src.web.forms.member import MemberForm, FilterForm
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
@@ -10,15 +11,20 @@ from src.web.helpers.auth import login_required, verify_permission
 member_blueprint = Blueprint("members", __name__, url_prefix="/socios")
 
 service = MemberService()
+setting = SettingsService()
 
 
 @member_blueprint.get("/")
 @login_required
 def index():
-    """Por metodo GET pide la lista total de socios al modelo y lo renderiza en la vista"""
+    filter_form = FilterForm()
     page = request.args.get("page", 1, type=int)
-    member_paginator = service.list_paginated_members(page, 2, "members.index")
-    return render_template("members/index.html", paginator=member_paginator)
+    member_paginator = service.list_paginated_members(
+        page, setting.get_items_per_page(), "members.index", "Todos"
+    )
+    return render_template(
+        "members/index.html", filter_form=filter_form, paginator=member_paginator
+    )
 
 
 @member_blueprint.route("/create", methods=["GET", "POST"])
@@ -109,10 +115,28 @@ def deactivate(member_id):
     service.deactivate_member(member_id)
     return redirect(url_for("members.index"))
 
-@member_blueprint.post("/exportpdf") 
+
+@member_blueprint.post("/exportpdf")
 def export_pdf():
     list = request.form.items.__get__
     print(list)
-    return redirect(url_for("members.index"))   
+    return redirect(url_for("members.index"))
 
 
+@member_blueprint.route("/filter_by", methods=["POST"])
+def filter_by():
+    filter_form = FilterForm()
+    if filter_form.validate_on_submit:
+        page = request.args.get("page", 1, type=int)
+        filter = filter_form.filter.data
+        members_paginator = service.list_paginated_members(
+            page,
+            setting.get_items_per_page(),
+            "members.index",
+            filter,
+        )
+        return render_template(
+            "members/index.html",
+            paginator=members_paginator,
+            filter_form=filter_form,
+        )

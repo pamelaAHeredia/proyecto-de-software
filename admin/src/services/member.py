@@ -24,7 +24,7 @@ class MemberService:
         return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
-        self, page: int, items_per_page: int, endpoint: str
+        self, page: int, items_per_page: int, endpoint: str, filter: str
     ) -> Paginator:
         """Función que retorna el paginador con los socios del sistema.
 
@@ -36,7 +36,12 @@ class MemberService:
         Returns:
            Un paginador.
         """
-        members = self.list_members()
+        if filter == "Activos":
+            members = self.list_by_is_active(active=True)
+        elif filter == "Inactivos":
+            members = self.list_by_is_active(active=False)   
+        else:  
+            members = self.list_members()
         return Paginator(members, page, items_per_page, endpoint)
 
 
@@ -129,7 +134,7 @@ class MemberService:
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado"""
-        return Member.query.filter_by(is_active=active).all()
+        return Member.query.filter_by(is_active=active).order_by(Member.membership_number)
     
 
     def format_pdf(self, pdf):
@@ -173,3 +178,11 @@ class MemberService:
                y = 725
         pdf.save()
         return pdf
+
+    def no_user(self, id):
+        """Funcion que retorna True si el Socio NO tiene asignado un Usuario"""
+        member = self.get_by_membership_number(id)
+        return member.user == None
+    
+    
+

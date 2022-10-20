@@ -18,9 +18,13 @@ class User(db.Model):
     first_name = db.Column(db.String(75), nullable=False)
     last_name = db.Column(db.String(75), nullable=False)
     blocked = db.Column(db.Boolean, default=False)
-    roles = db.relationship('Role', secondary=user_has_role, lazy='subquery',
-        backref=db.backref('users', lazy=True))
-    members = db.relationship("Member", back_populates="user")    
+    roles = db.relationship(
+        "Role",
+        secondary=user_has_role,
+        lazy="subquery",
+        backref=db.backref("users", lazy=True),
+    )
+    members = db.relationship("Member", back_populates="user", lazy="dynamic")
 
     def __init__(
         self,

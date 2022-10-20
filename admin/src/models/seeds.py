@@ -1,25 +1,11 @@
 from src.models import auth
 from src.services.utils import hash_pass
 from src.services.member import MemberService
-from src.services.discipline import DisciplineService
 from src.services.user import UserService
 
 
 def run():
     """Hacemos un seed de informacion en la BBDD"""
-
-    service = DisciplineService()
-
-    discipline = service.create_discipline(
-        name="Basquet",
-        category="Pre mini",
-        instructor_first_name="Juan",
-        instructor_last_name="De Los Palotes",
-        days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
-        registration_quota=50,
-        amount=600.00,
-        is_active=True
-    )
 
     service = MemberService()
 
