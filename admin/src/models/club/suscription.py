@@ -31,4 +31,19 @@ class Suscription(db.Model):
     membership = db.relationship("Membership")
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
-    # movements = db.relationship("Movement", back_populates="suscription")
+    movements = db.relationship("Movement", back_populates="suscription")
+
+    @property
+    def get_balance_movements(self):
+        """Metodo que obtiene el saldo de los movimientos"""
+
+        if (self.movements is None):
+            return 0
+        else:
+            aux = 0
+            for m in self.movements:
+                if(m.is_credit):
+                    aux+= m.amount
+                else:
+                    aux+=(m.amount*-1)
+            return aux
