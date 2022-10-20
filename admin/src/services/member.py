@@ -1,3 +1,4 @@
+import csv
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -19,7 +20,7 @@ class MemberService:
         return cls._instance
 
     def list_members(self):
-        """Función que retorna la query de todos los Socios de la Base de Datos ordenada por 
+        """Función que retorna la query de todos los Socios de la Base de Datos ordenada por
         Nro de Socio"""
         return Member.query.order_by(Member.membership_number)
 
@@ -39,12 +40,10 @@ class MemberService:
         if filter == "Activos":
             members = self.list_by_is_active(active=True)
         elif filter == "Inactivos":
-            members = self.list_by_is_active(active=False)   
-        else:  
+            members = self.list_by_is_active(active=False)
+        else:
             members = self.list_members()
         return Paginator(members, page, items_per_page, endpoint)
-
-
 
     def create_member(
         self,
@@ -74,8 +73,9 @@ class MemberService:
             db.session.add(member)
             db.session.commit()
             return member
-        raise database.ExistingData(info="ATENCION!!!",
-            message="Ya existe el Socio con ese tipo y numero de documento"
+        raise database.ExistingData(
+            info="ATENCION!!!",
+            message="Ya existe el Socio con ese tipo y numero de documento",
         )
 
     def find_member(self, document_type, document_number):
@@ -115,8 +115,9 @@ class MemberService:
             member.email = email
             db.session.commit()
             return member
-        raise database.ExistingData(info="ATENCION!!!",
-            message="Ya existe el Socio con ese tipo y numero de documento"
+        raise database.ExistingData(
+            info="ATENCION!!!",
+            message="Ya existe el Socio con ese tipo y numero de documento",
         )
 
     def deactivate_member(self, id):
@@ -134,12 +135,13 @@ class MemberService:
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado"""
-        return Member.query.filter_by(is_active=active).order_by(Member.membership_number)
-    
+        return Member.query.filter_by(is_active=active).order_by(
+            Member.membership_number
+        )
 
     def format_pdf(self, pdf):
         """Función que define el formato de las paginas del pdf"""
-        pdf.drawImage('../admin/public/logoclub.jpg', 5, 790 , width=50, height=50)
+        pdf.drawImage("../admin/public/logoclub.jpg", 5, 790, width=50, height=50)
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
         pdf.drawCentredString(300, 800, "Reporte de Asociados")
@@ -150,11 +152,9 @@ class MemberService:
         pdf.drawString(350, 750, "Tipo y numero de documento")
         pdf.line(1, 740, 600, 740)
         pdf.setFontSize(12)
-        pdf.drawString(490, 820, "Fecha: "+ date.today().strftime("%d/%m/%Y"))
+        pdf.drawString(490, 820, "Fecha: " + date.today().strftime("%d/%m/%Y"))
         pdf.drawString(520, 10, "Página " + str(pdf.getPageNumber()))
         return pdf
-
-
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
@@ -172,10 +172,10 @@ class MemberService:
             members_per_page = members_per_page + 1
             members_total = members_total + 1
             if (line_per_page == members_per_page) and (members_total < len(members)):
-               pdf.showPage()
-               members_per_page = 0
-               self.format_pdf(pdf)
-               y = 725
+                pdf.showPage()
+                members_per_page = 0
+                self.format_pdf(pdf)
+                y = 725
         pdf.save()
         return pdf
 
@@ -183,6 +183,36 @@ class MemberService:
         """Funcion que retorna True si el Socio NO tiene asignado un Usuario"""
         member = self.get_by_membership_number(id)
         return member.user == None
-    
-    
 
+    def export_list_to_csv(self, members):
+        """Funcion que exporta una lista de Socios a un archivo report.csv"""
+        file = open("report.csv", "w", newline='')
+        fields = ["N° de Socio", "Nombre", "Apellido", "Tipo de Documento", "N° de Documento"]
+        salida = csv.DictWriter(file, fieldnames=fields)
+        salida.writeheader()
+        for member in members:
+            salida.writerow(
+                {
+                    "N° de Socio": member.membership_number,
+                    "Nombre": member.first_name,
+                    "Apellido": member.last_name,
+                    "Tipo de Documento": member.document_type,
+                    "N° de Documento": member.document_number,
+                }
+            )
+        file.close()
+        return file
+
+    def link_management(self, id_member, id_user):
+        """Funcion que vincula un socio con un usuario para ser gestionado"""
+        member = self.get_by_membership_number(id_member)
+        member.user_id = id_user
+        db.session.commit()
+        return member           
+
+    def unlink_management(self, id_member):
+        """Funcion que desvincula un socio del usuario que lo gestiona"""
+        member = self.get_by_membership_number(id_member)
+        member.user_id = None
+        db.session.commit()
+        return member      

@@ -19,10 +19,10 @@
         <div class="col-12 text-center">
             <h1>Socios</h1>
         </div>
-        <form name="export_form" onsubmit="post_export()" method="post" action="{{ url_for('members.export_pdf')}}">
+        <form name="export_form" method="post" action="{{ url_for('members.export_pdf')}}">
             <input name="filter_value" type="hidden"> 
             <div class="col-sm-12 d-flex justify-content-center">
-                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" value="Export">
+                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" onclick="return post_export()" value="Export">
             </div>
         </form>
     </div>
@@ -80,27 +80,26 @@
             <a class="btn btn-secondary btn-lg" href="{{url_for('members.create')}}">Agregar Socio</a>
         </div>
     </div>
-    <br />
-    <br />
+    <br>
+    <br>
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
             <a class="btn btn-primary btn-sm" href="{{url_for('home')}}"> Volver </a>
         </div>
     </div>
 </div>
-
-
-
-
-{% endblock content %}
-
 {% block javascripts %}
 <script>
- function myFunction() {
+ function post_export() {
   /*console.log(document.getElementById("filter").value);  
   document.export_form.filter_value = "chochi";
   return true;*/
   alert("entra");
+  return true;
 }   
 </script>
 {% endblock javascripts %}    
+
+
+
+{% endblock content %}

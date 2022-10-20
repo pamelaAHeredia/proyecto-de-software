@@ -6,6 +6,7 @@ from src.services.settings import SettingsService
 from src.services.utils import hash_pass
 from src.web.helpers.auth import login_required, verify_permission
 from src.services.user import UserService
+from src.services.member import MemberService
 from src.services.utils import hash_pass
 from src.web.forms.user import (
     CreateUserForm,
@@ -262,4 +263,21 @@ def delete(id):
     users = service.list_users()
     return render_template("users/index.html", users=users, filter_form=filter_form)
 
+@user_blueprint.route("/link_member/<id>", methods=["POST", "GET"])
+@login_required
+def link_member(id):
+    search_form = SearchUserForm()
+    member_service = MemberService()
+    user=None
+    member = member_service.get_by_membership_number(id)
+    if request.method == "POST":
+        if search_form.validate_on_submit: 
+            email = search_form.email.data
+            user = service.find_user_byEmail(email)
+            try: 
+                member = member_service.link_management(member.membership_number, user.id)
+                flash("Usuario asignado con éxito","success")
+            except: 
+                flash("El email no pertenece a un usuario.","danger")
 
+    return render_template("users/link_member.html", search_form=search_form, member=member, user=user)

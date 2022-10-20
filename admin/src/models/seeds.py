@@ -18,6 +18,24 @@ def run():
         address="La Plata",
     )
 
+    member_2 = service.create_member(
+        first_name="César",
+        last_name="OtraCosa",
+        document_type="DNI",
+        document_number="12345678",
+        gender="M",
+        address="La Plata",
+    )
+
+    member_3 = service.create_member(
+        first_name="Nemo",
+        last_name="Nobody",
+        document_type="DNI",
+        document_number="87654321",
+        gender="M",
+        address="La Plata",
+    )
+
     service = UserService()
 
     perms = [
