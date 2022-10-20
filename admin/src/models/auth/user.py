@@ -24,6 +24,7 @@ class User(db.Model):
         lazy="subquery",
         backref=db.backref("users", lazy=True),
     )
+    members = db.relationship("Member", back_populates="user", lazy="dynamic")
 
     def __init__(
         self,
