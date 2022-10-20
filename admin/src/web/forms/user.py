@@ -42,9 +42,8 @@ class FilterUsersForm(FlaskForm):
             ("activo", "activo"),
             ("bloqueado", "bloqueado"),
             ("mostrar todos", "mostrar todos"),
-        ],
-        validators=[DataRequired()],
-    )
+        ]
+            )
     submit = SubmitField("Filtar")
 
 

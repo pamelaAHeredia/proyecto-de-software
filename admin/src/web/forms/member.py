@@ -23,6 +23,5 @@ class FilterForm(FlaskForm):
             ("Inactivos", "Inactivos"),
             ("Todos", "Todos"),
         ],
-        validators=[DataRequired()],
-    )
+          )
     submit = SubmitField("Filtrar")    
