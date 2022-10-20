@@ -202,3 +202,17 @@ class MemberService:
             )
         file.close()
         return file
+
+    def link_management(self, id_member, id_user):
+        """Funcion que vincula un socio con un usuario para ser gestionado"""
+        member = self.get_by_membership_number(id_member)
+        member.user_id = id_user
+        db.session.commit()
+        return member           
+
+    def unlink_management(self, id_member):
+        """Funcion que desvincula un socio del usuario que lo gestiona"""
+        member = self.get_by_membership_number(id_member)
+        member.user_id = None
+        db.session.commit()
+        return member      

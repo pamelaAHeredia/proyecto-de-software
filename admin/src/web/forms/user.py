@@ -39,12 +39,12 @@ class FilterUsersForm(FlaskForm):
     filter = SelectField(
         "filter",
         choices=[
-            ("activo", "activo"),
-            ("bloqueado", "bloqueado"),
-            ("mostrar todos", "mostrar todos"),
+            ("Activo", "Activo"),
+            ("Bloqueado", "Bloqueado"),
+            ("Mostrar Todos", "Mostrar Todos"),
         ]
             )
-    submit = SubmitField("Filtar")
+    submit = SubmitField("Filtrar")
 
 
 class AddRolesForm(FlaskForm):

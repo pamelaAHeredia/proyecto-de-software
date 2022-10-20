@@ -48,3 +48,9 @@ class Member(db.Model):
         self.address = address
         self.phone_number = phone_number
         self.email = email
+
+    @property
+    def username(self):
+        if self.user:
+           return self.user.username
+        return None   
