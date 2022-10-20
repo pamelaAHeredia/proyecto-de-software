@@ -4,6 +4,8 @@ import datetime
 
 
 from src.models.database import db
+from src.models.club.membership import Membership
+from src.models.club.suscription import Suscription
 
 from src.services.member import MemberService
 from src.services.membership import MembershipService
@@ -66,3 +68,12 @@ class SuscriptionService:
     
     def enroll(self, member_id, discipline_id):
         pass
+    
+    def associate_member(self, member_id):
+        social_quota = Membership.query.get(2)
+        member = self._member_service.get_by_membership_number(member_id)
+        suscription = Suscription(membership=social_quota, member=member)
+        db.session.add(suscription)
+        db.session.commit()
+        
+        

@@ -21,8 +21,8 @@ class MembershipService:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(MembershipService, cls).__new__(cls)
-        return cls._instance
-
+        return cls._instance        
+    
     def membership_active(self, discipline_id: int) -> bool:
         """Retorna si la membresia esta activa.
 
