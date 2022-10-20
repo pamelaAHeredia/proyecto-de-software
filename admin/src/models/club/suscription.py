@@ -10,7 +10,7 @@ class Suscription(db.Model):
     ---------
     date_from : Datetime
         Fecha en la que se realizó la inscripción.
-    date_from : Datetime
+    date_to : Datetime
         Fecha en la que se realizó la baja de la inscripción.
     membership_id : Integer
         Es el Id de la membresia asociada a la suscripcion.
@@ -18,7 +18,7 @@ class Suscription(db.Model):
         Es el objeto membresia que contiene la relación.
     member_id : Integer
         Es el Id del socio asociado a la suscripcion.
-    membership : Member
+    member : Member
         Es el objeto socio que contiene la relación.
     
     """
