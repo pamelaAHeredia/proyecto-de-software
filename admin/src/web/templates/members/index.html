@@ -15,6 +15,13 @@
       <button class="btn btn btn-primary block" type="submit">Filtrar</button>  
     </div>
   </form>
+  <form class="d-flex" action="{{ url_for('members.search_by_last_name')}}" method="post">
+    <div class="form group">
+        {{ search_form.last_name(class="form-control me-2", placeholder="Busqueda por Apellido")}}
+        {{ search_form.hidden_tag() }}
+        <button class="btn btn-outline-success" type="submit">Buscar por Apellido</button> 
+    </div>
+  </form>
     <div class="row">
         <div class="col-12 text-center">
             <h1>Socios</h1>

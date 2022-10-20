@@ -45,6 +45,26 @@ class MemberService:
             members = self.list_members()
         return Paginator(members, page, items_per_page, endpoint)
 
+    def list_paginated_last_name(
+        self, page: int, items_per_page: int, endpoint: str, search: str
+    ) -> Paginator:
+        """Función que retorna el paginador con los socios del sistema.
+
+        Args:
+           page: Número de pagina.
+           items_per_page: cantidad de registros por página.
+           endpoint: endpoint para el armado del url_for.
+
+        Returns:
+           Un paginador.
+        """
+        members = self.list_by_last_name(search)
+       
+        return Paginator(members, page, items_per_page, endpoint)
+
+
+
+
     def create_member(
         self,
         first_name,
@@ -130,7 +150,8 @@ class MemberService:
     def list_by_last_name(self, substring):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
         el substring enviado por parametro"""
-        return Member.query.filter(Member.last_name.ilike("%" + substring + "%")).all()
+        return Member.query.filter(Member.last_name.ilike('%' + substring + '%')).order_by(
+            Member.membership_number)
 
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos

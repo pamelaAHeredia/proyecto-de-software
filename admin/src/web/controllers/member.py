@@ -2,7 +2,12 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
-from src.web.forms.member import FilterByDocForm, MemberForm, FilterForm;
+from src.web.forms.member import (
+    FilterByDocForm,
+    MemberForm,
+    FilterForm,
+    SearchByLastName,
+)
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
@@ -18,12 +23,13 @@ setting = SettingsService()
 @login_required
 def index():
     filter_form = FilterForm()
+    search_form = SearchByLastName()
     page = request.args.get("page", 1, type=int)
     member_paginator = service.list_paginated_members(
         page, setting.get_items_per_page(), "members.index", "Todos"
     )
     return render_template(
-        "members/index.html", filter_form=filter_form, paginator=member_paginator
+        "members/index.html", filter_form=filter_form, search_form=search_form, paginator=member_paginator
     )
 
 
@@ -126,6 +132,7 @@ def export_pdf():
 @member_blueprint.route("/filter_by", methods=["POST"])
 def filter_by():
     filter_form = FilterForm()
+    search_form = SearchByLastName()
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
@@ -138,8 +145,9 @@ def filter_by():
         return render_template(
             "members/index.html",
             paginator=members_paginator,
-            filter_form=filter_form,
+            filter_form=filter_form, search_form=search_form
         )
+
 
 @member_blueprint.route("/filter_by_dni", methods=["POST", "GET"])
 def filter_by_doc():
@@ -153,3 +161,23 @@ def filter_by_doc():
     else:
         return render_template("members/search.html", filter_form=filter_form)
 
+
+
+@member_blueprint.route("/search_by_last_name", methods=["POST"])
+def search_by_last_name():
+    search_form = SearchByLastName()
+    filter_form = FilterForm()
+    if search_form.validate_on_submit():
+        last_name = search_form.last_name.data
+        page = request.args.get("page", 1, type=int)
+        members_paginator = service.list_paginated_last_name(
+            page,
+            setting.get_items_per_page(),
+            "members.index",
+            str(last_name)
+        )
+        return render_template(
+            "members/index.html",
+            paginator=members_paginator,
+            search_form=search_form,filter_form = filter_form
+        )
