@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
-from src.web.forms.member import MemberForm, FilterForm
+from src.web.forms.member import FilterByDocForm, MemberForm, FilterForm;
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
@@ -140,3 +140,16 @@ def filter_by():
             paginator=members_paginator,
             filter_form=filter_form,
         )
+
+@member_blueprint.route("/filter_by_dni", methods=["POST", "GET"])
+def filter_by_doc():
+    filter_form = FilterByDocForm()
+    if request.method == "POST":
+        if filter_form.validate_on_submit():
+            doc_type = filter_form.document_type.data
+            doc_number = filter_form.document_number.data
+            member = service.find_member(doc_type, doc_number)
+            return render_template("members/member_info.html", member=member)
+    else:
+        return render_template("members/search.html", filter_form=filter_form)
+

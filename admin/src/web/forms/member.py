@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, EmailField
-from wtforms.validators import InputRequired, Email, Optional, DataRequired
+from wtforms import StringField, SubmitField, SelectField, EmailField, IntegerField
+from wtforms.validators import InputRequired, Email, Optional, DataRequired, Length
 
 
 class MemberForm(FlaskForm):
@@ -26,3 +26,8 @@ class FilterForm(FlaskForm):
         validators=[DataRequired()],
     )
     submit = SubmitField("Filtrar")    
+
+class FilterByDocForm(FlaskForm):
+    document_number = StringField("Número de Documento", validators=[DataRequired(), Length(min=8, max=10)])
+    document_type = SelectField("Tipo de Documento", choices=["DNI","LE","LC","PASAPORTE"])
+    submit = SubmitField("Buscar Socio")
