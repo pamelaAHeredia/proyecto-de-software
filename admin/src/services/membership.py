@@ -87,7 +87,9 @@ class MembershipService:
         used_quota = membership.suscriptions.filter(Suscription.date_to == None).count()
         return used_quota
 
-    def create_social_membership(self):
+    def create_social_membership(self) -> None:
+        """Crea la cuota social inicial usada en el seeds.
+        """        
         social_membership = Membership(registration_quota=999999, pays_per_year=12)
         social_membership_tariff = Tariff(
             amount=self._settings_service.get_amount_monthly(),
@@ -96,7 +98,12 @@ class MembershipService:
         db.session.add_all([social_membership, social_membership_tariff])
         db.session.commit()
 
-    def update_social_membership(self, amount):
+    def update_social_membership(self, amount: Decimal) -> None:
+        """Actualiza el valor de la cuota social.
+
+        Args:
+            amount (Decimal): Nuevo valor de la cuota.
+        """      
         old_tariff = Tariff.query.filter_by(membership_id=1, date_to=None).first()
         old_tariff.date_to = datetime.datetime.now()
         new_tariff = Tariff(membership_id=1, amount=amount)
