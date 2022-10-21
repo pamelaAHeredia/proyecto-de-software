@@ -7,13 +7,14 @@ from src.models.database import db
 from src.models.club.member import Member
 from src.errors import database
 from src.services.paginator import Paginator
-#from src.services.suscription import SuscriptionService
+from src.services.suscription import SuscriptionService
 
 
 class MemberService:
     """Clase que representa el manejo de los Socios"""
 
     _instance = None
+    _suscription_service = SuscriptionService()
 
     def __new__(cls):
         if cls._instance is None:
@@ -93,6 +94,7 @@ class MemberService:
             )
             db.session.add(member)
             db.session.commit()
+            self._suscription_service.associate_member(member.membership_number)
             return member
         raise database.ExistingData(
             info="ATENCION!!!",
@@ -141,10 +143,10 @@ class MemberService:
             message="Ya existe el Socio con ese tipo y numero de documento",
         )
 
-    def deactivate_member(self, id):
-        """Función que pone inactivo a un Socio"""
+    def change_activity_member(self, id):
+        """Función que cambia el estado activo/inactivo del Socio"""
         member = self.get_by_membership_number(id)
-        member.is_active = False
+        member.is_active = not member.is_active
         db.session.commit()
         return member
 

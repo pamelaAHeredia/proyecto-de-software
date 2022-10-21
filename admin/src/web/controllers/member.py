@@ -18,7 +18,6 @@ member_blueprint = Blueprint("members", __name__, url_prefix="/socios")
 
 service = MemberService()
 setting = SettingsService()
-suscription = SuscriptionService()
 
 
 @member_blueprint.get("/")
@@ -53,7 +52,7 @@ def create():
         phone_number = form.phone_number.data
 
         try:
-            member = service.create_member(
+            service.create_member(
                 first_name=first_name,
                 last_name=last_name,
                 document_type=document_type,
@@ -63,7 +62,6 @@ def create():
                 email=email,
                 phone_number=phone_number,
             )
-            suscription.associate_member(member.membership_number)
             flash("Socio guardado con éxito!", "success")
             return redirect(url_for("members.index"))
         except database.ExistingData as e:
@@ -118,10 +116,10 @@ def update(member_id):
     return render_template("members/update.html", form=form, member_id=member_id)
 
 
-@member_blueprint.post("/deactivate/<int:member_id>")
+@member_blueprint.post("/change_activity/<int:member_id>")
 @login_required
-def deactivate(member_id):
-    service.deactivate_member(member_id)
+def change_activity(member_id):
+    service.change_activity_member(member_id)
     return redirect(url_for("members.index"))
 
 
