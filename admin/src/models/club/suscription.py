@@ -38,4 +38,4 @@ class Suscription(db.Model):
 
     @property
     def is_active(self):
-        return True if date_to == None else False
+        return True if self.date_to == None else False
