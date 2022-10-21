@@ -15,6 +15,7 @@ from src.web.forms.user import (
     FilterUsersForm,
     AddRolesForm,
     DeleteRolesForm,
+    UnlinkMemberForm,
 )
 from src.errors import database
 
@@ -22,6 +23,7 @@ from src.errors import database
 user_blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 service = UserService()
+member_service = MemberService()
 
 
 @user_blueprint.get("/")
@@ -51,10 +53,7 @@ def users_filter_by():
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
         users_paginator = service.list_paginated_users(
-                page,
-                settings_service.get_items_per_page(),
-                "users.users_index",
-                filter
+            page, settings_service.get_items_per_page(), "users.users_index", filter
         )
         return render_template(
             "users/index.html",
@@ -67,7 +66,6 @@ def users_filter_by():
 @login_required
 def users_add():
     """Agrega usuarios mediante el formulario"""
-
     form = CreateUserForm()
 
     if form.validate_on_submit():
@@ -81,7 +79,7 @@ def users_add():
         roles = [role]
 
         try:
-            service.create_user(
+            user = service.create_user(
                 email=email,
                 username=username,
                 password=password,
@@ -100,12 +98,14 @@ def users_add():
 def users_update(id):
     form = UpdateUserForm()
     user = service.find_user_by_id(id)
+
     if request.method == "POST":
         if form.validate_on_submit():
             email = form.email.data
             username = form.username.data
             first_name = form.first_name.data
             last_name = form.last_name.data
+
             try:
                 service.update_user(
                     id=id,
@@ -118,22 +118,20 @@ def users_update(id):
             except database.ExistingData as e:
                 flash(e, "danger")
 
-        return render_template("users/update.html", user=user, form=form)
-    else:
-        return render_template("users/update.html", user=user, form=form)
+    return render_template("users/update.html", user=user, form=form)
 
 
 @user_blueprint.route("/block_user/<id>", methods=["GET"])
 @login_required
 def users_block(id):
-
     user = service.find_user_by_id(id)
+
     try:
         delete_roles_form = DeleteRolesForm()
         add_roles_form = AddRolesForm()
         user_session = session["user"]
         service.block_user(id, user_session)
-        if user.blocked == True:
+        if user.is_active == False:
             flash("Usuario bloqueado con éxito", "success")
         else:
             flash("Usuario desbloqueado con éxito", "success")
@@ -151,9 +149,11 @@ def users_block(id):
 @login_required
 def users_search():
     search_form = SearchUserForm()
+
     if request.method == "POST":
         delete_roles_form = DeleteRolesForm()
         add_roles_form = AddRolesForm()
+
         if search_form.validate_on_submit():
             email = search_form.email.data
             user = service.find_user_byEmail(email)
@@ -172,12 +172,15 @@ def users_search():
 def user_info(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
+    unlink_form = UnlinkMemberForm()
+
     user = service.find_user_by_id(id)
     return render_template(
         "users/user_info.html",
         user=user,
         add_roles_form=add_roles_form,
         delete_roles_form=delete_roles_form,
+        unlink_form=unlink_form,
     )
 
 
@@ -186,10 +189,14 @@ def user_info(id):
 def users_add_roles(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
+    unlink_form = UnlinkMemberForm()
     user = service.find_user_by_id(id)
+
     if request.method == "POST":
+
         if add_roles_form.validate_on_submit:
             role = add_roles_form.roles.data
+
             try:
                 service.add_role(id, role)
                 flash("Rol agregado con éxito!", "success")
@@ -207,6 +214,7 @@ def users_add_roles(id):
             user=user,
             add_roles_form=add_roles_form,
             delete_roles_form=delete_roles_form,
+            unlink_form=unlink_form,
         )
 
 
@@ -215,6 +223,7 @@ def users_add_roles(id):
 def users_delete_roles(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
+    unlink_form = UnlinkMemberForm()
     user = service.find_user_by_id(id)
     roles = service.list_user_roles(id)
     if request.method == "POST":
@@ -231,6 +240,7 @@ def users_delete_roles(id):
         roles=roles,
         delete_roles_form=delete_roles_form,
         add_roles_form=add_roles_form,
+        unlink_form=unlink_form,
     )
 
 
@@ -240,6 +250,7 @@ def profile():
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
     id = session["user"]
+
     user = service.find_user_by_id(id)
     return render_template(
         "users/profile.html",
@@ -255,6 +266,7 @@ def profile():
 def delete(id):
     filter_form = FilterUsersForm()
     session_id = session["user"]
+
     try:
         service.delete(id, session_id)
         flash("Usuario eliminado con éxito!", "success")
@@ -263,21 +275,56 @@ def delete(id):
     users = service.list_users()
     return render_template("users/index.html", users=users, filter_form=filter_form)
 
+
 @user_blueprint.route("/link_member/<id>", methods=["POST", "GET"])
 @login_required
 def link_member(id):
     search_form = SearchUserForm()
-    member_service = MemberService()
-    user=None
+
+    user = None
     member = member_service.get_by_membership_number(id)
     if request.method == "POST":
-        if search_form.validate_on_submit: 
+
+        if search_form.validate_on_submit:
             email = search_form.email.data
             user = service.find_user_byEmail(email)
-            try: 
-                member = member_service.link_management(member.membership_number, user.id)
-                flash("Usuario asignado con éxito","success")
-            except: 
-                flash("El email no pertenece a un usuario.","danger")
+            
+            if user:
+                if service.contains_role("Socio", user.id):
+                    member = member_service.link_management(
+                        member.membership_number, user.id
+                    )
+                    flash("Usuario asignado con éxito", "success")
+                else:
+                    flash(
+                        "El usuario que desea asignar no tiene rol de socio.", "danger"
+                    )
+            else:
+                flash("El email no pertenece a un usuario.", "danger")
 
-    return render_template("users/link_member.html", search_form=search_form, member=member, user=user)
+    return render_template(
+        "users/link_member.html", search_form=search_form, member=member, user=user
+    )
+
+
+@user_blueprint.route("/unlink_member/<id>", methods=["GET", "POST"])
+@login_required
+def unlink_member(id):
+    delete_roles_form = DeleteRolesForm()
+    add_roles_form = AddRolesForm()
+    unlink_form = UnlinkMemberForm()
+    user = service.find_user_by_id(id)
+
+    if request.method == "POST":
+        if unlink_form.validate_on_submit:
+            member = unlink_form.member.data
+            member_service.unlink_management(member)
+            flash("Socio desvinculado con éxito!", "success")
+
+    return render_template(
+        "users/user_info.html",
+        user=user,
+        add_roles_form=add_roles_form,
+        delete_roles_form=delete_roles_form,
+        unlink_form=unlink_form,
+    )

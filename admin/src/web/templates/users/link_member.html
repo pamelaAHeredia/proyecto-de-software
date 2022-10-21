@@ -13,10 +13,13 @@
       {{search_form.hidden_tag()}}
       <button class="btn btn-outline-success" type="submit">Buscar Usuario</button> 
     </form>
-  </div>
+</div>
+
 {% if member.user_id %}
 <h3> Usuario asignado: {{ user.username }}</h3>
 {% endif %}
+
+
 
 <a href="{{url_for('users.users_index')}}"> Volver </a>
 {% endblock %}

@@ -41,3 +41,13 @@ class User(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.roles = roles
+
+    @property
+    def is_admin(self):
+        aux = False
+        for role in self.roles: 
+            if role.name == "Administrador":
+                aux = True
+        return aux
+    
+

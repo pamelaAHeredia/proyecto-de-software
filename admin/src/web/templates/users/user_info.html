@@ -25,9 +25,9 @@
       <th>{{ user.id }}</th>
       <th>{{ user.email }}</th>
       <th>{{ user.username }}</th>
-      <th>{%if user.blocked -%} {{"Bloqueado"}}
+      <th>{%if user.is_active -%} {{"Activo"}}
         {%else -%}
-        {{"Activo"}}
+        {{"Bloqueado"}}
         {% endif %}</th>
       <th>{{ user.first_name }}</th>
       <th>{{ user.last_name }}</th>
@@ -39,7 +39,7 @@
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
-            {% if not is_admin(user.id) %}
+            {% if not user.is_admin %}
             <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
                 {%if user.blocked%}
                 {{"Desbloquear"}}
@@ -55,6 +55,39 @@
     </tr>
   </tbody>
 </table>
+
+{% for role in user.roles %}
+  {% if role.name == "Socio" %}
+    {% if user.members %}
+      <h1>Socios vinculados</h1>
+      <table class="table table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Socios </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% for member in user.members %}
+            <th>{{member.document_type}}: {{ member.document_number }}</th>
+            <th><form action="{{url_for('users.unlink_member', id=user.id)}}"  method="post">
+              <div class="form-group">
+                  {{ unlink_form.hidden_tag() }}
+                  {{ unlink_form.member(type="hidden", value=member.membership_number) }}
+              </div>  
+              <button type="submit" class="btn btn-danger"> Desvincular Socio</button>  
+              </form>
+            </th>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+
+
 {% else %}
 <h2>Usuario Inexistente</h2>
 {% endif %}

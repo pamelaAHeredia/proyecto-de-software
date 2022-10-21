@@ -21,16 +21,18 @@
         {% for role in user.roles %}
         <tr>
             <th>{{ role.name }}</th>
+
             <th><form action="{{url_for('users.users_delete_roles', id=user.id)}}"  method="post">
                 <div class="form-group">
                     {{ delete_roles_form.hidden_tag() }}
                     {{ delete_roles_form.role(type="hidden", value=role.name) }}
                 </div>  
-                {% if user.roles|length > 1 %} 
+                {% if user.roles|length > 1  %} 
                 <button type="submit" class="btn btn-danger"> Desasignar Rol</button>  
-                {% endif %}   
+                {% endif %} 
                 </form>
             </th>
+
         </tr>
         {% endfor %}
         </tr>
