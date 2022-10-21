@@ -7,12 +7,13 @@ from src.services.suscription import SuscriptionService
 from src.services.member import MemberService
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
-from src.web.forms.suscription import SuscriptionSearchForm, SuscriptionAddForm
+from src.web.forms.suscription import SuscriptionForm
 
 
 service_discipline = DisciplineService()
 service_suscription = SuscriptionService()
 service_member = MemberService()
+
 # Se define Blueprint de Usuario
 suscription_blueprint = Blueprint("suscription", __name__, url_prefix="/inscripciones")
 
@@ -36,7 +37,7 @@ def index():
 @login_required
 # @verify_permission("discipline_create")
 def find_member(discipline_id):
-    form = SuscriptionSearchForm()
+    form = SuscriptionForm()
     member = None
     if request.method == "GET":
         discipline_id = request.args.get("discipline_id", type=int)
@@ -54,18 +55,16 @@ def find_member(discipline_id):
     )
 
 
-@suscription_blueprint.route(
-    "/resume/<int:member_id>/<int:discipline_id>", methods=["POST", "GET"]
-)
+@suscription_blueprint.post("/enroll/<int:member_id>/<int:discipline_id>")
 @login_required
 # @verify_permission("discipline_create")
-def resume(member_id, discipline_id):
+def enroll(member_id, discipline_id):
     membership = service_discipline.membership(discipline_id)
     member = service_member.get_by_membership_number(member_id)
 
     if not service_suscription.enroll(member, membership):
         flash("El socio ya se encuentra inscripto.", "danger")
-        form = SuscriptionSearchForm()
+        form = SuscriptionForm()
         form.email.data = member.email
         return render_template(
             "suscription/find_member.html",
