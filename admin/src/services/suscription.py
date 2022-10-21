@@ -65,7 +65,7 @@ class SuscriptionService:
         )
 
     def enroll(self, member_id, discipline_id):
-        pass
+        return self._membership_service.member_is_enrolled(member_id, discipline_id)
 
     def associate_member(self, member_id):
         social_quota = Membership.query.get(
