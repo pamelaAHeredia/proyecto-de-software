@@ -2,6 +2,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
+from src.services.suscription import SuscriptionService 
 from src.web.forms.member import (
     FilterByDocForm,
     MemberForm,
@@ -17,6 +18,7 @@ member_blueprint = Blueprint("members", __name__, url_prefix="/socios")
 
 service = MemberService()
 setting = SettingsService()
+suscription = SuscriptionService()
 
 
 @member_blueprint.get("/")
@@ -51,7 +53,7 @@ def create():
         phone_number = form.phone_number.data
 
         try:
-            service.create_member(
+            member = service.create_member(
                 first_name=first_name,
                 last_name=last_name,
                 document_type=document_type,
@@ -61,6 +63,7 @@ def create():
                 email=email,
                 phone_number=phone_number,
             )
+            suscription.associate_member(member.membership_number)
             flash("Socio guardado con éxito!", "success")
             return redirect(url_for("members.index"))
         except database.ExistingData as e:

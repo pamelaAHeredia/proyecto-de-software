@@ -7,6 +7,7 @@ from src.models.database import db
 from src.models.club.member import Member
 from src.errors import database
 from src.services.paginator import Paginator
+#from src.services.suscription import SuscriptionService
 
 
 class MemberService:
