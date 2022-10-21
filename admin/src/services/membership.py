@@ -61,8 +61,7 @@ class MembershipService:
             Suscription.member_id == member_id,
             Suscription.date_to == None,
         ).count()
-        print(f"cant: {cant}{cant == 0}")
-        return cant == 0
+        return cant > 0
 
     def available_quota(self, discipline_id: int) -> int:
         """Retorna el cupo disponible

@@ -47,11 +47,17 @@
                         </div>
                     </td>
                     <td>
+                        {% if not enrolled %}
                         <div class="btn-group mb-3">
                             <button class="btn btn-sm btn-success rounded-pill d-inline" type="button"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Inscribir
                             </button>
+                        </div>
+                        {% else %}
+                        <div class="btn-group mb-3">
+                            <span class="btn btn-sm btn-info rounded-pill d-inline">Inscripto</span>                        </div>
+                        {% endif %}
                     </td>
                 </tr>
             </tbody>

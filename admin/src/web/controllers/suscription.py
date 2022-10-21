@@ -5,6 +5,7 @@ from flask import session
 from src.services.discipline import DisciplineService
 from src.services.suscription import SuscriptionService
 from src.services.member import MemberService
+from src.services.membership import MembershipService
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 from src.web.forms.suscription import SuscriptionForm
@@ -13,6 +14,7 @@ from src.web.forms.suscription import SuscriptionForm
 service_discipline = DisciplineService()
 service_suscription = SuscriptionService()
 service_member = MemberService()
+service_membership = MembershipService()
 
 # Se define Blueprint de Usuario
 suscription_blueprint = Blueprint("suscription", __name__, url_prefix="/inscripciones")
@@ -39,6 +41,7 @@ def index():
 def find_member(discipline_id):
     form = SuscriptionForm()
     member = None
+    enrolled = False
     if request.method == "GET":
         discipline_id = request.args.get("discipline_id", type=int)
     else:
@@ -47,11 +50,16 @@ def find_member(discipline_id):
             member = service_member.find_member_by_mail(email=email)
             if not member:
                 flash("No existe un socio con ese email", "danger")
+            enrolled = service_membership.member_is_enrolled(
+                member.membership_number, discipline_id
+            )
+
     return render_template(
         "suscription/find_member.html",
         form=form,
         member=member,
         discipline_id=discipline_id,
+        enrolled=enrolled,
     )
 
 
@@ -62,15 +70,15 @@ def enroll(member_id, discipline_id):
     membership = service_discipline.membership(discipline_id)
     member = service_member.get_by_membership_number(member_id)
 
-    if not service_suscription.enroll(member, membership):
-        flash("El socio ya se encuentra inscripto.", "danger")
-        form = SuscriptionForm()
-        form.email.data = member.email
-        return render_template(
-            "suscription/find_member.html",
-            form=form,
-            member=member,
-            discipline_id=discipline_id,
-        )
+    if service_suscription.enroll(member, membership):
+        flash("Socio suscripto correctamente", "success")
+        # form = SuscriptionForm()
+        # form.email.data = member.email
+        # return render_template(
+        #     "suscription/find_member.html",
+        #     form=form,
+        #     member=member,
+        #     discipline_id=discipline_id,
+        # )
 
     return redirect(url_for("suscription.index", discipline_id=discipline_id))

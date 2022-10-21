@@ -109,7 +109,7 @@ class SuscriptionService:
         Returns:
             Suscription: La suscripcion del socio a la membresia.
         """        
-        if not self._membership_service.member_is_enrolled(
+        if self._membership_service.member_is_enrolled(
             member.membership_number, membership.discipline_id
         ):
             raise ExistingData(message="El socio ya se encuentra inscripto.")
