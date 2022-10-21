@@ -102,5 +102,3 @@ class MembershipService:
         new_tariff = Tariff(membership_id=1, amount=amount)
         db.session.add_all([old_tariff, new_tariff])
         db.session.commit()
-    
-    
