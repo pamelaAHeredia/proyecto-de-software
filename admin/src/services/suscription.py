@@ -9,6 +9,7 @@ from src.models.club.suscription import Suscription
 
 from src.services.membership import MembershipService
 from src.errors import database
+from src.services.paginator import Paginator
 
 
 class SuscriptionService:
@@ -25,6 +26,26 @@ class SuscriptionService:
             cls._instance = super(SuscriptionService, cls).__new__(cls)
         return cls._instance
 
+    def list_suscriptions(self, discipline_id) -> List[Suscription]:
+        suscriptions = self._membership_service.suscriptions(discipline_id)
+        return suscriptions
+    
+    def list_paginated_suscriptions(
+        self, discipline_id: int, page: int, items_per_page: int, endpoint: str
+    ) -> Paginator:
+        """Retorna un paginador con las suscripciones.
+
+        Args:
+            page (int): Numero de pagina.
+            items_per_page (int): cantidad de registros por página.
+            endpoint (str): endpoint para el armado del url_for.
+
+        Returns:
+            Paginator: Un paginador.
+        """
+        suscriptions = self.list_suscriptions(discipline_id)
+        return Paginator(suscriptions, page, items_per_page, endpoint)
+    
     def can_suscribe(self, member_id, discipline_id):
         """Verifica que se pueda inscribir a la disciplina.
 

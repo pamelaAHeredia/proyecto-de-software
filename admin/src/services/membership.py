@@ -38,8 +38,12 @@ class MembershipService:
         """
         return self._discipline_service.active(discipline_id)
 
-    def _membership(self, discipline_id):
+    def membership(self, discipline_id):
         return self._discipline_service.membership(discipline_id)
+    
+    def suscriptions(self, discipline_id):
+        membership = self.membership(discipline_id)
+        return membership.suscriptions
 
     def member_is_enrolled(self, member_id: int, discipline_id: int) -> bool:
         """Verifica si un socio esta inscripto a una disciplina.
@@ -51,7 +55,7 @@ class MembershipService:
         Returns:
             bool: True si se puede inscribir.
         """
-        membership = self._membership(discipline_id)
+        membership = self.membership(discipline_id)
         return (
             membership.suscriptions.filter(
                 Suscription.membership_id == membership.id,
@@ -70,7 +74,7 @@ class MembershipService:
         Returns:
             int: Cantidad de cupos discponibles para inscripciones.
         """
-        membership = self._membership(discipline_id)
+        membership = self.membership(discipline_id)
         quota_left = membership.registration_quota - self.used_quota(discipline_id)
         return quota_left
 
@@ -83,7 +87,7 @@ class MembershipService:
         Returns:
             int: Cantidad de inscriptos
         """
-        membership = self._membership(discipline_id)
+        membership = self.membership(discipline_id)
         used_quota = membership.suscriptions.filter(Suscription.date_to == None).count()
         return used_quota
 
