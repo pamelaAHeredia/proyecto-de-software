@@ -10,7 +10,7 @@ class Suscription(db.Model):
     ---------
     date_from : Datetime
         Fecha en la que se realizó la inscripción.
-    date_from : Datetime
+    date_to : Datetime
         Fecha en la que se realizó la baja de la inscripción.
     membership_id : Integer
         Es el Id de la membresia asociada a la suscripcion.
@@ -18,9 +18,9 @@ class Suscription(db.Model):
         Es el objeto membresia que contiene la relación.
     member_id : Integer
         Es el Id del socio asociado a la suscripcion.
-    membership : Member
+    member : Member
         Es el objeto socio que contiene la relación.
-    
+
     """
 
     __tablename__ = "suscription"
@@ -31,19 +31,11 @@ class Suscription(db.Model):
     membership = db.relationship("Membership")
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
-    movements = db.relationship("Movement", back_populates="suscription")
 
     @property
-    def get_balance_movements(self):
-        """Metodo que obtiene el saldo de los movimientos"""
+    def amount(self):
+        return self.membership.amount
 
-        if (self.movements is None):
-            return 0
-        else:
-            aux = 0
-            for m in self.movements:
-                if(m.is_credit):
-                    aux+= m.amount
-                else:
-                    aux+=(m.amount*-1)
-            return aux
+    @property
+    def is_active(self):
+        return True if self.date_to == None else False

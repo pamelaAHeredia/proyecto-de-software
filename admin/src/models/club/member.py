@@ -23,6 +23,7 @@ class Member(db.Model):
     email = db.Column(db.String(50))
     creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    movements = db.relationship("Movement", back_populates="member")
 
     def __init__(
         self,
