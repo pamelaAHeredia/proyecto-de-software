@@ -78,6 +78,13 @@ class MemberService:
             document_type=document_type, document_number=document_number, deleted=False
         ).first()
 
+    def find_member_by_mail(self, email):
+        
+        return Member.query.filter_by(
+            email=email, deleted=False
+        ).first()
+
+
     def get_by_membership_number(self, id):
         """Funcion que retorna un Socio de la base de Datos por su Nro de Socio"""
         return Member.query.get(id)

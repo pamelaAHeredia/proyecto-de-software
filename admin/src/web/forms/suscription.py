@@ -1,7 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, SubmitField, IntegerField, BooleanField
-from wtforms.validators import InputRequired, NumberRange, Length, Optional
+from wtforms import EmailField, SubmitField
+from wtforms.validators import InputRequired, Email
 
 
-class SuscriptionForm(FlaskForm):
-    pass
+class SuscriptionBaseForm(FlaskForm):
+    email = EmailField("Email", validators=[InputRequired(),Email()])
+
+class SuscriptionSearchForm(SuscriptionBaseForm):
+    submit = SubmitField('Buscar')
+
+class SuscriptionAddForm(SuscriptionBaseForm):
+    submit = SubmitField('Inscribir')

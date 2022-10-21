@@ -2,7 +2,7 @@ from decimal import Decimal
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 from src.services.discipline import DisciplineService
-from src.services.suscription import SuscriptionService
+
 from src.web.forms.discipline import CreateDisciplineForm, UpdateDisciplineForm
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
@@ -10,7 +10,6 @@ from src.web.helpers.auth import login_required, verify_permission
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
 service_discipline = DisciplineService()
-service_suscription = SuscriptionService()
 
 
 @discipline_blueprint.get("/")
@@ -22,18 +21,6 @@ def index():
         page, 2, "discipline.index"
     )
     return render_template("disciplines/index.html", paginator=discipline_paginator)
-
-
-@discipline_blueprint.get("/suscriptions")
-@login_required
-def suscriptions():
-    page = request.args.get("page", 1, type=int)
-    discipline_id = request.args.get("discipline_id", type=int)
-    suscriptions_paginator = service_suscription.list_paginated_suscriptions(
-        discipline_id, page, 2, "discipline.suscriptions"
-    )
-    return render_template("suscription/index.html", paginator=suscriptions_paginator)
-
 
 @discipline_blueprint.route("/create", methods=["GET", "POST"])
 @login_required

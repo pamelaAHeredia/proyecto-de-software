@@ -8,6 +8,7 @@ from src.web.controllers.user import user_blueprint
 from src.web.controllers.member import member_blueprint
 from src.web.controllers.discipline import discipline_blueprint
 from src.web.controllers.settings import settings_blueprint
+from src.web.controllers.suscription import suscription_blueprint
 from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
 
@@ -43,6 +44,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(member_blueprint)
     app.register_blueprint(discipline_blueprint)
     app.register_blueprint(settings_blueprint)
+    app.register_blueprint(suscription_blueprint)
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)

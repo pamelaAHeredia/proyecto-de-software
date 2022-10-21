@@ -26,7 +26,7 @@
             <tr>
                 <td>{{ suscription.member_first_name }}</td>
                 <td>{{ suscription.member_last_name }}</td>
-                <td>{{ discipline.date_from }} </td>
+                <td>{{ suscription.date_from }} </td>
                 <td>
                     <div class="btn-group mb-3">
                         <a class="btn btn-sm btn-warning rounded-pill d-inline" 
@@ -43,12 +43,12 @@
     {% include('partials/paginator.html') %}
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
-            <a class="btn btn-secondary" href="#">Nueva Suscripcion</a>
+            <a class="btn btn-secondary" href="{{ url_for('suscription.find_member', discipline_id=discipline_id ) }} ">Nueva Suscripcion</a>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
-            <a href="{{url_for('home')}}"> Volver </a>
+            <a href="{{ url_for('discipline.index') }}"> Volver </a>
         </div>
     </div>
 </div>

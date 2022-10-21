@@ -29,7 +29,7 @@ class SuscriptionService:
     def list_suscriptions(self, discipline_id) -> List[Suscription]:
         suscriptions = self._membership_service.suscriptions(discipline_id)
         return suscriptions
-    
+
     def list_paginated_suscriptions(
         self, discipline_id: int, page: int, items_per_page: int, endpoint: str
     ) -> Paginator:
@@ -45,7 +45,7 @@ class SuscriptionService:
         """
         suscriptions = self.list_suscriptions(discipline_id)
         return Paginator(suscriptions, page, items_per_page, endpoint)
-    
+
     def can_suscribe(self, member_id, discipline_id):
         """Verifica que se pueda inscribir a la disciplina.
 
@@ -85,8 +85,13 @@ class SuscriptionService:
             and membership_has_quota
         )
 
-    def enroll(self, member_id, discipline_id):
-        return self._membership_service.member_is_enrolled(member_id, discipline_id)
+    def enroll(self, member, membership):
+        suscription = Suscription(
+            member_id=member.membership_number, membership_id=membership.id
+        )
+        db.session.add(suscription)
+        db.session.commit()
+        # return self._membership_service.member_is_enrolled(member_id, discipline_id)
 
     def associate_member(self, member_id):
         social_quota = Membership.query.get(
