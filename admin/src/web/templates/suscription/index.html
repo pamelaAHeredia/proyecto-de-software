@@ -24,9 +24,9 @@
         <tbody>
             {% for suscription in paginator.items %}
             <tr>
-                <td>{{ suscription.member_first_name }}</td>
-                <td>{{ suscription.member_last_name }}</td>
-                <td>{{ suscription.date_from }} </td>
+                <td>{{ suscription.member.first_name }}</td>
+                <td>{{ suscription.member.last_name }}</td>
+                <td>{{ suscription.date_from | format_datetime }} </td>
                 <td>
                     <div class="btn-group mb-3">
                         <a class="btn btn-sm btn-warning rounded-pill d-inline" 

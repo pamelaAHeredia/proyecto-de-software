@@ -86,11 +86,18 @@ class SuscriptionService:
         )
 
     def enroll(self, member, membership):
+        if not self._membership_service.member_is_enrolled(
+            member.membership_number, membership.discipline_id
+        ):
+            print("Ya estaba")
+            return False
+
         suscription = Suscription(
             member_id=member.membership_number, membership_id=membership.id
         )
         db.session.add(suscription)
         db.session.commit()
+        return True
         # return self._membership_service.member_is_enrolled(member_id, discipline_id)
 
     def associate_member(self, member_id):

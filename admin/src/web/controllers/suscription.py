@@ -31,6 +31,7 @@ def index():
         discipline_id=discipline_id,
     )
 
+
 @suscription_blueprint.route("/find_member/<discipline_id>", methods=["POST", "GET"])
 @login_required
 # @verify_permission("discipline_create")
@@ -46,11 +47,31 @@ def find_member(discipline_id):
             if not member:
                 flash("No existe un socio con ese email", "danger")
     return render_template(
-        "suscription/find_member.html", form=form, member=member, discipline_id=discipline_id
+        "suscription/find_member.html",
+        form=form,
+        member=member,
+        discipline_id=discipline_id,
     )
 
-@suscription_blueprint.route("/resume/<int:member_id>/<int:discipline_id>", methods=["POST", "GET"])
+
+@suscription_blueprint.route(
+    "/resume/<int:member_id>/<int:discipline_id>", methods=["POST", "GET"]
+)
 @login_required
 # @verify_permission("discipline_create")
-def resume(member_id, discipline_id ):
-    print(f"member_id = {member_id} discipline_id = {discipline_id}")
+def resume(member_id, discipline_id):
+    membership = service_discipline.membership(discipline_id)
+    member = service_member.get_by_membership_number(member_id)
+
+    if not service_suscription.enroll(member, membership):
+        flash("El socio ya se encuentra inscripto.", "danger")
+        form = SuscriptionSearchForm()
+        form.email.data = member.email
+        return render_template(
+            "suscription/find_member.html",
+            form=form,
+            member=member,
+            discipline_id=discipline_id,
+        )
+
+    return redirect(url_for("suscription.index", discipline_id=discipline_id))

@@ -40,7 +40,7 @@ class MembershipService:
 
     def membership(self, discipline_id):
         return self._discipline_service.membership(discipline_id)
-    
+
     def suscriptions(self, discipline_id):
         membership = self.membership(discipline_id)
         return membership.suscriptions
@@ -56,14 +56,13 @@ class MembershipService:
             bool: True si se puede inscribir.
         """
         membership = self.membership(discipline_id)
-        return (
-            membership.suscriptions.filter(
-                Suscription.membership_id == membership.id,
-                Suscription.member_id == member_id,
-                Suscription.date_to == None,
-            ).count()
-            == 0
-        )
+        cant = membership.suscriptions.filter(
+            Suscription.membership_id == membership.id,
+            Suscription.member_id == member_id,
+            Suscription.date_to == None,
+        ).count()
+        print(f"cant: {cant}{cant == 0}")
+        return cant == 0
 
     def available_quota(self, discipline_id: int) -> int:
         """Retorna el cupo disponible
@@ -92,8 +91,7 @@ class MembershipService:
         return used_quota
 
     def create_social_membership(self) -> None:
-        """Crea la cuota social inicial usada en el seeds.
-        """        
+        """Crea la cuota social inicial usada en el seeds."""
         social_membership = Membership(registration_quota=999999, pays_per_year=12)
         social_membership_tariff = Tariff(
             amount=self._settings_service.get_amount_monthly(),
@@ -107,7 +105,7 @@ class MembershipService:
 
         Args:
             amount (Decimal): Nuevo valor de la cuota.
-        """      
+        """
         old_tariff = Tariff.query.filter_by(membership_id=1, date_to=None).first()
         old_tariff.date_to = datetime.datetime.now()
         new_tariff = Tariff(membership_id=1, amount=amount)

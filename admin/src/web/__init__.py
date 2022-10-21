@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash
 from flask_session import Session
+
 from src.web.helpers import handlers
 from src.web.helpers import auth
 from src.models import database
@@ -56,7 +57,16 @@ def create_app(env="development", static_folder="static"):
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
     app.jinja_env.globals.update(is_admin=auth.is_admin)
-    
+
+    #Jinja datetime formater    
+    @app.template_filter()
+    def format_datetime(value, format='dma'):
+        if format == 'dmahm':
+            format="%d-%m-%Y H%:%M"
+        elif format == 'dma':
+            format="%d-%m-%Y"
+        return value.strftime(format)
+
     # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():
