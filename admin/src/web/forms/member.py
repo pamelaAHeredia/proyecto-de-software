@@ -33,20 +33,17 @@ class MemberForm(FlaskForm):
     submit = SubmitField("Guardar")
 
 
-class FilterForm(FlaskForm):
+class FilterSearchForm(FlaskForm):
     filter = SelectField(
-        "filter",
+        "Filtro",
         choices=[
-            ("Activos", "Activos"),
+            ("Activos", "Activos"), 
             ("Inactivos", "Inactivos"),
             ("Todos", "Todos"),
         ],
     )
+    search = StringField("Apellido")
     submit = SubmitField("Filtrar")
-
-class SearchByLastName(FlaskForm):
-    last_name = StringField("Apellido")
-    submit = SubmitField("Eliminar rol")
 
 
 class FilterByDocForm(FlaskForm):

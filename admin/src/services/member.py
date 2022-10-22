@@ -1,4 +1,5 @@
 import csv
+from typing import Optional
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -27,7 +28,7 @@ class MemberService:
         return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
-        self, page: int, items_per_page: int, endpoint: str, filter: str
+        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str
     ) -> Paginator:
         """Función que retorna el paginador con los socios del sistema.
 
@@ -39,33 +40,15 @@ class MemberService:
         Returns:
            Un paginador.
         """
-        if filter == "Activos":
-            members = self.list_by_is_active(active=True)
-        elif filter == "Inactivos":
-            members = self.list_by_is_active(active=False)
+        if (not filter or filter == "Todos") and search and search != "":
+            members = self.list_by_last_name(substring=search)
+        elif (filter) and search and search != "":
+            members = self.list_by_last_name(substring=search, active=(filter=="Activos"))
+        elif (not filter or filter == "Todos") and (not search or search == ""):   
+           members = self.list_members()
         else:
-            members = self.list_members()
-        return Paginator(members, page, items_per_page, endpoint)
-
-    def list_paginated_last_name(
-        self, page: int, items_per_page: int, endpoint: str, search: str
-    ) -> Paginator:
-        """Función que retorna el paginador con los socios del sistema.
-
-        Args:
-           page: Número de pagina.
-           items_per_page: cantidad de registros por página.
-           endpoint: endpoint para el armado del url_for.
-
-        Returns:
-           Un paginador.
-        """
-        members = self.list_by_last_name(search)
-       
-        return Paginator(members, page, items_per_page, endpoint)
-
-
-
+           members = self.list_by_is_active(filter=="Activos")                
+        return Paginator(members, page, items_per_page, endpoint, filter, search)
 
     def create_member(
         self,
@@ -150,11 +133,14 @@ class MemberService:
         db.session.commit()
         return member
 
-    def list_by_last_name(self, substring):
+    def list_by_last_name(self, substring, active: Optional[bool] = None):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
         el substring enviado por parametro"""
+        if active is not None:
+            return Member.query.filter(Member.last_name.ilike('%' + substring + '%'), Member.is_active==active).order_by(
+                Member.membership_number)
         return Member.query.filter(Member.last_name.ilike('%' + substring + '%')).order_by(
-            Member.membership_number)
+                Member.membership_number)        
 
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
@@ -240,3 +226,16 @@ class MemberService:
         member.user_id = None
         db.session.commit()
         return member      
+
+    def members_for_export(self, filter_by_status, filter_by_laat_name):
+
+       """ if (not filter or filter == "Todos") and search and search != "":
+            members = self.list_by_last_name(substring=search)
+        elif (filter) and search and search != "":
+            members = self.list_by_last_name(substring=search, active=(filter=="Activos"))
+        elif (not filter or filter == "Todos") and (not search or search == ""):   
+           members = self.list_members()
+        else:
+           members = self.list_by_is_active(filter=="Activos")                
+        return members"""
+       pass   

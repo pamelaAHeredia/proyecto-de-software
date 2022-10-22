@@ -13,7 +13,8 @@
             {% for page in paginator.pages %}
             {% if page != paginator.page %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for(paginator._endpoint, page=page) }}">
+                <a class="page-link" href="{{ url_for(paginator._endpoint, page=page, filter=paginator.filter,
+                     search=paginator.search) }}">
                     {{ page }} 
                 </a>
             </li>

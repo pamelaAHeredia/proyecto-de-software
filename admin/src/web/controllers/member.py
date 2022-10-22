@@ -1,13 +1,13 @@
+from crypt import methods
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
-from src.services.suscription import SuscriptionService 
+from src.services.suscription import SuscriptionService
 from src.web.forms.member import (
     FilterByDocForm,
     MemberForm,
-    FilterForm,
-    SearchByLastName,
+    FilterSearchForm,
 )
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
@@ -23,14 +23,18 @@ setting = SettingsService()
 @member_blueprint.get("/")
 @login_required
 def index():
-    filter_form = FilterForm()
-    search_form = SearchByLastName()
+    filter_form = FilterSearchForm()
     page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter")
+    search = request.args.get("search")
+    print("por get")
+    print(filter)
+    print(search)
     member_paginator = service.list_paginated_members(
-        page, setting.get_items_per_page(), "members.index", "Todos"
+        page, setting.get_items_per_page(), "members.index", filter, search
     )
     return render_template(
-        "members/index.html", filter_form=filter_form, search_form=search_form, paginator=member_paginator
+        "members/index.html", filter_form=filter_form, paginator=member_paginator
     )
 
 
@@ -130,23 +134,23 @@ def export_pdf():
     return redirect(url_for("members.index"))
 
 
-@member_blueprint.route("/filter_by", methods=["POST"])
+@member_blueprint.route("/filter_by", methods=["POST", "GET"])
 def filter_by():
-    filter_form = FilterForm()
-    search_form = SearchByLastName()
+    filter_form = FilterSearchForm()
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
+        # filter = request.args.get("filter")
+        # search = request.args.get("search")
         filter = filter_form.filter.data
+        search = filter_form.search.data
+        print("entro aca")
+        print(filter)
+        print(search)
         members_paginator = service.list_paginated_members(
-            page,
-            setting.get_items_per_page(),
-            "members.index",
-            filter,
+            page, setting.get_items_per_page(), "members.index", filter, search
         )
         return render_template(
-            "members/index.html",
-            paginator=members_paginator,
-            filter_form=filter_form, search_form=search_form
+            "members/index.html", paginator=members_paginator, filter_form=filter_form
         )
 
 
@@ -162,23 +166,13 @@ def filter_by_doc():
     else:
         return render_template("members/search.html", filter_form=filter_form)
 
-
-
-@member_blueprint.route("/search_by_last_name", methods=["POST"])
-def search_by_last_name():
-    search_form = SearchByLastName()
-    filter_form = FilterForm()
-    if search_form.validate_on_submit():
-        last_name = search_form.last_name.data
-        page = request.args.get("page", 1, type=int)
-        members_paginator = service.list_paginated_last_name(
-            page,
-            setting.get_items_per_page(),
-            "members.index",
-            str(last_name)
-        )
-        return render_template(
-            "members/index.html",
-            paginator=members_paginator,
-            search_form=search_form,filter_form = filter_form
-        )
+@member_blueprint.get("/export_list_to_pdf")
+def export_to_pdf():
+    filter_by_status = request.args.get("filter_by_status")
+    filter_by_last_name = request.args.get("filter_by_last_name")
+    print("exportpdf")
+    print(filter_by_status)  
+    print(filter_by_last_name)   
+    members = service.members_for_export(filter_by_status, filter_by_last_name)
+    report = service.export_list_to_pdf(members, setting.get_items_per_page())
+    return report
