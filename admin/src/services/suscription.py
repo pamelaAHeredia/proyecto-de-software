@@ -98,7 +98,7 @@ class SuscriptionService:
 
     def _get_suscription(self, member_id: int, membership_id: int) -> Suscription:
         return Suscription.query.filter_by(
-            member_id=member_id, membership_id=membership_id
+            member_id=member_id, membership_id=membership_id, date_to=None
         ).one()
 
     def leave(self, member: Member, membership: Membership) -> Suscription:
