@@ -27,9 +27,6 @@ def index():
     page = request.args.get("page", 1, type=int)
     filter = request.args.get("filter")
     search = request.args.get("search")
-    print("por get")
-    print(filter)
-    print(search)
     member_paginator = service.list_paginated_members(
         page, setting.get_items_per_page(), "members.index", filter, search
     )
@@ -127,25 +124,13 @@ def change_activity(member_id):
     return redirect(url_for("members.index"))
 
 
-@member_blueprint.post("/exportpdf")
-def export_pdf():
-    list = request.form.items.__get__
-    print(list)
-    return redirect(url_for("members.index"))
-
-
 @member_blueprint.route("/filter_by", methods=["POST", "GET"])
 def filter_by():
     filter_form = FilterSearchForm()
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
-        # filter = request.args.get("filter")
-        # search = request.args.get("search")
         filter = filter_form.filter.data
         search = filter_form.search.data
-        print("entro aca")
-        print(filter)
-        print(search)
         members_paginator = service.list_paginated_members(
             page, setting.get_items_per_page(), "members.index", filter, search
         )
@@ -170,9 +155,6 @@ def filter_by_doc():
 def export_to_pdf():
     filter_by_status = request.args.get("filter_by_status")
     filter_by_last_name = request.args.get("filter_by_last_name")
-    print("exportpdf")
-    print(filter_by_status)  
-    print(filter_by_last_name)   
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     report = service.export_list_to_pdf(members, setting.get_items_per_page())
-    return report
+    return redirect(url_for("members.index"))

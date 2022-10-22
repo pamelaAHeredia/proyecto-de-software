@@ -227,15 +227,18 @@ class MemberService:
         db.session.commit()
         return member      
 
-    def members_for_export(self, filter_by_status, filter_by_laat_name):
+    def members_for_export(self, filter_by_status, filter_by_last_name):
 
-       """ if (not filter or filter == "Todos") and search and search != "":
-            members = self.list_by_last_name(substring=search)
-        elif (filter) and search and search != "":
-            members = self.list_by_last_name(substring=search, active=(filter=="Activos"))
-        elif (not filter or filter == "Todos") and (not search or search == ""):   
-           members = self.list_members()
-        else:
-           members = self.list_by_is_active(filter=="Activos")                
-        return members"""
-       pass   
+       if filter_by_status == "Todos":
+            if filter_by_last_name != "":
+                members = self.list_by_last_name(substring=filter_by_last_name)
+            else:
+                members = self.list_members()        
+       else:
+           if filter_by_last_name != "":
+                members = members = self.list_by_last_name(substring=filter_by_last_name, active=(filter_by_status=="Activos")) 
+           else:
+                members = members = self.list_by_is_active(filter_by_status=="Activos")  
+       return list(members)  
+
+       
