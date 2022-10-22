@@ -43,7 +43,7 @@ class MembershipService:
 
     def suscriptions(self, discipline_id):
         membership = self.membership(discipline_id)
-        return membership.suscriptions
+        return membership.suscriptions.filter(Suscription.date_to==None)
 
     def member_is_enrolled(self, member_id: int, discipline_id: int) -> bool:
         """Verifica si un socio esta inscripto a una disciplina.

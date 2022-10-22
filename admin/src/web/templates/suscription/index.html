@@ -29,11 +29,10 @@
                 <td>{{ suscription.date_from | format_datetime }} </td>
                 <td>
                     <div class="btn-group mb-3">
-                        <a class="btn btn-sm btn-warning rounded-pill d-inline" 
-                            href="#" 
-                            role="button">
-                            X
-                        </a>
+                        <button class="btn btn-sm btn-success rounded-pill d-inline" type="button"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal{{ suscription.member.membership_number }}"> 
+                            Baja
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -53,7 +52,32 @@
     </div>
 </div>
 
+<!-- Modal -->
+{% for suscription in paginator.items %}
+    <div class="modal fade" id="exampleModal{{ suscription.member.membership_number }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Baja</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Se va a dar de baja al socio
+                    de la disciplina. ¿Está Seguro?
+                </div>
+                <form
+                    action="{{url_for('suscription.leave', member_id=suscription.member.membership_number, discipline_id=discipline_id)}}"
+                    method="POST">
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Si</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 
 
 {% endblock %}

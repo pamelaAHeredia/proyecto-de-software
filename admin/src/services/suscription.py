@@ -35,9 +35,9 @@ class SuscriptionService:
             discipline_id (int): Id de la disciplina.
 
         Returns:
-            List[Suscription]: Lista de todas las suscripciones 
+            List[Suscription]: Lista de todas las suscripciones
               para esa disciplina.
-        """        
+        """
         suscriptions = self._membership_service.suscriptions(discipline_id)
         return suscriptions
 
@@ -96,6 +96,18 @@ class SuscriptionService:
             and membership_has_quota
         )
 
+    def _get_suscription(self, member_id: int, membership_id: int) -> Suscription:
+        return Suscription.query.filter_by(
+            member_id=member_id, membership_id=membership_id
+        ).one()
+
+    def leave(self, member: Member, membership: Membership) -> Suscription:
+        suscription = self._get_suscription(member.membership_number, membership.id)
+        suscription.date_to = datetime.datetime.now()
+        db.session.add(suscription)
+        db.session.commit()
+        return suscription
+
     def enroll(self, member: Member, membership: Membership) -> Suscription:
         """Inscribe a un socio en una membresia.
 
@@ -108,7 +120,7 @@ class SuscriptionService:
 
         Returns:
             Suscription: La suscripcion del socio a la membresia.
-        """        
+        """
         if self._membership_service.member_is_enrolled(
             member.membership_number, membership.discipline_id
         ):
@@ -132,7 +144,7 @@ class SuscriptionService:
 
         Returns:
             Suscription: La suscripcion del socio a la membresia cuota.
-        """        
+        """
         social_quota = Membership.query.get(
             1
         )  # Esto es una chanchada hay que mejorarlo
