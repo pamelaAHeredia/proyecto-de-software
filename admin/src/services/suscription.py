@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import List, Optional
+from typing import Dict, List, Optional
 import datetime
 
 
@@ -57,7 +57,7 @@ class SuscriptionService:
         suscriptions = self.list_suscriptions(discipline_id)
         return Paginator(suscriptions, page, items_per_page, endpoint)
 
-    def can_suscribe(self, member_id: int, discipline_id: int) -> bool:
+    def can_suscribe(self, member_id: int, discipline_id: int) -> Dict[str, bool]:
         """Verifica que se pueda inscribir a la disciplina.
 
         Metodo que verifica que el socio se pueda suscribir a la disciplina.
@@ -89,6 +89,13 @@ class SuscriptionService:
             else True
         )
 
+        # can_suscribe = {
+        #     "member_active": member_active,
+        #     "member_enrolled": member_enrolled,
+        #     "membership_active": membership_active,
+        #     "membership_has_quota": membership_has_quota,
+        # }
+
         return (
             member_active
             and member_enrolled
@@ -102,14 +109,27 @@ class SuscriptionService:
         ).one()
 
     def leave(self, member: Member, membership: Membership) -> Suscription:
+        """Baja de un socio a una suscripcion.
+
+        Args:
+            member (Member): Un Socio.
+            membership (Membership): Una Membresia.
+
+        Returns:
+            Suscription: La suscripcion en cuestion.
+        """
         suscription = self._get_suscription(member.membership_number, membership.id)
         suscription.date_to = datetime.datetime.now()
-        db.session.add(suscription)
+        # db.session.add(suscription)
         db.session.commit()
         return suscription
 
     def enroll(self, member: Member, membership: Membership) -> Suscription:
         """Inscribe a un socio en una membresia.
+
+        Si el socio no ya no se encuentra inscripto a la membresia y
+        hay lugar en la membresia y ¿no tiene otras deudas?
+        lo inscribe a la membresia.
 
         Args:
             member (Member): Un objeto socio
@@ -121,9 +141,12 @@ class SuscriptionService:
         Returns:
             Suscription: La suscripcion del socio a la membresia.
         """
-        if self._membership_service.member_is_enrolled(
-            member.membership_number, membership.discipline_id
-        ):
+        member_id = member.membership_number
+        discipline_id = membership.discipline_id
+        # check_results = self.can_suscribe(member_id, discipline_id)
+
+        if not self.can_suscribe(member_id, discipline_id):
+            # for check, result in check_results:
             raise ExistingData(message="El socio ya se encuentra inscripto.")
 
         suscription = Suscription(
