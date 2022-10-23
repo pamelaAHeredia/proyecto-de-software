@@ -4,8 +4,10 @@ import datetime
 
 
 from src.models.database import db
+from src.models.club.membership import Membership
+from src.models.club.suscription import Suscription
+from src.models.club.member import Member
 
-from src.services.member import MemberService
 from src.services.membership import MembershipService
 from src.errors import database
 
@@ -17,7 +19,6 @@ class SuscriptionService:
     """
 
     _instance = None
-    _member_service = MemberService()
     _membership_service = MembershipService()
 
     def __new__(cls):
@@ -41,9 +42,9 @@ class SuscriptionService:
         Returns:
             _type_: _description_
         """
-        member_active = self._member_service.get_by_membership_number(
-            member_id
-        ).is_active
+        member_active = (
+            Member.query.filter_by(membership_number=member_id).first().is_active
+        )
         member_enrolled = (
             True
             if self._membership_service.member_is_enrolled(member_id, discipline_id)
@@ -63,6 +64,15 @@ class SuscriptionService:
             and membership_active
             and membership_has_quota
         )
-    
+
     def enroll(self, member_id, discipline_id):
-        pass
+        return self._membership_service.member_is_enrolled(member_id, discipline_id)
+
+    def associate_member(self, member_id):
+        social_quota = Membership.query.get(
+            1
+        )  # Esto es una chanchada hay que mejorarlo
+        member = Member.query.filter_by(membership_number=member_id).first()
+        suscription = Suscription(membership=social_quota, member=member)
+        db.session.add(suscription)
+        db.session.commit()

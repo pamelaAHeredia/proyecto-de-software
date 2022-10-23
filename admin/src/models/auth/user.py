@@ -50,4 +50,8 @@ class User(db.Model):
                 aux = True
         return aux
     
+     
+    @property
+    def have_members(self):
+        return len(list(self.members)) > 0
 

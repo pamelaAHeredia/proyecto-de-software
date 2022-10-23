@@ -1,8 +1,14 @@
+from crypt import methods
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
-from src.web.forms.member import FilterByDocForm, MemberForm, FilterForm;
+from src.services.suscription import SuscriptionService
+from src.web.forms.member import (
+    FilterByDocForm,
+    MemberForm,
+    FilterSearchForm,
+)
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
@@ -17,10 +23,12 @@ setting = SettingsService()
 @member_blueprint.get("/")
 @login_required
 def index():
-    filter_form = FilterForm()
+    filter_form = FilterSearchForm()
     page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter")
+    search = request.args.get("search")
     member_paginator = service.list_paginated_members(
-        page, setting.get_items_per_page(), "members.index", "Todos"
+        page, setting.get_items_per_page(), "members.index", filter, search
     )
     return render_template(
         "members/index.html", filter_form=filter_form, paginator=member_paginator
@@ -109,37 +117,27 @@ def update(member_id):
     return render_template("members/update.html", form=form, member_id=member_id)
 
 
-@member_blueprint.post("/deactivate/<int:member_id>")
+@member_blueprint.post("/change_activity/<int:member_id>")
 @login_required
-def deactivate(member_id):
-    service.deactivate_member(member_id)
+def change_activity(member_id):
+    service.change_activity_member(member_id)
     return redirect(url_for("members.index"))
 
 
-@member_blueprint.post("/exportpdf")
-def export_pdf():
-    list = request.form.items.__get__
-    print(list)
-    return redirect(url_for("members.index"))
-
-
-@member_blueprint.route("/filter_by", methods=["POST"])
+@member_blueprint.route("/filter_by", methods=["POST", "GET"])
 def filter_by():
-    filter_form = FilterForm()
+    filter_form = FilterSearchForm()
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
+        search = filter_form.search.data
         members_paginator = service.list_paginated_members(
-            page,
-            setting.get_items_per_page(),
-            "members.index",
-            filter,
+            page, setting.get_items_per_page(), "members.index", filter, search
         )
         return render_template(
-            "members/index.html",
-            paginator=members_paginator,
-            filter_form=filter_form,
+            "members/index.html", paginator=members_paginator, filter_form=filter_form
         )
+
 
 @member_blueprint.route("/filter_by_dni", methods=["POST", "GET"])
 def filter_by_doc():
@@ -153,3 +151,10 @@ def filter_by_doc():
     else:
         return render_template("members/search.html", filter_form=filter_form)
 
+@member_blueprint.get("/export_list_to_pdf")
+def export_to_pdf():
+    filter_by_status = request.args.get("filter_by_status")
+    filter_by_last_name = request.args.get("filter_by_last_name")
+    members = service.members_for_export(filter_by_status, filter_by_last_name)
+    report = service.export_list_to_pdf(members, setting.get_items_per_page())
+    return redirect(url_for("members.index"))
