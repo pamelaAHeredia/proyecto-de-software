@@ -176,8 +176,14 @@ class UserService:
     def delete(self, id, session_id):
         user = self.find_user_by_id(id)
         if user.id != session_id:
+
+            member_service = MemberService()
+
+            for member in user.members:
+                member_service.unlink_management(member.membership_number)
             db.session.delete(user)
             db.session.commit()
+
         else:
             raise database.PermissionDenied(
                 info="Permiso Denegado", message="No puede eliminar su propio usuario."
@@ -203,11 +209,17 @@ class UserService:
         roles = user.roles
         role = self.find_role_by_name(role_name)
 
-        if not roles.__contains__(role):
-            user.roles.append(role)
+        if user.is_active:
+            if not roles.__contains__(role):
+
+                user.roles.append(role)
+            else:
+                raise database.ExistingData(
+                    info="Los datos ya existen", message="El usuario ya tiene este rol."
+                )
         else:
-            raise database.ExistingData(
-                info="Los datos ya existen", message="El usuario ya tiene este rol."
+            raise database.PermissionDenied(
+                info="No se pudo Agregar el rol.", message="El usuario se encuentra bloqueado."
             )
         db.session.commit()
 

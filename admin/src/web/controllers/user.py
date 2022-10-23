@@ -1,5 +1,4 @@
-from logging.config import IDENTIFIER
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import Blueprint, request, render_template, flash
 from flask import session
 
 from src.services.settings import SettingsService
@@ -7,7 +6,6 @@ from src.services.utils import hash_pass
 from src.web.helpers.auth import login_required, verify_permission
 from src.services.user import UserService
 from src.services.member import MemberService
-from src.services.utils import hash_pass
 from src.web.forms.user import (
     CreateUserForm,
     UpdateUserForm,
@@ -24,17 +22,21 @@ user_blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 service = UserService()
 member_service = MemberService()
+settings = SettingsService()
 
 
-@user_blueprint.get("/")
+@user_blueprint.route("/", methods=["GET"])
 @login_required
-def users_index():
+def index():
     filter_form = FilterUsersForm()
 
     """Render de la lista de usuarios paginada"""
     page = request.args.get("page", 1, type=int)
     users_paginator = service.list_paginated_users(
-        page, 2, "users.users_index", "todos"
+        page, 
+        settings.get_items_per_page(), 
+        "users.index", 
+        "Todos"
     )
     return render_template(
         "users/index.html",
@@ -47,13 +49,16 @@ def users_index():
 @login_required
 def users_filter_by():
     filter_form = FilterUsersForm()
-
+    
     if filter_form.validate_on_submit:
-        settings_service = SettingsService()
+
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
         users_paginator = service.list_paginated_users(
-            page, settings_service.get_items_per_page(), "users.users_index", filter
+            page, 
+            settings.get_items_per_page(), 
+            "users.index", 
+            filter
         )
         return render_template(
             "users/index.html",
@@ -79,7 +84,7 @@ def users_add():
         roles = [role]
 
         try:
-            user = service.create_user(
+            service.create_user(
                 email=email,
                 username=username,
                 password=password,
@@ -129,6 +134,7 @@ def users_block(id):
     try:
         delete_roles_form = DeleteRolesForm()
         add_roles_form = AddRolesForm()
+        unlink_form = UnlinkMemberForm()
         user_session = session["user"]
         service.block_user(id, user_session)
         if user.is_active == False:
@@ -142,6 +148,7 @@ def users_block(id):
         user=user,
         add_roles_form=add_roles_form,
         delete_roles_form=delete_roles_form,
+        unlink_form=unlink_form
     )
 
 
@@ -201,6 +208,8 @@ def users_add_roles(id):
                 service.add_role(id, role)
                 flash("Rol agregado con éxito!", "success")
             except database.ExistingData as e:
+                flash(e, "danger")
+            except database.PermissionDenied as e:
                 flash(e, "danger")
         return render_template(
             "users/roles.html",
@@ -288,13 +297,16 @@ def link_member(id):
         if search_form.validate_on_submit:
             email = search_form.email.data
             user = service.find_user_byEmail(email)
-            
+
             if user:
                 if service.contains_role("Socio", user.id):
-                    member = member_service.link_management(
-                        member.membership_number, user.id
-                    )
-                    flash("Usuario asignado con éxito", "success")
+                    if user.is_active:
+                        member = member_service.link_management(
+                            member.membership_number, user.id
+                        )
+                        flash("Usuario asignado con éxito", "success")
+                    else:
+                        flash("El usuario que quiere asignar se encuentra bloqueado.", "danger")
                 else:
                     flash(
                         "El usuario que desea asignar no tiene rol de socio.", "danger"

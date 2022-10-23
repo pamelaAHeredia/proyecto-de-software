@@ -41,10 +41,10 @@
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
             {% if not user.is_admin %}
             <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
-                {%if user.blocked%}
-                {{"Desbloquear"}}
-                {% else %}
+                {% if user.is_active %}
                 {{"Bloquear"}}
+                {% else %}
+                {{"Desbloquear"}}
                 {% endif %}</a>
             </li>
             {% endif %}
@@ -125,5 +125,5 @@
 </div>
 
 
-<a href="{{url_for('users.users_index')}}"> Volver </a>
+<a href="{{url_for('users.index')}}"> Volver </a>
 {% endblock %}
