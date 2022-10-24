@@ -76,22 +76,14 @@ def enroll(member_id, discipline_id):
     return redirect(url_for("suscription.index", discipline_id=discipline_id))
 
 
-@suscription_blueprint.post("/leave/<int:member_id>/<int:discipline_id>")
+@suscription_blueprint.post("/leave/<int:suscription_id>/<int:discipline_id>")
 @login_required
 # @verify_permission("discipline_create")
-def leave(member_id, discipline_id):
-    membership = service_discipline.membership(discipline_id)
-    member = service_member.get_by_membership_number(member_id)
+def leave(suscription_id, discipline_id):
+    # membership = service_discipline.membership(discipline_id)
+    # member = service_member.get_by_membership_number(member_id)
 
-    if service_suscription.leave(member, membership):
+    if service_suscription.leave(suscription_id):
         flash("Socio dado de baja de la suscripcion correctamente", "success")
-        # form = SuscriptionForm()
-        # form.email.data = member.email
-        # return render_template(
-        #     "suscription/find_member.html",
-        #     form=form,
-        #     member=member,
-        #     discipline_id=discipline_id,
-        # )
 
     return redirect(url_for("suscription.index", discipline_id=discipline_id))

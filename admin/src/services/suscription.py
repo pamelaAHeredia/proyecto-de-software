@@ -108,17 +108,16 @@ class SuscriptionService:
             member_id=member_id, membership_id=membership_id, date_to=None
         ).one()
 
-    def leave(self, member: Member, membership: Membership) -> Suscription:
+    def leave(self, suscription_id: int) -> Suscription:
         """Baja de un socio a una suscripcion.
 
         Args:
-            member (Member): Un Socio.
-            membership (Membership): Una Membresia.
+            suscription_id (Suscription): Id de la suscripcion.
 
         Returns:
             Suscription: La suscripcion en cuestion.
         """
-        suscription = self._get_suscription(member.membership_number, membership.id)
+        suscription = Suscription.query.get(suscription_id)
         suscription.date_to = datetime.datetime.now()
         # db.session.add(suscription)
         db.session.commit()
@@ -152,6 +151,12 @@ class SuscriptionService:
         suscription = Suscription(
             member_id=member.membership_number, membership_id=membership.id
         )
+        # Aca deberia llamar al servicio de pagos y generar 
+        # Octubre se ve reflejadas las deudas recien en diciembre y si paga
+        # despues de el 10 de noviembre generar la deuda ad hoc
+        # pagos.debito(monto membresia)
+        # pagos.creditos(monto membresia)
+        # Politica de pagar en la inscripción.
         db.session.add(suscription)
         db.session.commit()
         return suscription
