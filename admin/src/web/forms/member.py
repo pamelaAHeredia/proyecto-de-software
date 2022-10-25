@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, EmailField
-from wtforms.validators import InputRequired, Email, Optional
+from wtforms.validators import InputRequired, Email, Optional, DataRequired
 
 
 class MemberForm(FlaskForm):
@@ -13,3 +13,16 @@ class MemberForm(FlaskForm):
     email = EmailField("Email", validators=[Optional(),Email()])
     phone_number = StringField("Teléfono")
     submit = SubmitField('Guardar')
+
+
+class FilterForm(FlaskForm):
+    filter = SelectField(
+        "filter",
+        choices=[
+            ("Activos", "Activos"),
+            ("Inactivos", "Inactivos"),
+            ("Todos", "Todos"),
+        ],
+        validators=[DataRequired()],
+    )
+    submit = SubmitField("Filtrar")    
