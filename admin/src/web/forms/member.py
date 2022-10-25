@@ -1,5 +1,6 @@
 from flask import flash
 from flask_wtf import FlaskForm
+from traitlets import default
 from wtforms import StringField, SubmitField, SelectField, EmailField
 from wtforms.validators import (
     InputRequired,
@@ -37,10 +38,10 @@ class FilterSearchForm(FlaskForm):
     filter = SelectField(
         "Filtro",
         choices=[
+            ("Todos", "Todos"),
             ("Activos", "Activos"), 
             ("Inactivos", "Inactivos"),
-            ("Todos", "Todos"),
-        ],
+        ], default=("Todos")
     )
     search = StringField("Apellido")
     submit = SubmitField("Filtrar")

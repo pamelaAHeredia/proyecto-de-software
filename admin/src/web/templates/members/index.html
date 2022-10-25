@@ -7,7 +7,7 @@
 
 
 <div class="container">
-  <h3>Filtrar listado por: </h3>
+  <h4>Filtrar listado por: </h4>
   <form class="d-flex" action="{{ url_for('members.filter_by')}}" method="post">
     <div class="form group">
       {{ filter_form.filter(class="", id="filter_by_status") }}
@@ -16,15 +16,22 @@
       <button class="btn btn btn-primary block" type="submit">Filtrar</button>  
     </div>
   </form>
-    <div class="row">
+    
         <div class="col-12 text-center">
             <h1>Socios</h1>
         </div>
-        <div class="col-sm-12 d-flex justify-content-center">
-            <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" onclick="return post_export()" value="Exportar a PDF">
-        </div>
-    </div>
-    <table class="table table-hover">
+        <div class="col-sm-12 d-flex justify-content-center"> 
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" onclick="return post_export()" value="Exportar en:">
+                </div>
+                <select class="custom-select" id="export_select">
+                  <option selected value="pdf">PDF</option>
+                  <option value="csv">CSV</option>
+                </select>
+            </div>
+        </div>    
+   <table class="table table-hover">
         <thead>
             <tr>
                 <th>N° de Socio</th>
@@ -90,16 +97,13 @@
 </div>
 {% block javascripts %}
 <script>
- function post_filter_by_last_name()
-    {document.getElementById("filter_last_name").value = document.getElementById("filter").value;
-     return true; 
-    }
- 
 
  function post_export() {
-  window.open("./export_list_to_pdf?filter_by_status="+ 
+  
+  window.open("./export_list?filter_by_status="+ 
   document.getElementById("filter_by_status").value + "&filter_by_last_name=" + 
-  document.getElementById("filter_by_last_name").value)  
+  document.getElementById("filter_by_last_name").value + "&export_select=" +
+  document.getElementById("export_select").value) 
  }   
 </script>
 {% endblock javascripts %}    

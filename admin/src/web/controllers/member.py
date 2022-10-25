@@ -1,5 +1,6 @@
 from crypt import methods
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from fileinput import filename
+from flask import Blueprint, request, render_template, flash, redirect, url_for, send_file
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
@@ -151,10 +152,23 @@ def filter_by_doc():
     else:
         return render_template("members/search.html", filter_form=filter_form)
 
-@member_blueprint.get("/export_list_to_pdf")
-def export_to_pdf():
+@member_blueprint.get("/export_list")
+def export_list():
     filter_by_status = request.args.get("filter_by_status")
     filter_by_last_name = request.args.get("filter_by_last_name")
+    export_select = request.args.get("export_select")
     members = service.members_for_export(filter_by_status, filter_by_last_name)
-    report = service.export_list_to_pdf(members, setting.get_items_per_page())
-    return redirect(url_for("members.index"))
+    if export_select == "pdf":
+        report = service.export_list_to_pdf(members, setting.get_items_per_page())
+        return render_template("members/view_report.html", filename=report._filename)
+    else:
+        #print((url_for('static', filename='report.csv')))
+        report = service.export_list_to_csv(members)
+        print(report.name)
+        return send_file(
+        "report.csv",
+        mimetype='text/csv',
+        download_name='report.csv',
+        as_attachment=True
+    )
+   
