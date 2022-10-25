@@ -1,6 +1,11 @@
 from src.models import auth
 from src.services.utils import hash_pass
 from src.services.member import MemberService
+from src.services.membership import MembershipService
+from src.services.discipline import DisciplineService
+from src.services.settings import SettingsService
+
+
 from src.services.user import UserService
 
 
@@ -34,17 +39,20 @@ def run():
         "pays_index",
         "pays_show",
         "pays_import",
-        "pays_destroy"
+        "pays_destroy",
+        "suscription_index",
+        "suscription_create",
+        "suscription_destroy",
+        "suscription_update",
+        "suscription_show",
     ]
 
     member_perms = [service.create_permission(perm) for perm in perms]
-    
 
     role_1 = service.create_role(name="Administrador")
     role_1.permissions = member_perms
     role_2 = service.create_role(name="Operador")
     role_3 = service.create_role(name="Socio")
-
 
     admin = service.create_user(
         email="admin@gmail.com",
@@ -79,5 +87,10 @@ def run():
         password=hash_pass("socioperador"),
         first_name="Nadia",
         last_name="Socioperador",
-        roles=[role_2, role_3]
+        roles=[role_2, role_3],
     )
+
+    service = SettingsService()
+    service.load_settings(5, True, "Correo", "pagos", 600, 10)
+    service = MembershipService()
+    service.create_social_membership()

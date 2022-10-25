@@ -1,3 +1,4 @@
+from decimal import Decimal
 from src.models.database import db
 from src.models.club.suscription import Suscription
 
@@ -44,13 +45,23 @@ class Membership(db.Model):
     )
 
     @property
-    def amount(self):
+    def amount(self) -> Decimal:
+        """Retorna el costo de la membresia
+
+        Returns:
+            Decimal: Valor de la membresia
+        """        
         for tariff in self.tariffs:
             if not tariff.date_to:
                 return tariff.amount
 
     @property
-    def used_quota(self):
+    def used_quota(self) -> int:
+        """Retorna la cantidad de inscriptos.
+
+        Returns:
+            int: Cantidad de inscriptos.
+        """
         return self.suscriptions.filter(Suscription.date_to == None).count()
 
     def __repr__(self):
