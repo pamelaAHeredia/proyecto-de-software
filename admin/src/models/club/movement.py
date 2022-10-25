@@ -10,15 +10,15 @@ class Movement(db.Model):
     ---------
     date : Date
         Indica la fecha del movimiento
-    is_credit : Boolean
-        Indica si el movimiento es de credito(true) o debito(false).
+    type : String
+        El tipo de movimiento que es.
     amount : Int
         Indica el monto del movimiento.
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     date= db.Column(db.DateTime, default=datetime.datetime.now)
-    is_credit = db.Column(db.Boolean, default=True)
+    type = db.Column(db.String(4), nullable=False)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-    suscription_id = db.Column(db.Integer, db.ForeignKey("suscription.id"))
-    suscription = db.relationship("Suscription")
+    member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
+    member = db.relationship("Member")
