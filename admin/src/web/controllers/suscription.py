@@ -35,21 +35,24 @@ def index():
     )
 
 
-@suscription_blueprint.route("/find_member/<discipline_id>", methods=["POST", "GET"])
+@suscription_blueprint.route("/find_member", methods=["GET", "POST"])
 @login_required
 # @verify_permission("discipline_create")
-def find_member(discipline_id):
+def find_member():
     form = SuscriptionForm()
     member = None
     enrolled = False
-    if request.method == "GET":
-        discipline_id = request.args.get("discipline_id", type=int)
-    else:
-        if form.validate_on_submit():
-            email = form.email.data
-            member = service_member.find_member_by_mail(email=email)
-            if not member:
-                flash("No existe un socio con ese email", "danger")
+    discipline_id = request.args.get("discipline_id", type=int)
+
+    if form.validate_on_submit():
+        doc_type = form.document_type.data
+        doc_number = form.document_number.data
+        member = service_member.find_member(
+            document_type=doc_type, document_number=doc_number
+        )
+        if not member:
+            flash("No existe un socio con ese documento", "danger")
+        else:
             enrolled = service_membership.member_is_enrolled(
                 member.membership_number, discipline_id
             )

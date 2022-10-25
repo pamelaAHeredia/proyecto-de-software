@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, SubmitField
+from wtforms import SelectField, StringField, SubmitField
 from wtforms.validators import InputRequired, Email
 
 
 class SuscriptionForm(FlaskForm):
-    email = EmailField("Email", validators=[InputRequired(),Email()])
+    document_type = SelectField("Tipo de Documento", choices=["DNI","LE","LC","PASAPORTE"])
+    document_number = StringField("Número de Documento", validators=[InputRequired()])
     submit = SubmitField('Buscar')
