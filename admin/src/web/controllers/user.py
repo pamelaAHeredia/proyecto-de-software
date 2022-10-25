@@ -353,13 +353,24 @@ def link_members(id):
     members = member_service.list_by_is_active(True)
 
     if request.method == "POST":
+
+        delete_roles_form = DeleteRolesForm()
+        add_roles_form = AddRolesForm()
+        unlink_form = UnlinkMemberForm()
+
         members = request.form.getlist("selected")
         print(members)
         for member_id in members:
             member = member_service.get_by_membership_number(member_id)
             member_service.link_management(member.membership_number, user.id)
 
-        return "ok"
+        return render_template(
+                "users/user_info.html",
+                user=user,
+                add_roles_form=add_roles_form,
+                delete_roles_form=delete_roles_form,
+                unlink_form=unlink_form
+            )
 
     return render_template(
         "users/link_members.html",
