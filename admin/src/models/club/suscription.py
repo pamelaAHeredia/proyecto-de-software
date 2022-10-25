@@ -20,7 +20,7 @@ class Suscription(db.Model):
         Es el Id del socio asociado a la suscripcion.
     member : Member
         Es el objeto socio que contiene la relación.
-    
+
     """
 
     __tablename__ = "suscription"
@@ -31,4 +31,11 @@ class Suscription(db.Model):
     membership = db.relationship("Membership")
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
-    # movements = db.relationship("Movement", back_populates="suscription")
+
+    @property
+    def amount(self):
+        return self.membership.amount
+
+    @property
+    def is_active(self):
+        return True if date_to == None else False

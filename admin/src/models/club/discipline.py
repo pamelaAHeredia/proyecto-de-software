@@ -1,3 +1,4 @@
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from src.models.database import db
 
 
@@ -49,11 +50,11 @@ class Discipline(db.Model):
     @property
     def amount(self):
         return self.membership.amount
-    
+
     @property
     def is_active(self):
         return self.membership.is_active
-    
+
     @is_active.setter
     def is_active(self, v):
         self.membership.is_active = v
@@ -61,11 +62,11 @@ class Discipline(db.Model):
     @property
     def pays_per_year(self):
         return self.membership.pays_per_year
-    
+
     @pays_per_year.setter
     def pays_per_year(self, v):
         self.membership.pays_per_year = v
-    
+
     @property
     def registration_quota(self):
         return self.membership.registration_quota
@@ -73,6 +74,13 @@ class Discipline(db.Model):
     @registration_quota.setter
     def registration_quota(self, v):
         self.membership.registration_quota = v
-    
+
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"
+
+
+class DisciplineSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Discipline
+        include_relationships = False
+        load_instance = True
