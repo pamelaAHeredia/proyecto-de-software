@@ -1,6 +1,6 @@
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, EmailField, PasswordField
+from wtforms import StringField, SelectField, SubmitField, EmailField, PasswordField, SelectMultipleField
 from wtforms.validators import DataRequired, Length, Email
 
 
@@ -83,3 +83,4 @@ class LoginForm(FlaskForm):
 class UnlinkMemberForm(FlaskForm):
     member = StringField("member", validators=[DataRequired()])
     submit = SubmitField("Desvincular Socio")
+

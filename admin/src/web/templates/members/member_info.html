@@ -47,7 +47,7 @@
                     <ul class="dropdown-menu">
                         {% if not member.user_id %}
                         <li><a class="dropdown-item" href="{{url_for('users.users_add')}}" method="post">Crear nuevo usuario</a></li>
-                        <li><a class="dropdown-item" href="{{url_for('users.link_member', id=member.membership_number)}}">Asignar usuario</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('users.link_user', id=member.membership_number)}}">Asignar usuario</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" href="#">Editar</a></li>
                     </ul>

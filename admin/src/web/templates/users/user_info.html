@@ -1,4 +1,4 @@
-{% extends "users/roles.html" %}
+{% extends "layout.html" %}
 {% block title %}Información de usuario{% endblock %}
 {% block head %}
 {{ super() }}
@@ -58,7 +58,7 @@
 
 {% for role in user.roles %}
   {% if role.name == "Socio" %}
-    {% if user.members %}
+    {% if user.has_members %}
       <h1>Socios vinculados</h1>
       <table class="table table-hover table-sm">
         <thead>
@@ -70,7 +70,8 @@
           <tr>
             {% for member in user.members %}
             <th>{{member.document_type}}: {{ member.document_number }}</th>
-            <th><form action="{{url_for('users.unlink_member', id=user.id)}}"  method="post">
+            <th>
+              <form action="{{url_for('users.unlink_member', id=user.id)}}"  method="post">
               <div class="form-group">
                   {{ unlink_form.hidden_tag() }}
                   {{ unlink_form.member(type="hidden", value=member.membership_number) }}
@@ -86,14 +87,8 @@
   {% endif %}
 {% endfor %}
 
+{% include('users/roles.html') %}
 
-
-{% else %}
-<h2>Usuario Inexistente</h2>
-{% endif %}
-{%block roles%}
-{{ super() }}
-{% endblock %}
 
 <!-- Button trigger modal -->
 <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -124,6 +119,9 @@
   </div>
 </div>
 
+{% else %}
+<h2>Usuario Inexistente</h2>
+{% endif %}
 
 <a href="{{url_for('users.index')}}"> Volver </a>
 {% endblock %}

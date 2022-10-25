@@ -50,8 +50,16 @@ class User(db.Model):
                 aux = True
         return aux
     
+    @property
+    def is_member(self):
+        aux = False
+        for role in self.roles: 
+            if role.name == "Socio":
+                aux = True
+        return aux
+    
      
     @property
-    def have_members(self):
+    def has_members(self):
         return len(list(self.members)) > 0
 

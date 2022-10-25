@@ -25,17 +25,26 @@ class UserService:
         """
         return User.query.order_by(User.id)
 
-    def list_paginated_users(self, page, items_per_page, endpoint, filter_by):
+    def list_paginated_users(self, page, items_per_page, endpoint, filter):
         """
         Retorna el paginador de los usuarios del sistema
-        """
-        if filter_by == "Activo":
+
+        Args:
+           page: Número de pagina.
+           items_per_page: cantidad de registros por página.
+           endpoint: endpoint para el armado del url_for.
+
+        Returns:
+           Un paginador.
+        """ 
+        if filter == "Activo":
             users = self.find_active_users()
-        elif filter_by == "Bloqueado":
+        elif filter == "Bloqueado":
             users = self.find_blocked_users()
         else:
             users = self.list_users()
-        return Paginator(users, page, items_per_page, endpoint)
+       
+        return Paginator(users, page, items_per_page, endpoint, filter)
 
     def create_user(self, email, username, password, first_name, last_name, roles):
         """
@@ -133,7 +142,7 @@ class UserService:
         """Si el usuario no es un administrador y está bloqueado lo desbloquea, y viceversa"""
         """Si tiene usuarios vinculados, los desvincula."""
 
-        if not self.contains_role("Administrador", user.id):
+        if not user.roles.__contains__(role):
             if not blocker_id == user.id:
                 if user.is_active:
                     user.is_active = False
@@ -206,11 +215,10 @@ class UserService:
     def add_role(self, id, role_name):
         """Permite asignar roles a un usuario."""
         user = self.find_user_by_id(id)
-        roles = user.roles
         role = self.find_role_by_name(role_name)
 
         if user.is_active:
-            if not roles.__contains__(role):
+            if not user.roles.__contains__(role):
 
                 user.roles.append(role)
             else:
@@ -232,11 +240,15 @@ class UserService:
         user = self.find_user_by_id(id)
 
         if len(user.roles) > 1:
-
             role = self.find_role_by_name(roles)
-            user.roles.remove(role)
-            db.session.commit()
-
+            if (role.name == "Socio" and not user.has_members) or (not role.name == "Socio"):
+                user.roles.remove(role)
+                db.session.commit()
+            else:
+                raise database.PermissionDenied(
+                    info="No se pudo desasignar el rol.",
+                    message="El usuario con rol de socio tiene socios asignados.",
+                )
         else:
             raise database.PermissionDenied(
                 info="No se pudo desasignar el rol.",
@@ -251,8 +263,6 @@ class UserService:
 
         return user.roles
 
-    def contains_role(self, role, id):
-        user = self.find_user_by_id(id)
-        roles = self.find_role_by_name(role)
-
-        return user.roles.__contains__(roles)
+    def contains_role(self, role_name, id):
+        role = self.find_role_by_name(role_name)
+        return self.find_user_by_id(id).roles.__contains__(role)

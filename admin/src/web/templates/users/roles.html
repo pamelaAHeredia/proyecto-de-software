@@ -1,15 +1,3 @@
-{% extends "layout.html" %}
-{% block title %}Roles{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block content %}
-
-{% block roles %}
-{% if user %}
-<h1>Roles Del Usuario:</h1>
-<h2>{{user.email}}</h2>
-
 <table class="table table-hover table-sm">
     <thead>
         <tr>
@@ -28,8 +16,10 @@
                     {{ delete_roles_form.role(type="hidden", value=role.name) }}
                 </div>  
                 {% if user.roles|length > 1  %} 
+                {% if (role.name == "Socio" and not user.has_members) or (not role.name =="Socio") %}
                 <button type="submit" class="btn btn-danger"> Desasignar Rol</button>  
                 {% endif %} 
+                {% endif %}
                 </form>
             </th>
 
@@ -49,7 +39,3 @@
         </div>     
     </form>
 </div>
-{% endif %}
-{% endblock %}
-<a href="{{url_for('users.user_info', id=user.id)}}"> Volver </a>
-{% endblock %}

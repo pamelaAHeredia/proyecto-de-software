@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash
+from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 
 from src.services.settings import SettingsService
@@ -29,14 +29,11 @@ settings = SettingsService()
 @login_required
 def index():
     filter_form = FilterUsersForm()
-
     """Render de la lista de usuarios paginada"""
+    filter = request.args.get("filter")
     page = request.args.get("page", 1, type=int)
     users_paginator = service.list_paginated_users(
-        page, 
-        settings.get_items_per_page(), 
-        "users.index", 
-        "Todos"
+        page, settings.get_items_per_page(), "users.index", filter
     )
     return render_template(
         "users/index.html",
@@ -49,16 +46,13 @@ def index():
 @login_required
 def users_filter_by():
     filter_form = FilterUsersForm()
-    
+
     if filter_form.validate_on_submit:
 
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
         users_paginator = service.list_paginated_users(
-            page, 
-            settings.get_items_per_page(), 
-            "users.index", 
-            filter
+            page, settings.get_items_per_page(), "users.index", filter
         )
         return render_template(
             "users/index.html",
@@ -132,9 +126,7 @@ def users_block(id):
     user = service.find_user_by_id(id)
 
     try:
-        delete_roles_form = DeleteRolesForm()
-        add_roles_form = AddRolesForm()
-        unlink_form = UnlinkMemberForm()
+
         user_session = session["user"]
         service.block_user(id, user_session)
         if user.is_active == False:
@@ -143,19 +135,15 @@ def users_block(id):
             flash("Usuario desbloqueado con éxito", "success")
     except database.PermissionDenied as e:
         flash(e, "danger")
-    return render_template(
-        "users/user_info.html",
-        user=user,
-        add_roles_form=add_roles_form,
-        delete_roles_form=delete_roles_form,
-        unlink_form=unlink_form
-    )
+
+    return redirect(url_for("users.index"))
 
 
 @user_blueprint.route("/search_user", methods=["POST", "GET"])
 @login_required
 def users_search():
     search_form = SearchUserForm()
+    unlink_form = UnlinkMemberForm()
 
     if request.method == "POST":
         delete_roles_form = DeleteRolesForm()
@@ -169,6 +157,7 @@ def users_search():
                 user=user,
                 add_roles_form=add_roles_form,
                 delete_roles_form=delete_roles_form,
+                unlink_form=unlink_form
             )
     else:
         return render_template("users/search.html", search_form=search_form)
@@ -212,14 +201,14 @@ def users_add_roles(id):
             except database.PermissionDenied as e:
                 flash(e, "danger")
         return render_template(
-            "users/roles.html",
+            "users/user_info.html",
             user=user,
             add_roles_form=add_roles_form,
             delete_roles_form=delete_roles_form,
         )
     else:
         return render_template(
-            "users/roles.html",
+            "users/user_info.html",
             user=user,
             add_roles_form=add_roles_form,
             delete_roles_form=delete_roles_form,
@@ -229,6 +218,7 @@ def users_add_roles(id):
 
 @user_blueprint.route("/delete_roles/<id>", methods=["POST", "GET"])
 @login_required
+# role_destroy?
 def users_delete_roles(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
@@ -244,7 +234,7 @@ def users_delete_roles(id):
             except database.PermissionDenied as e:
                 flash(e, "danger")
     return render_template(
-        "users/roles.html",
+        "users/user_info.html",
         user=user,
         roles=roles,
         delete_roles_form=delete_roles_form,
@@ -258,6 +248,7 @@ def users_delete_roles(id):
 def profile():
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
+    unlink_form = UnlinkMemberForm()
     id = session["user"]
 
     user = service.find_user_by_id(id)
@@ -266,12 +257,14 @@ def profile():
         user=user,
         delete_roles_form=delete_roles_form,
         add_roles_form=add_roles_form,
+        unlink_form=unlink_form
     )
 
 
 @user_blueprint.route("/delete/<id>", methods=["GET"])
 @login_required
-@verify_permission("member_destroy")
+# El permiso, es correcto?
+@verify_permission("user_destroy")
 def delete(id):
     filter_form = FilterUsersForm()
     session_id = session["user"]
@@ -285,28 +278,35 @@ def delete(id):
     return render_template("users/index.html", users=users, filter_form=filter_form)
 
 
-@user_blueprint.route("/link_member/<id>", methods=["POST", "GET"])
+@user_blueprint.route("/link_user/<id>/<user_id>", methods=["POST", "GET"])
+@user_blueprint.route("/link_user/<id>", methods=["POST", "GET"])
 @login_required
-def link_member(id):
+def link_user(id, user_id=None):
     search_form = SearchUserForm()
 
     user = None
+
     member = member_service.get_by_membership_number(id)
     if request.method == "POST":
 
-        if search_form.validate_on_submit:
+        if search_form.validate_on_submit and user_id == None:
             email = search_form.email.data
             user = service.find_user_byEmail(email)
 
             if user:
                 if service.contains_role("Socio", user.id):
                     if user.is_active:
-                        member = member_service.link_management(
-                            member.membership_number, user.id
+                        return render_template(
+                            "users/link_user.html",
+                            search_form=search_form,
+                            member=member,
+                            user=user,
                         )
-                        flash("Usuario asignado con éxito", "success")
                     else:
-                        flash("El usuario que quiere asignar se encuentra bloqueado.", "danger")
+                        flash(
+                            "El usuario que quiere asignar se encuentra bloqueado.",
+                            "danger",
+                        )
                 else:
                     flash(
                         "El usuario que desea asignar no tiene rol de socio.", "danger"
@@ -314,8 +314,13 @@ def link_member(id):
             else:
                 flash("El email no pertenece a un usuario.", "danger")
 
+        if not user_id == None:
+            user = service.find_user_by_id(user_id)
+            member = member_service.link_management(id, user.id)
+            flash("Usuario asignado con éxito", "success")
+
     return render_template(
-        "users/link_member.html", search_form=search_form, member=member, user=user
+        "users/link_user.html", search_form=search_form, member=member, user=user
     )
 
 
@@ -339,4 +344,25 @@ def unlink_member(id):
         add_roles_form=add_roles_form,
         delete_roles_form=delete_roles_form,
         unlink_form=unlink_form,
+    )
+
+
+@user_blueprint.route("/link_members/<id>", methods=["GET", "POST"])
+def link_members(id):
+    user = service.find_user_by_id(id)
+    members = member_service.list_by_is_active(True)
+
+    if request.method == "POST":
+        members = request.form.getlist("selected")
+        print(members)
+        for member_id in members:
+            member = member_service.get_by_membership_number(member_id)
+            member_service.link_management(member.membership_number, user.id)
+
+        return "ok"
+
+    return render_template(
+        "users/link_members.html",
+        user=user,
+        members=members,
     )

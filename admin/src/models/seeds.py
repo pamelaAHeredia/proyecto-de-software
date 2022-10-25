@@ -32,7 +32,7 @@ def run():
 
     service = UserService()
 
-    perms = [
+    perms = [ 
         "member_index",
         "member_create",
         "member_destroy",

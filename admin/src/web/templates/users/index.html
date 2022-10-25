@@ -53,10 +53,12 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
             <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
-            <li><a class="dropdown-item" href="{{url_for('users.users_add_roles', id=user.id)}}">Ver roles</a></li>
+            {% if user.is_member%}
+            <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a></li>
+            {% endif %}
             {% if not user.is_admin %}
             <li>
-              <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
+              <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}" >
                 {% if user.is_active %}
                 {{"Bloquear"}}
                 {% else %}
