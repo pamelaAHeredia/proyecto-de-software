@@ -31,7 +31,6 @@ class DisciplineService:
             .order_by(Discipline.id)
             .all()
         )
-        # disciplines = self.list_disciplines().all()
         return self._discipline_schema.dump(disciplines, many=True)
 
     def active(self, discipline_id):
@@ -50,7 +49,7 @@ class DisciplineService:
         Returns:
             List[Discipline]: Una lista con todas las disciplinas
         """
-        return Discipline.query.order_by(Discipline.id)
+        return Discipline.query.filter_by(deleted=False).order_by(Discipline.id)
 
     def list_paginated_disciplines(
         self, page: int, items_per_page: int, endpoint: str
@@ -116,7 +115,7 @@ class DisciplineService:
 
         discipline = self.find_discipline(name=name, category=category)
 
-        if not discipline:
+        if not discipline or discipline.deleted:
             tariff = Tariff(amount=amount)
 
             discipline = Discipline(
@@ -195,7 +194,7 @@ class DisciplineService:
             or discipline_to_update.category != category
         ):
             discipline_in_db = self.find_discipline(name=name, category=category)
-            if discipline_in_db:
+            if discipline_in_db and discipline_in_db.deleted is False:
                 raise database.ExistingData(message="ya existen en la base de datos")
 
         if not discipline_to_update.membership.used_quota <= registration_quota:
@@ -257,9 +256,10 @@ class DisciplineService:
 
     def delete_discipline(self, discipline_id):
         discipline = self.find_discipline(discipline_id)
-        for suscription in discipline.membership.suscriptions:
+        for suscription in discipline.membership.active_suscriptions:
             suscription.date_to = datetime.datetime.now()
 
         discipline.membership.is_active = False
+        discipline.deleted = True
         db.session.commit()
         return discipline
