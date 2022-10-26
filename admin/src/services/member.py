@@ -54,9 +54,11 @@ class MemberService:
         else:
             members = self.list_by_is_active(filter == "Activos")
         return Paginator(members, page, items_per_page, endpoint, filter, search)
+    
     def api_get_members(self):
-        members = Members.query.filter_by(id=1)
+        members = Member.query.filter_by(id=1)
         return self._member_schema.dump(members, many=True)
+
     def create_member(
         self,
         first_name,
@@ -70,8 +72,8 @@ class MemberService:
     ):
         """Función que instancia un Socio, lo agrega a la Base de Datos y lo retorna solo en caso
         de que no exista el tipo y numero de documento"""
-        member = None
-        if not self.find_member(document_type, document_number):
+        member = self.find_member(document_type, document_number)
+        if not member:
             member = Member(
                 first_name,
                 last_name,
@@ -82,28 +84,16 @@ class MemberService:
                 phone_number,
                 email,
             )
-            suscription = self._suscription_service.associate_member(member)
-            if suscription:
-                debt_movement = self._movements_service.insert_movement(
-                    "D",
-                    suscription.amount * -1,
-                    "Cuota Social Inicial",
-                    member,
-                )
-                credit_movement = self._movements_service.insert_movement(
-                    "C",
-                    suscription.amount,
-                    "Pago Cuota Social Inicial",
-                    member,
-                )
-                db.session.add_all([member, suscription, debt_movement, credit_movement])
-                db.session.commit()
+            self._suscription_service.associate_member(member)
             return member
-            
-
-        raise database.ExistingData(
+        if member.is_active:    
+            raise database.ExistingData(
             info="ATENCION!!!",
-            message="Ya existe el Socio con ese tipo y numero de documento",
+            message="Ya existe un Socio ACTIVO con ese tipo y numero de documento",)
+        else:
+            raise database.ExistingData(
+            info="ATENCION!!!",
+            message="Ya existe un Socio con ese tipo y numero de documento pero INACTIVO",
         )
 
     def find_member(self, document_type, document_number):
