@@ -1,3 +1,4 @@
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from src.models.database import db
 
 
@@ -76,3 +77,10 @@ class Discipline(db.Model):
     
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"
+
+
+class DisciplineSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Discipline
+        include_relationships = False
+        load_instance = True

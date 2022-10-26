@@ -12,19 +12,6 @@ from src.services.user import UserService
 def run():
     """Hacemos un seed de informacion en la BBDD"""
 
-    # service = DisciplineService()
-
-    # discipline = service.create_discipline(
-    #     name="Basquet",
-    #     category="Pre mini",
-    #     instructor_first_name="Juan",
-    #     instructor_last_name="De Los Palotes",
-    #     days_and_schedules="Lunes 18 a 19 miercoles 18 a 19 jueves 18 a 19",
-    #     registration_quota=50,
-    #     amount=600.00,
-    #     is_active=True
-    # )
-
     service = MemberService()
 
     member_1 = service.create_member(
@@ -53,6 +40,11 @@ def run():
         "pays_show",
         "pays_import",
         "pays_destroy",
+        "suscription_index",
+        "suscription_create",
+        "suscription_destroy",
+        "suscription_update",
+        "suscription_show",
     ]
 
     member_perms = [service.create_permission(perm) for perm in perms]

@@ -24,6 +24,11 @@ class Member(db.Model):
     creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
     movements = db.relationship("Movement", back_populates="member")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    suscriptions = db.relationship(
+        "Suscription", back_populates="member", lazy="dynamic"
+    )
 
     def __init__(
         self,

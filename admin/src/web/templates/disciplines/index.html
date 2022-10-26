@@ -44,13 +44,15 @@
                     </div>
                 </td>
                 <td>
-                    <div class="btn-group mb-3">
-                        <a class="btn btn-sm btn-success rounded-pill d-inline" href="{{ url_for('discipline.update', discipline_id=discipline.id) }}" role="button">
-                            Editar
-                        </a>
-                        <a class="btn btn-sm btn-danger rounded-pill d-inline" href="#" role="button">
-                            Borrar
-                        </a>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Seleccionar
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('discipline.update', discipline_id=discipline.id) }}">Editar</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('suscription.index', discipline_id=discipline.id) }} ">Inscripciones</a></li>
+                        </ul>
                     </div>
                 </td>
             </tr>

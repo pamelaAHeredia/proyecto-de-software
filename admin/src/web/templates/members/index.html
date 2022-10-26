@@ -7,10 +7,24 @@
 
 
 <div class="container">
+  <h3>Filtrar listado por: </h3>
+  <form action="{{ url_for('members.filter_by')}}" method="post">
+    <div class="form group">
+      {{ filter_form.filter(class="") }}
+      {{ filter_form.hidden_tag() }}
+      <button class="btn btn btn-primary block" type="submit">Filtrar</button>  
+    </div>
+  </form>
     <div class="row">
         <div class="col-12 text-center">
             <h1>Socios</h1>
         </div>
+        <form name="export_form" onsubmit="post_export()" method="post" action="{{ url_for('members.export_pdf')}}">
+            <input name="filter_value" type="hidden"> 
+            <div class="col-sm-12 d-flex justify-content-center">
+                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" value="Export">
+            </div>
+        </form>
     </div>
     <table class="table table-hover">
         <thead>
@@ -36,14 +50,17 @@
                 <td>{{ member.gender }}</td>
                 <td>
                     <div class="row">
-                        <div class="btn-group mb-3">
-                            {% if member.is_active %}
-                            <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
-                            {% else %}
-                            <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
-                            {% endif %}
-                        </div>
-                    </div>    
+                        <form name="deactivate" method="post" action="{{ url_for('members.deactivate',
+                            member_id=member.membership_number)}}">
+                            <div class="btn-group mb-3">  
+                                {% if member.is_active %}
+                                <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit" value="Si">
+                                {% else %}
+                                <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
+                                {% endif %}
+                            </div>    
+                        </form>
+                    </div>
                 </td>
                 <td>
                     <div class="btn-group mb-3">
@@ -75,4 +92,15 @@
 
 
 
-{% endblock %}
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+ function myFunction() {
+  /*console.log(document.getElementById("filter").value);  
+  document.export_form.filter_value = "chochi";
+  return true;*/
+  alert("entra");
+}   
+</script>
+{% endblock javascripts %}    
