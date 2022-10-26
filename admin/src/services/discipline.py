@@ -4,6 +4,7 @@ import datetime
 
 
 from src.models.database import db
+from src.models.club.discipline import Discipline, DisciplineSchema
 from src.models.club.discipline import Discipline
 from src.models.club.membership import Membership
 from src.models.club.tariff import Tariff
@@ -18,11 +19,16 @@ class DisciplineService:
     """
 
     _instance = None
+    _discipline_schema = DisciplineSchema()
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(DisciplineService, cls).__new__(cls)
         return cls._instance
+
+    def api_get_disciplines(self):
+        disciplines = self.list_disciplines().all()
+        return self._discipline_schema.dump(disciplines, many=True)
 
     def active(self, discipline_id):
         discipline = self.find_discipline(id=discipline_id)

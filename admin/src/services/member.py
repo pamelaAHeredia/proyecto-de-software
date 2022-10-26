@@ -93,6 +93,13 @@ class MemberService:
             document_type=document_type, document_number=document_number, deleted=False
         ).first()
 
+    def find_member_by_mail(self, email):
+        
+        return Member.query.filter_by(
+            email=email, deleted=False
+        ).first()
+
+
     def get_by_membership_number(self, id):
         """Funcion que retorna un Socio de la base de Datos por su Nro de Socio"""
         return Member.query.get(id)
@@ -164,7 +171,7 @@ class MemberService:
 
     def format_pdf(self, pdf):
         """Función que define el formato de las paginas del pdf"""
-        pdf.drawImage("../admin/public/logoclub.jpg", 5, 790, width=50, height=50)
+        pdf.drawImage("../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50)
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
         pdf.drawCentredString(300, 800, "Reporte de Asociados")
@@ -181,7 +188,7 @@ class MemberService:
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "public/report" + str(random.randint(0,99999)) + ".pdf"
+        filename = "src/web/public/report" + str(random.randint(0,99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -211,7 +218,8 @@ class MemberService:
 
     def export_list_to_csv(self, members):
         """Funcion que exporta una lista de Socios a un archivo report.csv"""
-        file = open("public/report.csv", "w", newline="")
+        filename = "src/web/public/report" + str(random.randint(0,99999)) + ".csv"
+        file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",
             "Nombre",
@@ -232,7 +240,6 @@ class MemberService:
                 }
             )
         file.close()
-        print(file.name)
         return file
 
     def link_management(self, id_member, id_user):

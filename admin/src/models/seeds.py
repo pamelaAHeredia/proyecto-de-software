@@ -29,6 +29,11 @@ def run():
         "pays_show",
         "pays_import",
         "pays_destroy",
+        "suscription_index",
+        "suscription_create",
+        "suscription_destroy",
+        "suscription_update",
+        "suscription_show",
     ]
 
     member_perms = [service.create_permission(perm) for perm in perms]

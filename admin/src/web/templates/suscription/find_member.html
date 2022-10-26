@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block title %}Alta de Disciplina{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Alta de Suscripcion</h1>
+        </div>
+    </div>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.document_type(class_="form-control", placeholder="Tipo de documento")}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    {{ form.document_number(class_="form-control", placeholder="N° de documento")}}
+                </div>
+            </div>
+
+        </div>
+        {% if member %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.last_name }}</td>
+                    <td>{{ member.email }} </td>
+                    <td>
+                        <div class="row">
+                            {% if member.is_active %}
+                            <span class="btn btn-sm btn-success rounded-pill d-inline">Activo</span>
+                            {% else %}
+                            <span class="btn btn-sm btn-dark rounded-pill d-inline">Inactivo</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if not enrolled %}
+                        <div class="btn-group mb-3">
+                            <button class="btn btn-sm btn-success rounded-pill d-inline" type="button"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Inscribir
+                            </button>
+                        </div>
+                        {% else %}
+                        <div class="btn-group mb-3">
+                            <span class="btn btn-sm btn-info rounded-pill d-inline">Inscripto</span>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        <div class="row">
+            <div class="form-group mb-3">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    {{ form.submit(class="btn btn-success") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <a href="{{ url_for('suscription.index', discipline_id=discipline_id) }}"> Volver </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% if discipline_id and member %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Inscribir</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Se va a dar de alta al socio
+                <b>{{ "%s, %s"|format(member.last_name, member.first_name) }}</b>
+                a la disciplina. ¿Está Seguro?
+            </div>
+            <form
+                action="{{url_for('suscription.enroll', member_id=member.membership_number, discipline_id=discipline_id)}}"
+                method="POST">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Si</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -160,13 +160,13 @@ def export_list():
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     if export_select == "pdf":
         report = service.export_list_to_pdf(members, setting.get_items_per_page())
-        return render_template("members/view_report.html", filename=report._filename)
+        filename = report._filename.replace("src/web/","")
+        return render_template("members/view_report.html", filename=filename)
     else:
-        #print((url_for('static', filename='report.csv')))
         report = service.export_list_to_csv(members)
-        print(report.name)
+        filename = report.name.replace("src/web/","") 
         return send_file(
-        "report.csv",
+        filename,
         mimetype='text/csv',
         download_name='report.csv',
         as_attachment=True
