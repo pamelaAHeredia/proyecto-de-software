@@ -3,6 +3,7 @@ from flask import session
 
 from src.services.settings import SettingsService
 from src.services.utils import hash_pass
+from src.services.utils import verify_pass
 from src.web.helpers.auth import login_required, verify_permission
 from src.services.user import UserService
 from src.services.member import MemberService
@@ -14,6 +15,7 @@ from src.web.forms.user import (
     AddRolesForm,
     DeleteRolesForm,
     UnlinkMemberForm,
+    UpdatePassForm
 )
 from src.errors import database
 
@@ -285,7 +287,6 @@ def link_user(id, user_id=None):
     search_form = SearchUserForm()
 
     user = None
-
     member = member_service.get_by_membership_number(id)
     if request.method == "POST":
 
@@ -303,11 +304,13 @@ def link_user(id, user_id=None):
                             user=user,
                         )
                     else:
+                        user=None
                         flash(
                             "El usuario que quiere asignar se encuentra bloqueado.",
                             "danger",
                         )
                 else:
+                    user=None
                     flash(
                         "El usuario que desea asignar no tiene rol de socio.", "danger"
                     )
@@ -377,3 +380,25 @@ def link_members(id):
         user=user,
         members=members,
     )
+
+@user_blueprint.route("/update_password", methods=["GET","POST"])
+def update_password(id=None):
+    pass_form = UpdatePassForm()
+    id = session["user"]
+    user = service.find_user_by_id(id)
+    if request.method == "POST":
+        
+        if pass_form.validate_on_submit:
+            current = pass_form.current_password.data
+            new = pass_form.new_password.data
+
+            if verify_pass(user.password, current):
+                # service.update_password(new, id)
+                flash("Contraseña Actualizada con éxito", "success")
+            else: 
+                flash("Las contraseña actual ingresada no pertenece al usuario", "danger")
+        
+    return render_template( "users/update_password.html", pass_form=pass_form, user=user)
+
+
+

@@ -84,3 +84,7 @@ class UnlinkMemberForm(FlaskForm):
     member = StringField("member", validators=[DataRequired()])
     submit = SubmitField("Desvincular Socio")
 
+class UpdatePassForm(FlaskForm):
+    current_password = PasswordField("Contraseña Actual", validators=[DataRequired()])
+    new_password = PasswordField("Contraseña Nueva", validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField("Cambiar")

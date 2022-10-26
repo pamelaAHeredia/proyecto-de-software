@@ -266,3 +266,10 @@ class UserService:
     def contains_role(self, role_name, id):
         role = self.find_role_by_name(role_name)
         return self.find_user_by_id(id).roles.__contains__(role)
+
+    
+    def update_password(self, new_pass, id):
+        user = self.find_user_by_id(id)
+        user.password = new_pass
+        db.session.commit()
+        
