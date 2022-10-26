@@ -20,5 +20,6 @@ class Movement(db.Model):
     date= db.Column(db.DateTime, default=datetime.datetime.now)
     type = db.Column(db.String(4), nullable=False)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    detail = db.Column(db.String(15), nullable=False)
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
