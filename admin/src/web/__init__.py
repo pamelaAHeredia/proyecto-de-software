@@ -21,7 +21,7 @@ def create_app(env="development", static_folder="static"):
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-
+   
     # Carga configuracion
     app.config.from_object(config[env])
 
