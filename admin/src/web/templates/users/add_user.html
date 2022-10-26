@@ -6,29 +6,38 @@
 {% block content %}
 
 <div class="container">
-    <h2> Nuevo usuario</h2>
-    <form action="{{ url_for('users.users_add')}}" method="post">
+    <h1 class="text-muted text-center" > Nuevo usuario</h1>
+    <div class="row my-5">
+      <form action="{{ url_for('users.users_add')}}" method="post">
         {{ form.hidden_tag() }}
-      <div class="form-group">
+      <div class="form-group my-3">
         {{ form.email.label }} {{ form.email(class_="form-control") }}
       </div>
-      <div class="form-group">
+      <div class="form-group my-3">
         {{ form.username.label }} {{ form.username(class_="form-control") }}
       </div>
-      <div class="form-group">
+      <div class="form-group my-3">
         {{ form.first_name.label }} {{ form.first_name(class_="form-control") }}
       </div>
-      <div class="form-group">
+      <div class="form-group my-3">
         {{ form.last_name.label }} {{ form.last_name(class_="form-control") }}
       </div>
-      <div class="form-group">
+      <div class="form-group my-3">
         {{ form.roles.label }} {{ form.roles(class_="form-control") }}
       </div>
-     
-    <input type="submit" value="Crear Usuario" class="btn btn-success">
+      <div class="row my-5 mx-auto">
+        <input type="submit" value="Crear Usuario" class="btn btn-outline-success">
+      </div>
     </form>
+
+    
   </div>
 
-  <a href="{{url_for('home')}}"> Volver al inicio </a></li>
+  <div class="row my-5">
+    <a href="{{url_for('home')}}"> Volver al inicio </a></li>
+  </div>
+    
+</div>
+
 
 {% endblock %}

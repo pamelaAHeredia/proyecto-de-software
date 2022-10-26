@@ -33,6 +33,12 @@ def run():
         "suscription_destroy",
         "suscription_update",
         "suscription_show",
+        "user_index", 
+        "user_create",
+        "user_destroy", 
+        "user_update", 
+        "user_show", 
+        "user_search"
     ]
 
     member_perms = [service.create_permission(perm) for perm in perms]

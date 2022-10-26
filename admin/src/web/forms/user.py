@@ -87,4 +87,5 @@ class UnlinkMemberForm(FlaskForm):
 class UpdatePassForm(FlaskForm):
     current_password = PasswordField("Contraseña Actual", validators=[DataRequired()])
     new_password = PasswordField("Contraseña Nueva", validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField("Confirmar contraseña", validators=[DataRequired(), Length(min=6)])
     submit = SubmitField("Cambiar")

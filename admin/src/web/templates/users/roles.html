@@ -1,41 +1,47 @@
-<table class="table table-hover table-sm">
-    <thead>
-        <tr>
-            <th>Roles</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-        {% for role in user.roles %}
-        <tr>
-            <th>{{ role.name }}</th>
 
-            <th><form action="{{url_for('users.users_delete_roles', id=user.id)}}"  method="post">
-                <div class="form-group">
-                    {{ delete_roles_form.hidden_tag() }}
-                    {{ delete_roles_form.role(type="hidden", value=role.name) }}
-                </div>  
-                {% if user.roles|length > 1  %} 
-                {% if (role.name == "Socio" and not user.has_members) or (not role.name =="Socio") %}
-                <button type="submit" class="btn btn-danger"> Desasignar Rol</button>  
-                {% endif %} 
-                {% endif %}
-                </form>
-            </th>
+<h2 class="text-muted"> Roles Asignados </h2>
+<div class="row my-3">
 
-        </tr>
-        {% endfor %}
-        </tr>
-    </tbody>
-</table>
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for role in user.roles %}
+            <tr>
+                <th>{{ role.name }}</th>
 
-<div class="container">
-    <h2> Agregar nuevo rol </h2>
+                <th>
+                    <form action="{{url_for('users.users_delete_roles', id=user.id)}}" method="post">
+                        <div class="form-group">
+                            {{ delete_roles_form.hidden_tag() }}
+                            {{ delete_roles_form.role(type="hidden", value=role.name) }}
+                        </div>
+                        {% if user.roles|length > 1 %}
+                        {% if (role.name == "Socio" and not user.has_members) or (not role.name =="Socio") %}
+                        <button type="submit" class="btn btn-outline-danger"> Desasignar Rol</button>
+                        {% endif %}
+                        {% endif %}
+                    </form>
+                </th>
+
+            </tr>
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2 class="text-muted"> Asignar nuevo rol </h2>
+<div class="row my-5">
     <form action="{{ url_for('users.users_add_roles', id=user.id)}}" method="post">
         <div class="form group">
             {{add_roles_form.hidden_tag()}}
             {{add_roles_form.roles}}
-            <button class="btn btn-success">Asignar nuevo rol</button>
-        </div>     
+            <button class="btn btn-outline-success">Asignar nuevo rol</button>
+        </div>
     </form>
 </div>

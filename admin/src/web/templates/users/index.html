@@ -5,82 +5,97 @@
 {% endblock %}
 {% block content %}
 
-<h1>Usuarios</h1>
+<h1 class="text-muted text-center" >Usuarios</h1>
 
 <div class="container">
-  <h3>Filtrar listado por: </h3>
-  <form action="{{ url_for('users.users_filter_by')}}" method="post">
-    <div class="form group">
-      {{ filter_form.filter(class="", selected="selected")}}
-      {{filter_form.hidden_tag()}}
-      <button class="btn btn btn-primary block" type="submit">Filtrar</button>  
-    </div>
-  </form>
+  <div class="row my-5">
+    <h3 class="text-muted">Filtrar listado por: </h3>
+    <form action="{{ url_for('users.users_filter_by')}}" method="post">
+      <div class="form group">
+        {{ filter_form.filter(class="", selected="selected")}}
+        {{filter_form.hidden_tag()}}
+        <button class="btn btn-outline-secondary block" type="submit">Filtrar</button>  
+      </div>
+    </form>
+  </div>
+
+  {% if paginator.items %}
+
+  <div class="row my-3">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Nombre de Usuario</th>
+          <th>Estado</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Operaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in paginator.items %}
+        <tr>
+          <th>{{ user.id }}</th>
+          <th>{{ user.email }}</th>
+          <th>{{ user.username }}</th>
+          <th>{%if user.is_active -%} {{"Activo"}}
+            {%else -%}
+            {{"Bloqueado"}}
+            {% endif %}</th>
+          <th>{{ user.first_name }}</th>
+          <th>{{ user.last_name }}</th>
+          <th>
+          <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle"  type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Operaciones
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
+                <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
+                {% if user.is_member %}
+                <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a></li>  
+                {% endif %}
+                {% if not user.is_admin %}
+                <li>
+                  <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
+                    {% if user.is_active %}
+                    {{"Bloquear"}}
+                    {% else %}
+                    {{"Desbloquear"}}
+                    {% endif %}
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </th>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="row my-3">
+
+    {% include('partials/paginator.html') %}
+
+    {% else %}
+    <h2>No hay usuarios para mostrar</h2>
+    
+    {% endif %}
+    
+
+
+  </div>
+  <div class="row my-5">
+    <a href="{{url_for('home')}}"> Volver al inicio </a>
+  </div>
 </div>
 
-{% if paginator.items %}
-
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Email</th>
-      <th>Nombre de Usuario</th>
-      <th>Estado</th>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Operaciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in paginator.items %}
-    <tr>
-      <th>{{ user.id }}</th>
-      <th>{{ user.email }}</th>
-      <th>{{ user.username }}</th>
-      <th>{%if user.is_active -%} {{"Activo"}}
-        {%else -%}
-        {{"Bloqueado"}}
-        {% endif %}</th>
-      <th>{{ user.first_name }}</th>
-      <th>{{ user.last_name }}</th>
-      <th>
-      <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Operaciones
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
-            <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
-            {% if user.is_member%}
-            <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a></li>
-            {% endif %}
-            {% if not user.is_admin %}
-            <li>
-              <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}" >
-                {% if user.is_active %}
-                {{"Bloquear"}}
-                {% else %}
-                {{"Desbloquear"}}
-                {% endif %}
-            </a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </th>
-      </th>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-{% include('partials/paginator.html') %}
-
-{% else %}
-<h2>No hay usuarios para mostrar</h2>
-
-{% endif %}
-<a href="{{url_for('home')}}"> Volver al inicio </a>
 {% endblock %}
+

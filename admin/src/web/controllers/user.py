@@ -29,6 +29,7 @@ settings = SettingsService()
 
 @user_blueprint.route("/", methods=["GET"])
 @login_required
+@verify_permission("user_index")
 def index():
     filter_form = FilterUsersForm()
     """Render de la lista de usuarios paginada"""
@@ -46,6 +47,7 @@ def index():
 
 @user_blueprint.route("/filter_users_by", methods=["POST"])
 @login_required
+@verify_permission("user_search")
 def users_filter_by():
     filter_form = FilterUsersForm()
 
@@ -65,6 +67,7 @@ def users_filter_by():
 
 @user_blueprint.route("/add", methods=["POST", "GET"])
 @login_required
+@verify_permission("user_create")
 def users_add():
     """Agrega usuarios mediante el formulario"""
     form = CreateUserForm()
@@ -96,6 +99,7 @@ def users_add():
 
 @user_blueprint.route("/update/<id>", methods=["POST", "GET"])
 @login_required
+@verify_permission("user_update")
 def users_update(id):
     form = UpdateUserForm()
     user = service.find_user_by_id(id)
@@ -124,6 +128,7 @@ def users_update(id):
 
 @user_blueprint.route("/block_user/<id>", methods=["GET"])
 @login_required
+@verify_permission("user_update")
 def users_block(id):
     user = service.find_user_by_id(id)
 
@@ -143,6 +148,7 @@ def users_block(id):
 
 @user_blueprint.route("/search_user", methods=["POST", "GET"])
 @login_required
+@verify_permission("user_search")
 def users_search():
     search_form = SearchUserForm()
     unlink_form = UnlinkMemberForm()
@@ -167,6 +173,7 @@ def users_search():
 
 @user_blueprint.route("/user_info/<id>", methods=["GET", "POST"])
 @login_required
+@verify_permission("user_show")
 def user_info(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
@@ -184,6 +191,7 @@ def user_info(id):
 
 @user_blueprint.route("/add_roles/<id>", methods=["POST", "GET"])
 @login_required
+@verify_permission("user_update")
 def users_add_roles(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
@@ -220,7 +228,7 @@ def users_add_roles(id):
 
 @user_blueprint.route("/delete_roles/<id>", methods=["POST", "GET"])
 @login_required
-# role_destroy?
+@verify_permission("user_update")
 def users_delete_roles(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
@@ -265,7 +273,6 @@ def profile():
 
 @user_blueprint.route("/delete/<id>", methods=["GET"])
 @login_required
-# El permiso, es correcto?
 @verify_permission("user_destroy")
 def delete(id):
     filter_form = FilterUsersForm()
@@ -282,6 +289,7 @@ def delete(id):
 
 @user_blueprint.route("/link_user/<id>/<user_id>", methods=["POST", "GET"])
 @user_blueprint.route("/link_user/<id>", methods=["POST", "GET"])
+@verify_permission("user_update")
 @login_required
 def link_user(id, user_id=None):
     search_form = SearchUserForm()
@@ -329,6 +337,7 @@ def link_user(id, user_id=None):
 
 @user_blueprint.route("/unlink_member/<id>", methods=["GET", "POST"])
 @login_required
+@verify_permission("user_update")
 def unlink_member(id):
     delete_roles_form = DeleteRolesForm()
     add_roles_form = AddRolesForm()
@@ -351,9 +360,11 @@ def unlink_member(id):
 
 
 @user_blueprint.route("/link_members/<id>", methods=["GET", "POST"])
+@login_required
+@verify_permission("user_update")
 def link_members(id):
     user = service.find_user_by_id(id)
-    members = member_service.list_by_is_active(True)
+    members = member_service.list_active_and_no_user()
 
     if request.method == "POST":
 
@@ -382,6 +393,7 @@ def link_members(id):
     )
 
 @user_blueprint.route("/update_password", methods=["GET","POST"])
+@verify_permission("user_update")
 def update_password(id=None):
     pass_form = UpdatePassForm()
     id = session["user"]
@@ -391,10 +403,14 @@ def update_password(id=None):
         if pass_form.validate_on_submit:
             current = pass_form.current_password.data
             new = pass_form.new_password.data
+            confirm = pass_form.confirm_password.data
 
             if verify_pass(user.password, current):
-                # service.update_password(new, id)
-                flash("Contraseña Actualizada con éxito", "success")
+                if new == confirm: 
+                    service.update_password(hash_pass(new), id)
+                    flash("Contraseña Actualizada con éxito", "success")
+                else: 
+                    flash("Las contraseñas no coinciden", "danger")
             else: 
                 flash("Las contraseña actual ingresada no pertenece al usuario", "danger")
         
