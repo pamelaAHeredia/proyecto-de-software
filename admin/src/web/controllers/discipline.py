@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
@@ -8,13 +9,15 @@ from src.web.helpers.auth import login_required, verify_permission
 
 from src.services.discipline import DisciplineService
 from src.services.settings import SettingsService
+from src.services.suscription import SuscriptionService
 
 
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
 
 service_discipline = DisciplineService()
-
+service_settings = SettingsService()
+service_suscription = SuscriptionService()
 
 @discipline_blueprint.get("/")
 @login_required
@@ -117,3 +120,13 @@ def update(discipline_id):
     return render_template(
         "disciplines/update.html", form=form, discipline_id=discipline_id
     )
+
+
+@discipline_blueprint.post("/delete/<int:discipline_id>")
+@login_required
+@verify_permission("discipline_destroy")
+def delete(discipline_id):
+    if service_discipline.delete_discipline(discipline_id):
+        flash("Disciplina eliminada correctamente", "success")
+
+    return redirect(url_for("discipline.index"))

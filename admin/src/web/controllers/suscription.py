@@ -90,8 +90,6 @@ def enroll(member_id, discipline_id):
 @login_required
 # @verify_permission("discipline_create")
 def leave(suscription_id, discipline_id):
-    # membership = service_discipline.membership(discipline_id)
-    # member = service_member.get_by_membership_number(member_id)
 
     if service_suscription.leave(suscription_id):
         flash("Socio dado de baja de la suscripcion correctamente", "success")

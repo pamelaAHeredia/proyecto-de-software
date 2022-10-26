@@ -26,7 +26,12 @@ class DisciplineService:
         return cls._instance
 
     def api_get_disciplines(self):
-        disciplines = self.list_disciplines().all()
+        disciplines = (
+            Discipline.query.filter(Discipline.membership.has(is_active=True))
+            .order_by(Discipline.id)
+            .all()
+        )
+        # disciplines = self.list_disciplines().all()
         return self._discipline_schema.dump(disciplines, many=True)
 
     def active(self, discipline_id):
@@ -249,3 +254,12 @@ class DisciplineService:
         if id:
             return Discipline.query.get(id)
         return Discipline.query.filter_by(name=name, category=category).first()
+
+    def delete_discipline(self, discipline_id):
+        discipline = self.find_discipline(discipline_id)
+        for suscription in discipline.membership.suscriptions:
+            suscription.date_to = datetime.datetime.now()
+
+        discipline.membership.is_active = False
+        db.session.commit()
+        return discipline
