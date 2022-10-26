@@ -48,19 +48,19 @@ def users_filter_by():
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
-        if filter == "activo":
+        if filter == "Activo":
             users_paginator = service.list_paginated_users(
                 page,
                 2,
                 "users.users_index",
-                "activo",
+                "Activo",
             )
-        elif filter == "bloqueado":
+        elif filter == "Bloqueado":
             users_paginator = service.list_paginated_users(
                 page,
                 2,
                 "users.users_index",
-                "bloqueado",
+                "Bloqueado",
             )
         else:
             users_paginator = service.list_paginated_users(

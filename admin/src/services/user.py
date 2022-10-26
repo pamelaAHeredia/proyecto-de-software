@@ -28,9 +28,9 @@ class UserService:
         """
         Retorna el paginador de los usuarios del sistema
         """
-        if filter_by == "activo":
+        if filter_by == "Activo":
             users = self.find_active_users()
-        elif filter_by == "bloqueado":
+        elif filter_by == "Bloqueado":
              users = self.find_blocked_users()
         else:
             users = self.list_users()

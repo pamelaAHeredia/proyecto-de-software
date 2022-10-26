@@ -4,24 +4,13 @@ from src.services.member import MemberService
 from src.services.membership import MembershipService
 from src.services.discipline import DisciplineService
 from src.services.settings import SettingsService
-
-
 from src.services.user import UserService
 
 
 def run():
     """Hacemos un seed de informacion en la BBDD"""
 
-    service = MemberService()
-
-    member_1 = service.create_member(
-        first_name="César",
-        last_name="Amiconi",
-        document_type="DNI",
-        document_number="24953316",
-        gender="M",
-        address="La Plata",
-    )
+   
 
     service = UserService()
 
@@ -94,3 +83,14 @@ def run():
     service.load_settings(5, True, "Correo", "pagos", 600, 10)
     service = MembershipService()
     service.create_social_membership()
+
+    service = MemberService()
+
+    member_1 = service.create_member(
+        first_name="César",
+        last_name="Amiconi",
+        document_type="DNI",
+        document_number="24953316",
+        gender="M",
+        address="La Plata",
+    )

@@ -162,3 +162,5 @@ cython_debug/
 
 flask_session/
 .vscode/
+*.pdf
+*.csv

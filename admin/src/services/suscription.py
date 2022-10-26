@@ -8,6 +8,7 @@ from src.errors.database import ExistingData
 from src.models.club.member import Member
 from src.models.club.membership import Membership
 from src.models.club.suscription import Suscription
+from src.models.club.member import Member
 
 from src.services.membership import MembershipService
 from src.errors import database

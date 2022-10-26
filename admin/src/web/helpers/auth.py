@@ -36,7 +36,6 @@ def is_administrator(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         user = User.query.filter_by(id=session.get("user")).first()
-        print(user)
         for r in user.roles:
             if r.name == "Administrador":
                 return f(*args, **kwargs)

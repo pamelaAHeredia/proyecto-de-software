@@ -1,8 +1,15 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from crypt import methods
+from fileinput import filename
+from flask import Blueprint, request, render_template, flash, redirect, url_for, send_file
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
-from src.web.forms.member import MemberForm, FilterForm
+from src.services.suscription import SuscriptionService
+from src.web.forms.member import (
+    FilterByDocForm,
+    MemberForm,
+    FilterSearchForm,
+)
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
@@ -17,10 +24,12 @@ setting = SettingsService()
 @member_blueprint.get("/")
 @login_required
 def index():
-    filter_form = FilterForm()
+    filter_form = FilterSearchForm()
     page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter")
+    search = request.args.get("search")
     member_paginator = service.list_paginated_members(
-        page, setting.get_items_per_page(), "members.index", "Todos"
+        page, setting.get_items_per_page(), "members.index", filter, search
     )
     return render_template(
         "members/index.html", filter_form=filter_form, paginator=member_paginator
@@ -109,34 +118,57 @@ def update(member_id):
     return render_template("members/update.html", form=form, member_id=member_id)
 
 
-@member_blueprint.post("/deactivate/<int:member_id>")
+@member_blueprint.post("/change_activity/<int:member_id>")
 @login_required
-def deactivate(member_id):
-    service.deactivate_member(member_id)
+def change_activity(member_id):
+    service.change_activity_member(member_id)
     return redirect(url_for("members.index"))
 
 
-@member_blueprint.post("/exportpdf")
-def export_pdf():
-    list = request.form.items.__get__
-    print(list)
-    return redirect(url_for("members.index"))
-
-
-@member_blueprint.route("/filter_by", methods=["POST"])
+@member_blueprint.route("/filter_by", methods=["POST", "GET"])
 def filter_by():
-    filter_form = FilterForm()
+    filter_form = FilterSearchForm()
     if filter_form.validate_on_submit:
         page = request.args.get("page", 1, type=int)
         filter = filter_form.filter.data
+        search = filter_form.search.data
         members_paginator = service.list_paginated_members(
-            page,
-            setting.get_items_per_page(),
-            "members.index",
-            filter,
+            page, setting.get_items_per_page(), "members.index", filter, search
         )
         return render_template(
-            "members/index.html",
-            paginator=members_paginator,
-            filter_form=filter_form,
+            "members/index.html", paginator=members_paginator, filter_form=filter_form
         )
+
+
+@member_blueprint.route("/filter_by_dni", methods=["POST", "GET"])
+def filter_by_doc():
+    filter_form = FilterByDocForm()
+    if request.method == "POST":
+        if filter_form.validate_on_submit():
+            doc_type = filter_form.document_type.data
+            doc_number = filter_form.document_number.data
+            member = service.find_member(doc_type, doc_number)
+            return render_template("members/member_info.html", member=member)
+    else:
+        return render_template("members/search.html", filter_form=filter_form)
+
+@member_blueprint.get("/export_list")
+def export_list():
+    filter_by_status = request.args.get("filter_by_status")
+    filter_by_last_name = request.args.get("filter_by_last_name")
+    export_select = request.args.get("export_select")
+    members = service.members_for_export(filter_by_status, filter_by_last_name)
+    if export_select == "pdf":
+        report = service.export_list_to_pdf(members, setting.get_items_per_page())
+        filename = report._filename.replace("src/web/","")
+        return render_template("members/view_report.html", filename=filename)
+    else:
+        report = service.export_list_to_csv(members)
+        filename = report.name.replace("src/web/","") 
+        return send_file(
+        filename,
+        mimetype='text/csv',
+        download_name='report.csv',
+        as_attachment=True
+    )
+   
