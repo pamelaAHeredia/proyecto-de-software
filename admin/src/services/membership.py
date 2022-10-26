@@ -1,15 +1,14 @@
 from decimal import Decimal
 from typing import List, Optional
 import datetime
-
-
 from src.models.database import db
+from src.errors import database
 from src.models.club.membership import Membership
 from src.models.club.tariff import Tariff
 from src.models.club.suscription import Suscription
 from src.services.discipline import DisciplineService
 from src.services.settings import SettingsService
-from src.errors import database
+
 
 
 class MembershipService:
@@ -43,7 +42,7 @@ class MembershipService:
 
     def suscriptions(self, discipline_id):
         membership = self.membership(discipline_id)
-        return membership.suscriptions.filter(Suscription.date_to==None)
+        return membership.active_suscriptions
 
     def member_is_enrolled(self, member_id: int, discipline_id: int) -> bool:
         """Verifica si un socio esta inscripto a una disciplina.
@@ -73,7 +72,7 @@ class MembershipService:
             int: Cantidad de cupos discponibles para inscripciones.
         """
         membership = self.membership(discipline_id)
-        quota_left = membership.registration_quota - self.used_quota(discipline_id)
+        quota_left = membership.registration_quota - membership.used_quota
         return quota_left
 
     def used_quota(self, discipline_id: int) -> int:
@@ -86,7 +85,7 @@ class MembershipService:
             int: Cantidad de inscriptos
         """
         membership = self.membership(discipline_id)
-        used_quota = membership.suscriptions.filter(Suscription.date_to == None).count()
+        used_quota = membership.used_quota()
         return used_quota
 
     def create_social_membership(self) -> None:

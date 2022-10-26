@@ -89,14 +89,6 @@ class SuscriptionService:
             if self._membership_service.available_quota(discipline_id) == 0
             else True
         )
-
-        # can_suscribe = {
-        #     "member_active": member_active,
-        #     "member_enrolled": member_enrolled,
-        #     "membership_active": membership_active,
-        #     "membership_has_quota": membership_has_quota,
-        # }
-
         return (
             member_active
             and member_enrolled
@@ -143,10 +135,8 @@ class SuscriptionService:
         """
         member_id = member.membership_number
         discipline_id = membership.discipline_id
-        # check_results = self.can_suscribe(member_id, discipline_id)
 
         if not self.can_suscribe(member_id, discipline_id):
-            # for check, result in check_results:
             raise ExistingData(message="El socio ya se encuentra inscripto.")
 
         suscription = Suscription(

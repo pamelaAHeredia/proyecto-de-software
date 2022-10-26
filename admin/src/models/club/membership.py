@@ -1,3 +1,4 @@
+from typing import List
 from decimal import Decimal
 from src.models.database import db
 from src.models.club.suscription import Suscription
@@ -50,7 +51,7 @@ class Membership(db.Model):
 
         Returns:
             Decimal: Valor de la membresia
-        """        
+        """
         for tariff in self.tariffs:
             if not tariff.date_to:
                 return tariff.amount
@@ -63,6 +64,19 @@ class Membership(db.Model):
             int: Cantidad de inscriptos.
         """
         return self.suscriptions.filter(Suscription.date_to == None).count()
+
+    @property
+    def has_quota(self) -> bool:
+        """Verifica si hay lugar para una inscripcion nueva.
+
+        Returns:
+            bool: True si hay lugar para inscribirse.
+        """
+        return self.registration_quota > self.used_quota
+
+    @property
+    def active_suscriptions(self) -> List[Suscription]:
+        return self.suscriptions.filter(Suscription.date_to == None)
 
     def __repr__(self):
         return f"Membresia {self.id}"
