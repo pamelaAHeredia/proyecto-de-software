@@ -30,7 +30,7 @@
                 <td>
                     <div class="btn-group mb-3">
                         <button class="btn btn-sm btn-success rounded-pill d-inline" type="button"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal{{ suscription.id }}"> 
+                            data-bs-toggle="modal" data-bs-target="#exampleModal{{ suscription.id }}">
                             Baja
                         </button>
                     </div>
@@ -42,7 +42,13 @@
     {% include('partials/paginator.html') %}
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
-            <a class="btn btn-secondary" href="{{ url_for('suscription.find_member', discipline_id=discipline_id ) }} ">Nueva Suscripcion</a>
+            {% if has_quota %}
+              <a class="btn btn-secondary"
+                 href="{{ url_for('suscription.find_member', discipline_id=discipline_id ) }} ">Nueva Suscripcion</a>
+            {% else %}
+                <span class="btn btn-secondary">Cupo Lleno</span>
+            {% endif %}
+
         </div>
     </div>
     <div class="row">
@@ -54,29 +60,29 @@
 
 <!-- Modal -->
 {% for suscription in paginator.items %}
-    <div class="modal fade" id="exampleModal{{ suscription.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Baja</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Se va a dar de baja al socio
-                    de la disciplina. ¿Está Seguro?
-                </div>
-                <form
-                    action="{{url_for('suscription.leave', suscription_id=suscription.id, discipline_id=discipline_id)}}"
-                    method="POST">
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Si</button>
-                    </div>
-                </form>
+<div class="modal fade" id="exampleModal{{ suscription.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Baja</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                Se va a dar de baja al socio
+                de la disciplina. ¿Está Seguro?
+            </div>
+            <form action="{{url_for('suscription.leave', suscription_id=suscription.id, discipline_id=discipline_id)}}"
+                method="POST">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Si</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 {% endfor %}
 
 
