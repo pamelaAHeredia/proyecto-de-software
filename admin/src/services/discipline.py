@@ -2,7 +2,6 @@ from decimal import Decimal
 from typing import List, Optional
 import datetime
 
-
 from src.models.database import db
 from src.models.club.discipline import Discipline, DisciplineSchema
 from src.models.club.discipline import Discipline
@@ -201,13 +200,13 @@ class DisciplineService:
         discipline_to_update.days_and_schedules = days_and_schedules
         discipline_to_update.pays_per_year = pays_per_year
 
-        if discipline_to_update.membership.used_quota < registration_quota:
+        if discipline_to_update.membership.used_quota <= registration_quota:
             discipline_to_update.registration_quota = registration_quota
         else:
             raise database.MinValueValueError(
                 message="La cantidad de inscripciones activas son mayores al cupo nuevo"
             )
-        if not discipline_to_update.membership.used_quota == 0:
+        if discipline_to_update.membership.used_quota > 0:
             raise database.UpdateError(
                 message="La disciplina tiene inscriptos. No se puede deshabilitar"
             )
@@ -225,7 +224,6 @@ class DisciplineService:
             db.session.add(new_tarif)
 
         db.session.add(discipline_to_update)
-        db.session.flush()
         db.session.commit()
         return discipline_to_update
 

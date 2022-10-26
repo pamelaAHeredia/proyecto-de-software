@@ -1,7 +1,6 @@
 import datetime
 from src.models.database import db
 
-
 class Suscription(db.Model):
     """
     Clase usada para representar una inscripcion a una membresia por parte de un socio

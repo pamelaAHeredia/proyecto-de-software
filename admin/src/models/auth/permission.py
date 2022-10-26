@@ -1,5 +1,6 @@
 from src.models.database import db
 
+
 # Define la clase Permiso
 class Permission(db.Model):
     __tablename__ = "permission"

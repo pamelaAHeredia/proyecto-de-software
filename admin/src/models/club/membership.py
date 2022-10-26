@@ -2,7 +2,6 @@ from decimal import Decimal
 from src.models.database import db
 from src.models.club.suscription import Suscription
 
-
 class Membership(db.Model):
     """
     Clase usada para representar una Membresia
@@ -50,7 +49,7 @@ class Membership(db.Model):
 
         Returns:
             Decimal: Valor de la membresia
-        """        
+        """
         for tariff in self.tariffs:
             if not tariff.date_to:
                 return tariff.amount
@@ -63,6 +62,10 @@ class Membership(db.Model):
             int: Cantidad de inscriptos.
         """
         return self.suscriptions.filter(Suscription.date_to == None).count()
+
+    @property
+    def name(self):
+        return self.discipline.discipline_name
 
     def __repr__(self):
         return f"Membresia {self.id}"

@@ -15,7 +15,7 @@ class Tariff(db.Model):
     deleted : Boolean
         Indica si la disciplina se sigue dando o no.
     """
-
+    __tablename__ = "tariff"
     id = db.Column(db.Integer, primary_key=True, unique=True)
     date_from = db.Column(db.DateTime, default=datetime.datetime.now)
     date_to = db.Column(db.DateTime, nullable=True)

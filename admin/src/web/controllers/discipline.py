@@ -1,16 +1,19 @@
 from decimal import Decimal
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
-from src.services.discipline import DisciplineService
 
-from src.web.forms.discipline import CreateDisciplineForm, UpdateDisciplineForm
 from src.errors import database
 from src.web.helpers.auth import login_required, verify_permission
 
+from src.services.discipline import DisciplineService
+from src.web.forms.discipline import CreateDisciplineForm, UpdateDisciplineForm
+
+
+
 # Se define Blueprint de Usuario
 discipline_blueprint = Blueprint("discipline", __name__, url_prefix="/disciplinas")
-service_discipline = DisciplineService()
 
+service_discipline = DisciplineService()
 
 @discipline_blueprint.get("/")
 @login_required
@@ -76,7 +79,7 @@ def update(discipline_id):
         form.pays_per_year.data = discipline.pays_per_year
         form.amount.data = discipline.amount
         form.is_active.data = discipline.is_active
-        discipline_id = discipline_id
+        # discipline_id = discipline_id
 
     else:
         if form.validate_on_submit():

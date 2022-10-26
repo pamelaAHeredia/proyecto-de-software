@@ -75,6 +75,10 @@ class Discipline(db.Model):
     def registration_quota(self, v):
         self.membership.registration_quota = v
     
+    @property
+    def discipline_name(self):
+        return f"{self.name} {self.category}"
+
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"
 
