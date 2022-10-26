@@ -172,6 +172,7 @@ class DisciplineService:
         Returns:
             Discipline: Una disciplina.
         """
+        discipline_to_update = self.find_discipline(id=id)
 
         if pays_per_year <= 0:
             raise database.MinValueValueError(
@@ -184,8 +185,6 @@ class DisciplineService:
         if amount <= 0:
             raise database.MinValueValueError(message="El monto debe ser mayor a 0.")
 
-        discipline_to_update = self.find_discipline(id=id)
-
         if (
             discipline_to_update.name != name
             or discipline_to_update.category != category
@@ -194,24 +193,27 @@ class DisciplineService:
             if discipline_in_db:
                 raise database.ExistingData(message="ya existen en la base de datos")
 
+        if not discipline_to_update.membership.used_quota <= registration_quota:
+            raise database.MinValueValueError(
+                message="La cantidad de inscripciones activas son mayores al cupo nuevo"
+            )
+
+        if (
+            discipline_to_update.membership.used_quota > 0
+            and discipline_to_update.is_active
+            and not is_active
+        ):
+            raise database.UpdateError(
+                message="La disciplina tiene inscriptos. No se puede desactivar."
+            )
+
+        discipline_to_update.is_active = is_active
         discipline_to_update.name = name
         discipline_to_update.category = category
         discipline_to_update.instructor = instructor
         discipline_to_update.days_and_schedules = days_and_schedules
         discipline_to_update.pays_per_year = pays_per_year
-
-        if discipline_to_update.membership.used_quota <= registration_quota:
-            discipline_to_update.registration_quota = registration_quota
-        else:
-            raise database.MinValueValueError(
-                message="La cantidad de inscripciones activas son mayores al cupo nuevo"
-            )
-        if discipline_to_update.membership.used_quota > 0:
-            raise database.UpdateError(
-                message="La disciplina tiene inscriptos. No se puede deshabilitar"
-            )
-
-        discipline_to_update.is_active = is_active
+        discipline_to_update.registration_quota = registration_quota
 
         if discipline_to_update.amount != amount:
             old_tarif = [
@@ -223,7 +225,7 @@ class DisciplineService:
             new_tarif.membership = discipline_to_update.membership
             db.session.add(new_tarif)
 
-        db.session.add(discipline_to_update)
+        # db.session.add(discipline_to_update)
         db.session.commit()
         return discipline_to_update
 

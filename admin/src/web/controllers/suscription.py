@@ -2,19 +2,23 @@ from decimal import Decimal
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
 
+from src.errors import database
+from src.web.helpers.auth import login_required, verify_permission
+from src.web.forms.suscription import SuscriptionForm
+
 from src.services.discipline import DisciplineService
 from src.services.suscription import SuscriptionService
 from src.services.member import MemberService
 from src.services.membership import MembershipService
-from src.errors import database
-from src.web.helpers.auth import login_required, verify_permission
-from src.web.forms.suscription import SuscriptionForm
+from src.services.settings import SettingsService
+
 
 
 service_discipline = DisciplineService()
 service_suscription = SuscriptionService()
 service_member = MemberService()
 service_membership = MembershipService()
+service_settings = SettingsService()
 
 # Se define Blueprint de Usuario
 suscription_blueprint = Blueprint("suscription", __name__, url_prefix="/inscripciones")
@@ -25,13 +29,16 @@ suscription_blueprint = Blueprint("suscription", __name__, url_prefix="/inscripc
 def index():
     page = request.args.get("page", 1, type=int)
     discipline_id = request.args.get("discipline_id", type=int)
+    discipline = service_discipline.find_discipline(discipline_id)
+    has_quota = discipline.has_quota
     suscriptions_paginator = service_suscription.list_paginated_suscriptions(
-        discipline_id, page, 2, "discipline.index"
+        discipline_id, page, service_settings.get_items_per_page(), "discipline.index"
     )
     return render_template(
         "suscription/index.html",
         paginator=suscriptions_paginator,
         discipline_id=discipline_id,
+        has_quota=has_quota,
     )
 
 
