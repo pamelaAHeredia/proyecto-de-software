@@ -7,7 +7,7 @@
 
 <div class="container">
 
-  <h1 class="text-muted text-center"> Asignar Usuario</h1>
+  <h1 class="text-center"> Asignar Usuario</h1>
   <div class="row my-5" > 
     <h3 class="text-muted">Socio:</h3> 
     <blockquote class="blockquote">
@@ -25,7 +25,7 @@
   </div>
 
   {% if user %}
-  <h3 class="text-muted"> Usuario Encontrado:</h3>
+  <h3> Usuario Encontrado:</h3>
   <div class="row my-3">
     <div class="col-10">
       <blockquote class="blockquote">
@@ -45,7 +45,7 @@
 
   {% else %}
   <div class="row my-3">
-    <h3 class="text-muted" > Usuario asignado:</h3>
+    <h3> Usuario asignado:</h3>
     <blockquote class="blockquote">
       <p><strong>Nombre de Usuario:</strong> {{user.username}},<strong>Email:</strong> {{user.email}}</p>
     </blockquote>

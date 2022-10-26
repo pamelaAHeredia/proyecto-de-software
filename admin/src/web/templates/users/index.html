@@ -5,11 +5,11 @@
 {% endblock %}
 {% block content %}
 
-<h1 class="text-muted text-center" >Usuarios</h1>
+<h1 class="text-center" >Usuarios</h1>
 
 <div class="container">
   <div class="row my-5">
-    <h3 class="text-muted">Filtrar listado por: </h3>
+    <h3 >Filtrar listado por: </h3>
     <form action="{{ url_for('users.users_filter_by')}}" method="post">
       <div class="form group">
         {{ filter_form.filter(class="", selected="selected")}}

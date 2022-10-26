@@ -7,7 +7,7 @@
 
 <div class="container">
 
-  <h1 class="text-muted text-center" >Información de usuario</h1>
+  <h1 class="text-center" >Información de usuario</h1>
 
   {% if user %}
     <div class="row my-5" >
@@ -66,8 +66,8 @@
     {% for role in user.roles %}
       {% if role.name == "Socio" %}
         {% if user.has_members %}
-        <div class="row my-5">
-          <h1 class="text-muted">Socios vinculados</h1>
+        <div class="row my-3">
+          <h1 >Socios vinculados</h1>
           <table class="table table-hover table-sm">
             <thead>
               <tr>
@@ -99,12 +99,14 @@
     {% include('users/roles.html') %}
 
     <div class="row mx-auto">
-  
+      <h3 class="text-muted" > Eliminar Usuario</h3>
+        <p class="lead"><strong>Si elimina el usuario, se perderá toda la Información asociada al mismo.</strong></p>
       <!-- Button trigger modal -->
+      <div class="col-3 mx-right">
       <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" >
         Eliminar Usuario
       </button>
-
+      </div>
       <!-- Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -134,7 +136,7 @@
     <h2>Usuario Inexistente</h2>
   </div>
   {% endif %}
-  <div class="row my-5">
+  <div class="row my-3">
     <a href="{{url_for('users.index')}}"> Volver </a>
   </div>
 </div>
