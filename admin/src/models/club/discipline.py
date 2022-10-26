@@ -71,6 +71,11 @@ class Discipline(db.Model):
     def registration_quota(self):
         return self.membership.registration_quota
 
+    @property
+    def has_quota(self):
+        return self.membership.has_quota
+
+
     @registration_quota.setter
     def registration_quota(self, v):
         self.membership.registration_quota = v
