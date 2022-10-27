@@ -4,8 +4,9 @@ from flask import session
 
 from src.services.settings import SettingsService
 from src.services.utils import hash_pass
-from src.web.helpers.auth import login_required, verify_permission
+from src.web.helpers.auth import is_member, login_required, verify_permission
 from src.services.user import UserService
+from src.services.member import MemberService
 from src.services.utils import hash_pass
 from src.web.forms.user import (
     CreateUserForm,
@@ -15,12 +16,15 @@ from src.web.forms.user import (
     AddRolesForm,
     DeleteRolesForm,
 )
+from src.web.forms.member import FilterSearchForm
 from src.errors import database
 
 
 user_blueprint = Blueprint("users", __name__, url_prefix="/users")
 
 service = UserService()
+member_service = MemberService()
+settings = SettingsService()
 
 
 @user_blueprint.get("/")
@@ -275,3 +279,19 @@ def delete(id):
         flash(e, "danger")
     users = service.list_users()
     return render_template("users/index.html", users=users, filter_form=filter_form)
+
+
+@user_blueprint.route("/estado_societario/", methods=["GET"])
+@login_required
+@is_member
+def memberState():
+    filter_form = FilterSearchForm()
+    page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter")
+    search = request.args.get("search")
+    member_paginator = member_service.list_paginated_members(
+        page, settings.get_items_per_page(), "members.index", filter, search
+    )
+    return render_template(
+        "users/member_state.html", filter_form=filter_form, paginator=member_paginator
+    )
