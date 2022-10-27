@@ -290,7 +290,7 @@ def memberState():
     filter = request.args.get("filter")
     search = request.args.get("search")
     member_paginator = member_service.list_paginated_members(
-        page, settings.get_items_per_page(), "members.index", filter, search
+        page, settings.get_items_per_page(), "members.index", filter, search, True
     )
     return render_template(
         "users/member_state.html", filter_form=filter_form, paginator=member_paginator
