@@ -113,7 +113,7 @@ class SuscriptionService:
             Suscription: La suscripcion en cuestion.
         """
         suscription = Suscription.query.get(suscription_id)
-        suscription.date_to = datetime.datetime.now()
+        suscription.end_suscription()
         # db.session.add(suscription)
         db.session.commit()
         return suscription
@@ -144,7 +144,7 @@ class SuscriptionService:
         suscription = Suscription(
             member_id=member.membership_number, membership_id=membership.id
         )
-        
+
         debt_movement = self._movements_service.insert_movement(
             "D",
             membership.amount * -1,
@@ -180,17 +180,17 @@ class SuscriptionService:
         # member = Member.query.filter_by(membership_number=member_id).first()
         suscription = Suscription(membership=social_quota, member=member)
         debt_movement = self._movements_service.insert_movement(
-                    "D",
-                    suscription.amount * -1,
-                    "Cuota Social Inicial",
-                    member,
-                )
+            "D",
+            suscription.amount * -1,
+            "Cuota Social Inicial",
+            member,
+        )
         credit_movement = self._movements_service.insert_movement(
-                    "C",
-                    suscription.amount,
-                    "Pago Cuota Social Inicial",
-                    member,
-                )
+            "C",
+            suscription.amount,
+            "Pago Cuota Social Inicial",
+            member,
+        )
         db.session.add_all([member, suscription, debt_movement, credit_movement])
         db.session.commit()
         return suscription

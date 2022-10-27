@@ -145,9 +145,18 @@ class MemberService:
     def change_activity_member(self, id):
         """Función que cambia el estado activo/inactivo del Socio"""
         member = self.get_by_membership_number(id)
-        member.is_active = not member.is_active
-        db.session.commit()
+        if not member.is_active:
+            #Podria chequear en este momento si tiene deuda para permitir activar
+            member.is_active = True
+            self._suscription_service.associate_member(member)
+        else:
+            member.is_active = False
+            for suscription in member.suscriptions:
+                if suscription.is_active:
+                   self._suscription_service.leave(suscription.id)
+            db.session.commit()       
         return member
+
 
     def list_by_last_name(self, substring, active: Optional[bool] = None):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
