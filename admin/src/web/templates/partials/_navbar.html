@@ -55,6 +55,9 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item" href="{{url_for('users.profile')}}" >Ver mis Datos</a></li>
+                {% if is_member(session) %}
+                  <li><a class="dropdown-item" href="{{url_for('users.memberState')}}" >Estado societario</a></li> 
+                {% endif %}
                 <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
               </ul>
             </li>
