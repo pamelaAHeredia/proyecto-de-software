@@ -65,9 +65,3 @@ def is_operator_template(session):
         if r.name == "Operador":
             return True
     return False
-
-def is_admin(id):
-    service = UserService()
-    user = service.find_user_by_id(id)
-    admin = service.find_role_by_name("Administrador")
-    return user.roles.__contains__(admin)

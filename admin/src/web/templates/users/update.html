@@ -4,25 +4,34 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Editar Usuario</h1>
 
-<form action="{{ url_for('users.users_update', id=user.id)}}" method="post">
-    <div class="form-group" >
-        {{ form.email.label }} {{ form.email(class_="form-control", value= user.email) }}
-      </div>
-      <div class="form-group">
-        {{ form.username.label }} {{ form.username(class_="form-control", value= user.username) }}
-      </div>
-      <div class="form-group">
-        {{ form.first_name.label }} {{ form.first_name(class_="form-control", value= user.first_name) }}
-      </div>
-      <div class="form-group">
-        {{ form.last_name.label }} {{ form.last_name(class_="form-control", value= user.last_name) }}
-      </div>
-        {{ form.hidden_tag() }}
-      <input type="submit" value="Actualizar Usuario" class="btn btn-success">
-    </form>
-<a href="{{url_for('home')}}"> Volver al inicio </a>
+<div class="container">
+  <h1 class="text-center" >Editar Usuario</h1>
+    <div class="row my-5">
+      <form action="{{ url_for('users.users_update', id=user.id)}}" method="post">
+        <div class="form-group my-2" >
+            {{ form.email.label }} {{ form.email(class_="form-control", value= user.email) }}
+          </div>
+          <div class="form-group my-2">
+            {{ form.username.label }} {{ form.username(class_="form-control", value= user.username) }}
+          </div>
+          <div class="form-group my-2">
+            {{ form.first_name.label }} {{ form.first_name(class_="form-control", value= user.first_name) }}
+          </div>
+          <div class="form-group my-2">
+            {{ form.last_name.label }} {{ form.last_name(class_="form-control", value= user.last_name) }}
+          </div>
+            {{ form.hidden_tag() }}
+          <div class="row my-3 mx-auto">
+            <input type="submit" value="Actualizar Usuario" class="btn btn-outline-success">
+          </div>
+          
+      </form>
+    </div>
+    <div class="row my-5">
+      <a href="{{url_for('users.index')}}"> Volver </a>
+    </div>
 
+</div>
 
 {% endblock %}
