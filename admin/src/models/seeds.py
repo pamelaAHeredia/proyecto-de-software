@@ -11,10 +11,9 @@ def run():
     """Hacemos un seed de informacion en la BBDD"""
 
    
-
     service = UserService()
 
-    perms = [
+    perms = [ 
         "member_index",
         "member_create",
         "member_destroy",
@@ -34,6 +33,12 @@ def run():
         "suscription_destroy",
         "suscription_update",
         "suscription_show",
+        "user_index", 
+        "user_create",
+        "user_destroy", 
+        "user_update", 
+        "user_show", 
+        "user_search"
     ]
 
     member_perms = [service.create_permission(perm) for perm in perms]
@@ -91,6 +96,15 @@ def run():
         last_name="Amiconi",
         document_type="DNI",
         document_number="24953316",
+        gender="M",
+        address="La Plata",
+    )
+
+    member_3 = service.create_member(
+        first_name="Nemo",
+        last_name="Nobody",
+        document_type="DNI",
+        document_number="87654321",
         gender="M",
         address="La Plata",
     )

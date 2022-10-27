@@ -3,6 +3,7 @@ from src.models.auth.user import User
 from src.models.auth.role import Role
 
 from src.models.auth.permission import Permission
+from src.services.member import MemberService
 from src.services.paginator import Paginator
 from src.services.utils import verify_pass
 from src.errors import database
@@ -24,17 +25,26 @@ class UserService:
         """
         return User.query.order_by(User.id)
 
-    def list_paginated_users(self, page, items_per_page, endpoint, filter_by): 
+    def list_paginated_users(self, page, items_per_page, endpoint, filter):
         """
         Retorna el paginador de los usuarios del sistema
-        """
-        if filter_by == "Activo":
+
+        Args:
+           page: Número de pagina.
+           items_per_page: cantidad de registros por página.
+           endpoint: endpoint para el armado del url_for.
+
+        Returns:
+           Un paginador.
+        """ 
+        if filter == "Activo":
             users = self.find_active_users()
-        elif filter_by == "Bloqueado":
-             users = self.find_blocked_users()
+        elif filter == "Bloqueado":
+            users = self.find_blocked_users()
         else:
             users = self.list_users()
-        return Paginator(users, page, items_per_page, endpoint)
+       
+        return Paginator(users, page, items_per_page, endpoint, filter)
 
     def create_user(self, email, username, password, first_name, last_name, roles):
         """
@@ -48,13 +58,26 @@ class UserService:
                 db.session.add(user)
                 db.session.commit()
             else:
-                raise database.ExistingData(
-                    info="Error", message="El usuario que intenta agregar ya existe."
-                )
+                if not self.find_user_byUsername(username).is_active:
+                    raise database.ExistingData(
+                        info="Error",
+                        message="El usuario que intenta agregar ya existe y se encuentra bloqueado.",
+                    )
+                else:
+                    raise database.ExistingData(
+                        info="Error",
+                        message="El usuario que intenta agregar ya existe.",
+                    )
         else:
-            raise database.ExistingData(
-                info="Error", message="El email que intenta agregar ya existe."
-            )
+            if not self.find_user_byEmail(email).is_active:
+                raise database.ExistingData(
+                    info="Error",
+                    message="El email que intenta agregar ya existe y se encuentra bloqueado",
+                )
+            else:
+                raise database.ExistingData(
+                    info="Error", message="El email que intenta agregar ya existe."
+                )
         return user
 
     def find_user_byEmail(self, email):
@@ -111,16 +134,20 @@ class UserService:
         )
 
     def block_user(self, id, user_session):
+        member_service = MemberService()
         blocker_id = self.find_user_by_id(user_session)
         user = self.find_user_by_id(id)
         role = self.find_role_by_name("Administrador")
 
         """Si el usuario no es un administrador y está bloqueado lo desbloquea, y viceversa"""
+        """Si tiene usuarios vinculados, los desvincula."""
 
         if not user.roles.__contains__(role):
             if not blocker_id == user.id:
                 if user.is_active:
                     user.is_active = False
+                    for member in user.members:
+                        member_service.unlink_management(member.membership_number)
                 else:
                     user.is_active = True
                 db.session.commit()
@@ -144,22 +171,28 @@ class UserService:
         """Retorna todos los usuarios, que están bloqueados."""
         return User.query.filter_by(is_active=False)
 
-    # No va?
-    def deactivate_user(self, id):
-        user = self.find_user_by_id(id)
-        """Si el usuario está activo lo desbloquea, y viceversa"""
-        if user.is_active:
-            user.is_active = False
-        else:
-            user.is_active = True
-        db.session.commit()
-        return user
+    #  No va?
+    # def deactivate_user(self, id):
+    #     user = self.find_user_by_id(id)
+    #     """Si el usuario está activo lo desbloquea, y viceversa"""
+    #     if user.is_active:
+    #         user.is_active = False
+    #     else:
+    #         user.is_active = True
+    #     db.session.commit()
+    #     return user
 
     def delete(self, id, session_id):
         user = self.find_user_by_id(id)
         if user.id != session_id:
+
+            member_service = MemberService()
+
+            for member in user.members:
+                member_service.unlink_management(member.membership_number)
             db.session.delete(user)
             db.session.commit()
+
         else:
             raise database.PermissionDenied(
                 info="Permiso Denegado", message="No puede eliminar su propio usuario."
@@ -182,13 +215,19 @@ class UserService:
     def add_role(self, id, role_name):
         """Permite asignar roles a un usuario."""
         user = self.find_user_by_id(id)
-        roles = user.roles
         role = self.find_role_by_name(role_name)
-        if not roles.__contains__(role):
-            user.roles.append(role)
+
+        if user.is_active:
+            if not user.roles.__contains__(role):
+
+                user.roles.append(role)
+            else:
+                raise database.ExistingData(
+                    info="Los datos ya existen", message="El usuario ya tiene este rol."
+                )
         else:
-            raise database.ExistingData(
-                info="Los datos ya existen", message="El usuario ya tiene este rol."
+            raise database.PermissionDenied(
+                info="No se pudo Agregar el rol.", message="El usuario se encuentra bloqueado."
             )
         db.session.commit()
 
@@ -202,15 +241,35 @@ class UserService:
 
         if len(user.roles) > 1:
             role = self.find_role_by_name(roles)
-            user.roles.remove(role)
-            db.session.commit()
+            if (role.name == "Socio" and not user.has_members) or (not role.name == "Socio"):
+                user.roles.remove(role)
+                db.session.commit()
+            else:
+                raise database.PermissionDenied(
+                    info="No se pudo desasignar el rol.",
+                    message="El usuario con rol de socio tiene socios asignados.",
+                )
         else:
             raise database.PermissionDenied(
-                info="Permiso Denegado", message="El usuario debe tener,mínimo, un rol."
+                info="No se pudo desasignar el rol.",
+                message="El usuario debe tener,mínimo, un rol.",
             )
         return user
 
     def list_user_roles(self, id):
         """Retorna todos los roles de un usuario."""
+
         user = self.find_user_by_id(id)
+
         return user.roles
+
+    def contains_role(self, role_name, id):
+        role = self.find_role_by_name(role_name)
+        return self.find_user_by_id(id).roles.__contains__(role)
+
+    
+    def update_password(self, new_pass, id):
+        user = self.find_user_by_id(id)
+        user.password = new_pass
+        db.session.commit()
+        

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Asignar socios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+  <h1 class="text-center" >Asignar socios al usuario: {{user.username}}</h1>
+  <div class="row my-5">
+    
+    {% if members %}
+    <table class="table table-hover table-sm">
+        <thead>
+          <tr>
+            <th>#Nro de Socio</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+          </tr>
+        </thead>
+        <form action="{{url_for('users.link_members', id=user.id)}}" method="post" >
+          <tbody>
+            {% for member in members %}  
+            <tr>
+              <th>{{ member.membership_number }}</th>
+              <th>{{ member.first_name }}</th>
+              <th>{{ member.last_name }}</th>
+              <th>
+                <input type="checkbox", value="{{member.membership_number}}", name="selected">
+              </th>
+            </tr>
+            {% endfor %}     
+            </tbody> 
+                
+            <input type="submit" value="Seleccionar">
+        </form> 
+    </table>
+  
+    {% else %}
+  <h2 class="text-muted text-center">No hay usuarios para mostrar</h2>
+  {% endif %}
+  </div>
+  <div class="row my-5">
+    <a href="{{url_for('users.index')}}"> Volver </a>
+  </div>
+  
+</div>
+
+
+{% endblock %}
