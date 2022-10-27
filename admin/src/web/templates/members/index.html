@@ -72,7 +72,7 @@
 
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">
+                        data-bs-target="#staticBackdrop{{member.membership_number}}">
                         {% if member.is_active%}
                         {{"Sí"}}
                         {% else %}
@@ -81,7 +81,7 @@
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                    <div class="modal fade" id="staticBackdrop{{member.membership_number}}" data-bs-backdrop="static" data-bs-keyboard="false"
                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -103,6 +103,7 @@
                                     {% else %}
                                     {{" activar el socio"}}
                                     {% endif %}
+                                    {{ member.membership_number }}
                                 </div>
                                 <form method="post"
                                 action="{{ url_for('members.change_activity', member_id=member.membership_number)}}">
@@ -117,7 +118,6 @@
                     </div>
                 </td>
                 <td>
-
                     <div class="dropdown">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
