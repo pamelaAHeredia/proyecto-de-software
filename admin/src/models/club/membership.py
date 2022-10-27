@@ -3,7 +3,6 @@ from decimal import Decimal
 from src.models.database import db
 from src.models.club.suscription import Suscription
 
-
 class Membership(db.Model):
     """
     Clase usada para representar una Membresia
@@ -64,6 +63,10 @@ class Membership(db.Model):
             int: Cantidad de inscriptos.
         """
         return self.suscriptions.filter(Suscription.date_to == None).count()
+
+    @property
+    def name(self):
+        return self.discipline.discipline_name
 
     @property
     def has_quota(self) -> bool:

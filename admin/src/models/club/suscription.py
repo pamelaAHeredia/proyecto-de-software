@@ -1,7 +1,6 @@
 import datetime
 from src.models.database import db
 
-
 class Suscription(db.Model):
     """
     Clase usada para representar una inscripcion a una membresia por parte de un socio
@@ -38,4 +37,4 @@ class Suscription(db.Model):
 
     @property
     def is_active(self):
-        return True if date_to == None else False
+        return True if self.date_to == None else False

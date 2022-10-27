@@ -11,6 +11,7 @@ from src.models.club.suscription import Suscription
 from src.models.club.member import Member
 
 from src.services.membership import MembershipService
+from src.services.movement import MovementService
 from src.errors import database
 from src.services.paginator import Paginator
 
@@ -23,7 +24,7 @@ class SuscriptionService:
 
     _instance = None
     _membership_service = MembershipService()
-
+    _movements_service = MovementService()
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(SuscriptionService, cls).__new__(cls)
@@ -142,17 +143,25 @@ class SuscriptionService:
         suscription = Suscription(
             member_id=member.membership_number, membership_id=membership.id
         )
-        # Aca deberia llamar al servicio de pagos y generar 
-        # Octubre se ve reflejadas las deudas recien en diciembre y si paga
-        # despues de el 10 de noviembre generar la deuda ad hoc
-        # pagos.debito(monto membresia)
-        # pagos.creditos(monto membresia)
-        # Politica de pagar en la inscripción.
-        db.session.add(suscription)
+        
+        debt_movement = self._movements_service.insert_movement(
+            "D",
+            membership.amount * -1,
+            f"Cuota de {membership.name}",
+            member,
+        )
+        credit_movement = self._movements_service.insert_movement(
+            "C",
+            membership.amount,
+            f"Pago cuota de {membership.name}",
+            member,
+        )
+
+        db.session.add_all([suscription, debt_movement, credit_movement])
         db.session.commit()
         return suscription
 
-    def associate_member(self, member_id: int) -> Suscription:
+    def associate_member(self, member: Member) -> Suscription:
         """Genera la inscripcion a la cuota societaria.
 
         Cuando un socio es creado llama a este método para
@@ -167,8 +176,8 @@ class SuscriptionService:
         social_quota = Membership.query.get(
             1
         )  # Esto es una chanchada hay que mejorarlo
-        member = Member.query.filter_by(membership_number=member_id).first()
+        # member = Member.query.filter_by(membership_number=member_id).first()
         suscription = Suscription(membership=social_quota, member=member)
-        db.session.add(suscription)
-        db.session.commit()
+        # db.session.add(suscription)
+        # db.session.commit()
         return suscription

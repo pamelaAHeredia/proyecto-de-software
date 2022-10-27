@@ -1,6 +1,7 @@
 from math import perm
 from src.models.database import db
 
+
 # Define la tabla que relaciona Roles con Permisos
 role_has_permission = db.Table('role_has_permission',
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True),

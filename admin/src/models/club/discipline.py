@@ -23,9 +23,9 @@ class Discipline(db.Model):
     """
 
     __tablename__ = "discipline"
-    __table_args__ = (
-        db.UniqueConstraint("name", "category", name="unique_discipline_name_category"),
-    )
+    # __table_args__ = (
+    #     db.UniqueConstraint("name", "category", name="unique_discipline_name_category"),
+    # )
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(50), nullable=False)
     category = db.Column(db.String(255), nullable=False)
@@ -34,6 +34,7 @@ class Discipline(db.Model):
     membership = db.relationship(
         "Membership", back_populates="discipline", uselist=False
     )
+    deleted = db.Column(db.Boolean, default=False)
 
     def __init__(
         self,
@@ -75,10 +76,13 @@ class Discipline(db.Model):
     def has_quota(self):
         return self.membership.has_quota
 
-
     @registration_quota.setter
     def registration_quota(self, v):
         self.membership.registration_quota = v
+
+    @property
+    def discipline_name(self):
+        return f"{self.name} {self.category}"
 
     def __repr__(self):
         return f"<Disciplina {self.name} {self.category}>"

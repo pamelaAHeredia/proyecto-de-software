@@ -1,5 +1,6 @@
 from src.models.database import db
 
+
 # Define la tabla que relaciona Usuarios con Roles
 user_has_role = db.Table(
     "user_has_role",
@@ -42,6 +43,7 @@ class User(db.Model):
         self.last_name = last_name
         self.roles = roles
 
+<<<<<<< HEAD
     @property
     def is_admin(self):
         aux = False
@@ -59,7 +61,8 @@ class User(db.Model):
         return aux
     
      
+=======
+>>>>>>> development
     @property
     def has_members(self):
         return len(list(self.members)) > 0
-

@@ -10,6 +10,7 @@ from src.models.club.member import Member
 from src.errors import database
 from src.services.paginator import Paginator
 from src.services.suscription import SuscriptionService
+from src.services.movement import MovementService
 
 
 class MemberService:
@@ -17,6 +18,7 @@ class MemberService:
 
     _instance = None
     _suscription_service = SuscriptionService()
+    _movements_service = MovementService()
 
     def __new__(cls):
         if cls._instance is None:
@@ -52,7 +54,9 @@ class MemberService:
         else:
             members = self.list_by_is_active(filter == "Activos")
         return Paginator(members, page, items_per_page, endpoint, filter, search)
-
+    def api_get_members(self):
+        members = Members.query.filter_by(id=1)
+        return self._member_schema.dump(members, many=True)
     def create_member(
         self,
         first_name,
@@ -66,7 +70,7 @@ class MemberService:
     ):
         """Función que instancia un Socio, lo agrega a la Base de Datos y lo retorna solo en caso
         de que no exista el tipo y numero de documento"""
-
+        member = None
         if not self.find_member(document_type, document_number):
             member = Member(
                 first_name,
@@ -78,10 +82,25 @@ class MemberService:
                 phone_number,
                 email,
             )
-            db.session.add(member)
-            db.session.commit()
-            self._suscription_service.associate_member(member.membership_number)
+            suscription = self._suscription_service.associate_member(member)
+            if suscription:
+                debt_movement = self._movements_service.insert_movement(
+                    "D",
+                    suscription.amount * -1,
+                    "Cuota Social Inicial",
+                    member,
+                )
+                credit_movement = self._movements_service.insert_movement(
+                    "C",
+                    suscription.amount,
+                    "Pago Cuota Social Inicial",
+                    member,
+                )
+                db.session.add_all([member, suscription, debt_movement, credit_movement])
+                db.session.commit()
             return member
+            
+
         raise database.ExistingData(
             info="ATENCION!!!",
             message="Ya existe el Socio con ese tipo y numero de documento",
@@ -94,11 +113,8 @@ class MemberService:
         ).first()
 
     def find_member_by_mail(self, email):
-        
-        return Member.query.filter_by(
-            email=email, deleted=False
-        ).first()
 
+        return Member.query.filter_by(email=email, deleted=False).first()
 
     def get_by_membership_number(self, id):
         """Funcion que retorna un Socio de la base de Datos por su Nro de Socio"""
@@ -164,14 +180,16 @@ class MemberService:
 
     def list_active_and_no_user(self):
         """Función que retorna la lista de todos los Socios activos que no tengan Usuario
-         asignado"""
+        asignado"""
         return Member.query.filter_by(is_active=True, user=None).order_by(
             Member.membership_number
         )
 
     def format_pdf(self, pdf):
         """Función que define el formato de las paginas del pdf"""
-        pdf.drawImage("../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50)
+        pdf.drawImage(
+            "../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50
+        )
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
         pdf.drawCentredString(300, 800, "Reporte de Asociados")
@@ -188,7 +206,7 @@ class MemberService:
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "src/web/public/report" + str(random.randint(0,99999)) + ".pdf"
+        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -218,7 +236,7 @@ class MemberService:
 
     def export_list_to_csv(self, members):
         """Funcion que exporta una lista de Socios a un archivo report.csv"""
-        filename = "src/web/public/report" + str(random.randint(0,99999)) + ".csv"
+        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".csv"
         file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",

@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from src.models.database import db
 
 
@@ -23,6 +22,7 @@ class Member(db.Model):
     email = db.Column(db.String(50))
     creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    # movements = db.relationship("Movement", back_populates="member")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
     suscriptions = db.relationship(
@@ -53,4 +53,4 @@ class Member(db.Model):
     def username(self):
         if self.user:
            return self.user.username
-        return None   
+        return None
