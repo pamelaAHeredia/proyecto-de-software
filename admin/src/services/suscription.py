@@ -112,6 +112,7 @@ class SuscriptionService:
             Suscription: La suscripcion en cuestion.
         """
         suscription = Suscription.query.get(suscription_id)
+        # cambiar al suscription.end_suscription()
         suscription.date_to = datetime.datetime.now()
         # db.session.add(suscription)
         db.session.commit()

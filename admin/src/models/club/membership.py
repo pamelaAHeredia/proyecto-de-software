@@ -66,6 +66,8 @@ class Membership(db.Model):
 
     @property
     def name(self):
+        if not self.discipline:
+            return 'Cuota Social'
         return self.discipline.discipline_name
 
     @property
