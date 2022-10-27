@@ -44,5 +44,22 @@ class User(db.Model):
         self.roles = roles
 
     @property
-    def have_members(self):
+    def is_admin(self):
+        aux = False
+        for role in self.roles: 
+            if role.name == "Administrador":
+                aux = True
+        return aux
+    
+    @property
+    def is_member(self):
+        aux = False
+        for role in self.roles: 
+            if role.name == "Socio":
+                aux = True
+        return aux
+    
+     
+    @property
+    def has_members(self):
         return len(list(self.members)) > 0

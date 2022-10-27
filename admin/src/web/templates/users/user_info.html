@@ -1,96 +1,172 @@
-{% extends "users/roles.html" %}
+{% extends "layout.html" %}
 {% block title %}Información de usuario{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
 {% block content %}
 
-<h1>Información de usuario</h1>
+<div class="container">
 
-{% if user %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th>#ID </th>
-      <th>Email</th>
-      <th>Usuario</th>
-      <th>Estado</th>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Operaciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>{{ user.id }}</th>
-      <th>{{ user.email }}</th>
-      <th>{{ user.username }}</th>
-      <th>{%if user.blocked -%} {{"Bloqueado"}}
-        {%else -%}
-        {{"Activo"}}
-        {% endif %}</th>
-      <th>{{ user.first_name }}</th>
-      <th>{{ user.last_name }}</th>
-      <th>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Operaciones
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
-            {% if not is_admin(user.id) %}
-            <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
-                {%if user.blocked%}
-                {{"Desbloquear"}}
-                {% else %}
-                {{"Bloquear"}}
-                {% endif %}</a>
-            </li>
-            {% endif %}
-          </ul>
+  <h1 class="text-center">Información de usuario</h1>
+
+  {% if user %}
+  <div class="row my-5">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>#ID </th>
+          <th>Email</th>
+          <th>Usuario</th>
+          <th>Estado</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Operaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>{{ user.id }}</th>
+          <th>{{ user.email }}</th>
+          <th>{{ user.username }}</th>
+          <th>{%if user.is_active -%} {{"Activo"}}
+            {%else -%}
+            {{"Bloqueado"}}
+            {% endif %}</th>
+          <th>{{ user.first_name }}</th>
+          <th>{{ user.last_name }}</th>
+          <th>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Operaciones
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a>
+                </li>
+                {% if user.is_member%}
+                <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a>
+                </li>
+                {% endif %}
+                <!-- {% if not user.is_admin %}
+                    <li><a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
+                        {% if user.is_active %}
+                        {{"Bloquear"}}
+                        {% else %}
+                        {{"Desbloquear"}}
+                        {% endif %}</a>
+                    </li>
+                    {% endif %} -->
+              </ul>
+            </div>
+          </th>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% for role in user.roles %}
+  {% if role.name == "Socio" %}
+  {% if user.has_members %}
+  <div class="row my-3">
+    <h1>Socios vinculados</h1>
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>Socios </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for member in user.members %}
+          <th>{{member.document_type}}: {{ member.document_number }}</th>
+          <th>
+            <!-- Button trigger modal -->
+            <div class="col-3 mx-right">
+              <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                data-bs-target="#exampleModal{{member.membership_number}}">
+                Desvincular Socio
+              </button>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal{{member.membership_number}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title" id="exampleModalLabel">Desvincular socio</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ¡ATENCIÓN!
+                    Si desvincula el socio, se perderá la información asociada. 
+                    Está seguro que de desea desvincula el socio {{member.document_type}}: {{ member.document_number }}?
+                  </div>
+                  <form action="{{url_for('users.unlink_member', id=user.id)}}" method="post">
+                    <div class="form-group">
+                      {{ unlink_form.hidden_tag() }}
+                      {{ unlink_form.member(type="hidden", value=member.membership_number) }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-outline-danger">Desvincular Socio</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </th>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+
+  {% include('users/roles.html') %}
+
+  <div class="row mx-auto">
+    <h3 class="text-muted"> Eliminar Usuario</h3>
+    <p class="lead"><strong>Si elimina el usuario, se perderá toda la Información asociada al mismo.</strong></p>
+    <!-- Button trigger modal -->
+    <div class="col-3 mx-right">
+      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Eliminar Usuario
+      </button>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title" id="exampleModalLabel">Eliminar Usuario</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¡ATENCIÓN!
+            Esta acción es irreversible.
+            Está seguro que de desea eliminar el usuario {{user.email}}?
+          </div>
+          <form action="{{url_for('users.delete', id=user.id)}}">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+            </div>
+          </form>
         </div>
-      </th>
-      </th>
-    </tr>
-  </tbody>
-</table>
-{% else %}
-<h2>Usuario Inexistente</h2>
-{% endif %}
-{%block roles%}
-{{ super() }}
-{% endblock %}
-
-<!-- Button trigger modal -->
-<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Eliminar Usuario
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuario</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        ¡ATENCIÓN!
-        Esta acción es irreversible.
-        Está seguro que de desea eliminar el usuario {{user.email}}? 
-      </div>
-      <form action="{{url_for('users.delete', id=user.id)}}">
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Eliminar</button>
-        </div>
-      </form>
     </div>
   </div>
+  {% else %}
+  <div class="row">
+    <h2>Usuario Inexistente</h2>
+  </div>
+  {% endif %}
+  <div class="row my-3">
+    <a href="{{url_for('users.index')}}"> Volver </a>
+  </div>
 </div>
-
-
-<a href="{{url_for('users.users_index')}}"> Volver </a>
 {% endblock %}

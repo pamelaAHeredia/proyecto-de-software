@@ -1,6 +1,14 @@
 from crypt import methods
 from fileinput import filename
-from flask import Blueprint, request, render_template, flash, redirect, url_for, send_file
+from flask import (
+    Blueprint,
+    request,
+    render_template,
+    flash,
+    redirect,
+    url_for,
+    send_file,
+)
 
 from src.services.member import MemberService
 from src.services.settings import SettingsService
@@ -152,6 +160,13 @@ def filter_by_doc():
     else:
         return render_template("members/search.html", filter_form=filter_form)
 
+
+@member_blueprint.route("/member_info/<id>", methods=["GET"])
+def member_info(id):
+    member = service.get_by_membership_number(id)
+    return render_template("members/member_info.html", member=member)
+
+
 @member_blueprint.get("/export_list")
 def export_list():
     filter_by_status = request.args.get("filter_by_status")
@@ -160,15 +175,14 @@ def export_list():
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     if export_select == "pdf":
         report = service.export_list_to_pdf(members, setting.get_items_per_page())
-        filename = report._filename.replace("src/web/","")
+        filename = report._filename.replace("src/web/", "")
         return render_template("members/view_report.html", filename=filename)
     else:
         report = service.export_list_to_csv(members)
-        filename = report.name.replace("src/web/","") 
+        filename = report.name.replace("src/web/", "")
         return send_file(
-        filename,
-        mimetype='text/csv',
-        download_name='report.csv',
-        as_attachment=True
-    )
-   
+            filename,
+            mimetype="text/csv",
+            download_name="report.csv",
+            as_attachment=True,
+        )

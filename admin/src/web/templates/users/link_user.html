@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block title %}Buscar un Usuario{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+
+  <h1 class="text-center"> Asignar Usuario</h1>
+  <div class="row my-5" > 
+    <h3 class="text-muted">Socio:</h3> 
+    <blockquote class="blockquote">
+      <p><strong>Socio:</strong> {{member.first_name}} {{member.last_name}}, <strong>Nro de socio:</strong> {{member.membership_number}}</p>
+    </blockquote>
+  </div>
+
+  {% if not member.user_id %} 
+  <div class="row my-5">
+    <form class="d-flex" role="search" action="{{ url_for('users.link_user', id=member.membership_number)}}" method="post">
+      {{ search_form.email(class="form-control me-2", placeholder="Ingrese el email del usuario que desea buscar")}}
+      {{search_form.hidden_tag()}}
+      <button class="btn btn-outline-success" type="submit">Buscar Usuario</button> 
+    </form>
+  </div>
+
+  {% if user %}
+  <h3> Usuario Encontrado:</h3>
+  <div class="row my-3">
+    <div class="col-10">
+      <blockquote class="blockquote">
+        <p><strong>Nombre de Usuario:</strong> {{user.username}}, <strong>Email: </strong>{{user.email}}</p>
+      </blockquote>
+    </div>
+
+    <div class="d-grid gap-2 col-2 mx-auto">
+      <form class="d-flex" role="search" action="{{ url_for('users.link_user', id=member.membership_number, user_id=user.id)}}" method="post">
+
+        <button class="btn btn-outline-success" type="submit">Asignar Usuario</button> 
+      </form>
+    </div>
+    
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="row my-3">
+    <h3> Usuario asignado:</h3>
+    <blockquote class="blockquote">
+      <p><strong>Nombre de Usuario:</strong> {{user.username}},<strong>Email:</strong> {{user.email}}</p>
+    </blockquote>
+  </div>
+  {% endif %}
+
+  <div class="row my-5">
+    <a href="{{url_for('members.index')}}"> Volver </a>
+  </div>
+
+</div>
+
+{% endblock %}
