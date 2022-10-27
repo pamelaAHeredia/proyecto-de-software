@@ -5,16 +5,16 @@
 {% endblock %}
 {% block content %}
 
-<h1 class="text-center" >Usuarios</h1>
+<h1 class="text-center">Usuarios</h1>
 
 <div class="container">
   <div class="row my-5">
-    <h3 >Filtrar listado por: </h3>
+    <h3>Filtrar listado por: </h3>
     <form action="{{ url_for('users.users_filter_by')}}" method="post">
       <div class="form group">
         {{ filter_form.filter(class="", selected="selected")}}
         {{filter_form.hidden_tag()}}
-        <button class="btn btn-outline-secondary block" type="submit">Filtrar</button>  
+        <button class="btn btn-outline-secondary block" type="submit">Filtrar</button>
       </div>
     </form>
   </div>
@@ -28,9 +28,9 @@
           <th>#</th>
           <th>Email</th>
           <th>Nombre de Usuario</th>
-          <th>Estado</th>
           <th>Nombre</th>
           <th>Apellido</th>
+          <th>Estado</th>
           <th>Operaciones</th>
         </tr>
       </thead>
@@ -40,33 +40,77 @@
           <th>{{ user.id }}</th>
           <th>{{ user.email }}</th>
           <th>{{ user.username }}</th>
+          <th>{{ user.first_name }}</th>
+          <th>{{ user.last_name }}</th>
+          {% if user.is_admin %}
           <th>{%if user.is_active -%} {{"Activo"}}
             {%else -%}
             {{"Bloqueado"}}
-            {% endif %}</th>
-          <th>{{ user.first_name }}</th>
-          <th>{{ user.last_name }}</th>
+            {% endif %}
+          </th>
+          {% else %}
           <th>
-          <div class="dropdown">
-              <button class="btn btn-outline-secondary dropdown-toggle"  type="button" data-bs-toggle="dropdown"
+
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop{{user.id}}">
+              {% if user.is_active%}
+              {{"Activo"}}
+              {% else %}
+              {{"Bloqueado"}}
+              {% endif %}
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop{{user.id}}" data-bs-backdrop="static"
+              data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                      {% if user.is_active%}
+                      {{"Bloquear usuario"}}
+                      {% else %}
+                      {{"Activar usuario"}}
+                      {% endif %}
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Está seguro de que desea
+                    {% if user.is_active%}
+                    {{" bloquear el usuario?. Si tiene socios vinculados, éstos se desvincularán."}}
+                    {% else %}
+                    {{" activar el usuario?"}}
+                    {% endif %}
+                    {{ user.id }}
+                  </div>
+                  <form
+                    action="{{url_for('users.users_block', id=user.id)}}">
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Sí</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </th>
+          {% endif %}
+          <th>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 Operaciones
               </button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
-                <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a></li>
+                <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a>
+                </li>
                 {% if user.is_member %}
-                <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a></li>  
-                {% endif %}
-                {% if not user.is_admin %}
-                <li>
-                  <a class="dropdown-item" href="{{url_for('users.users_block', id=user.id)}}">
-                    {% if user.is_active %}
-                    {{"Bloquear"}}
-                    {% else %}
-                    {{"Desbloquear"}}
-                    {% endif %}
-                  </a>
+                <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a>
                 </li>
                 {% endif %}
               </ul>
@@ -86,9 +130,9 @@
 
     {% else %}
     <h2>No hay usuarios para mostrar</h2>
-    
+
     {% endif %}
-    
+
 
 
   </div>
@@ -98,4 +142,3 @@
 </div>
 
 {% endblock %}
-
