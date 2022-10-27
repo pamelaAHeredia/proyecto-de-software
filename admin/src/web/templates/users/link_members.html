@@ -15,8 +15,6 @@
         <thead>
           <tr>
             <th>#Nro de Socio</th>
-            <th>Email</th>
-            <th>Nombre de Usuario</th>
             <th>Nombre</th>
             <th>Apellido</th>
           </tr>
@@ -26,10 +24,8 @@
             {% for member in members %}  
             <tr>
               <th>{{ member.membership_number }}</th>
-              <th>{{ member.email }}</th>
               <th>{{ member.first_name }}</th>
               <th>{{ member.last_name }}</th>
-              <th>{{ user.last_name }}</th>
               <th>
                 <input type="checkbox", value="{{member.membership_number}}", name="selected">
               </th>

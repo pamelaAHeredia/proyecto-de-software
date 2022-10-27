@@ -28,9 +28,10 @@
                 </tr>
             </tbody>
         </table>
-
     </div>
+    {% if user.roles|length < 3 %}
     <div class="col-6 mx-auto">
+
         <h2 >Asignar nuevo rol </h2>
         <form action="{{ url_for('users.users_add_roles', id=user.id)}}" method="post">
             <div class="form group">
@@ -40,4 +41,5 @@
             </div>
         </form>
     </div>
+    {% endif %}
 </div>

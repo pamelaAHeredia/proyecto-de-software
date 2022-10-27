@@ -47,7 +47,7 @@
                           Operaciones
                         </button>
                         <ul class="dropdown-menu">
-                            {% if not member.user_id %}
+                            {% if not member.user_id and member.is_active %}
                             <li><a class="dropdown-item" href="{{url_for('users.link_user', id=member.membership_number)}}">Asignar usuario</a></li>
                             {% endif %}
                             <li><a class="dropdown-item" href="#">Editar</a></li>
