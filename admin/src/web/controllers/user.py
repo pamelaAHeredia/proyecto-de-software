@@ -3,17 +3,10 @@ from flask import session
 
 from src.services.settings import SettingsService
 from src.services.utils import hash_pass
-<<<<<<< HEAD
+from src.services.utils import verify_pass
 from src.web.helpers.auth import is_member, login_required, verify_permission
 from src.services.user import UserService
 from src.services.member import MemberService
-from src.services.utils import hash_pass
-=======
-from src.services.utils import verify_pass
-from src.web.helpers.auth import login_required, verify_permission
-from src.services.user import UserService
-from src.services.member import MemberService
->>>>>>> feature/moduloUsuarios
 from src.web.forms.user import (
     CreateUserForm,
     UpdateUserForm,
@@ -310,7 +303,7 @@ def memberState():
     return render_template(
         "users/member_state.html", filter_form=filter_form, paginator=member_paginator
     )
-    
+
 @user_blueprint.route("/link_user/<id>/<user_id>", methods=["POST", "GET"])
 @user_blueprint.route("/link_user/<id>", methods=["POST", "GET"])
 @verify_permission("user_update")

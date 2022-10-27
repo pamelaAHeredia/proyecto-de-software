@@ -47,9 +47,10 @@ class MemberService:
         """
         if (uniqueCase == True):
             id_user = session["user"]
-            user = User.query.filter(id==id_user).first()
-            members = user.members
+            members = self.list_by_id_user(id_user=id_user)
             print("Entro")
+            for member in members:
+                print(member.first_name)
         else:
             if (not filter or filter == "Todos") and search and search != "":
                 members = self.list_by_last_name(substring=search)
@@ -183,6 +184,12 @@ class MemberService:
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado"""
         return Member.query.filter_by(is_active=active).order_by(
+            Member.membership_number
+        )
+
+    def list_by_id_user(self, id_user):
+        """Función que retorna la lista de todos los Socios asociados a un usuario"""
+        return Member.query.filter_by(user_id=id_user).order_by(
             Member.membership_number
         )
 
