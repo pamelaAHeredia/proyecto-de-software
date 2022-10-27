@@ -215,6 +215,7 @@ def users_add_roles(id):
             user=user,
             add_roles_form=add_roles_form,
             delete_roles_form=delete_roles_form,
+            unlink_form=unlink_form,
         )
     else:
         return render_template(
