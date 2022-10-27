@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template
 from flask_session import Session
 
 from src.web.helpers import handlers
@@ -15,9 +15,8 @@ from src.web.controllers.auth import auth_blueprint
 from src.api.club.discipline import discipline_api_blueprint
 
 
-
 def create_app(env="development", static_folder="static"):
-    
+
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
@@ -37,9 +36,8 @@ def create_app(env="development", static_folder="static"):
     @app.route("/")
     def home():
         contenido = "mundo"
-        return render_template('index.html', contenido=contenido)
+        return render_template("index.html", contenido=contenido)
 
-   
     # Registro de Blueprints
     app.register_blueprint(user_blueprint)
     app.register_blueprint(auth_blueprint)
@@ -54,13 +52,14 @@ def create_app(env="development", static_folder="static"):
     app.register_error_handler(403, handlers.forbidden)
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
-    
-    #Jinja
+
+    # Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
     app.jinja_env.globals.update(is_member=auth.is_member_template)
     app.jinja_env.globals.update(is_operator=auth.is_operator_template)
     app.jinja_env.globals.update(is_admin=auth.is_admin)
+    # app.jinja_env.globals.update(is_admin=auth.is_admin)
 
     #Jinja datetime formater    
     @app.template_filter()
@@ -79,5 +78,5 @@ def create_app(env="development", static_folder="static"):
     @app.cli.command(name="seeds")
     def seedsdb():
         seeds.run()
-        
+
     return app

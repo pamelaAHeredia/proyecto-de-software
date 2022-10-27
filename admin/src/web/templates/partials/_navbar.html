@@ -7,20 +7,26 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        {% if is_authenticated(session) %}
+      {% if is_authenticated(session) %}
+
+        {% if is_administrator(session) %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="{{url_for('users.index')}}" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Usuarios
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="{{url_for('users.index')}}">Todos los usuarios</a></li>
+            <li><a class="dropdown-item" href="{{url_for('users.users_add')}}">Agregar nuevo usuario</a></li>
+            <li><a class="dropdown-item" href="{{url_for('users.users_search')}}">Buscar un Usuario</a></li>
+          </ul>
+        </li>
         
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="{{url_for('users.users_index')}}" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Usuarios
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="{{url_for('users.users_index')}}" >Todos los usuarios</a></li>
-                <li><a class="dropdown-item" href="{{url_for('users.users_add')}}">Agregar nuevo usuario</a></li>
-                <li><a class="dropdown-item" href="{{url_for('users.users_search')}}">Buscar un Usuario</a></li>
-              </ul>
-            </li>
-          
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
+        </li>
+        {% endif %}
+
         <li class="nav-item">
           <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
             <ul class="navbar-nav">
@@ -30,46 +36,38 @@
                   Socios
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark">
-                  <li><a class="dropdown-item" href="{{url_for('members.index')}}" >Todos los Socios</a></li>
+                  <li><a class="dropdown-item" href="{{url_for('members.index')}}">Todos los Socios</a></li>
                   <li><a class="dropdown-item" href="{{url_for('members.filter_by_doc')}}">Buscar un socio</a></li>
                 </ul>
               </li>
             </ul>
           </div>
-
-
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
-        </li>  
-        {% if is_administrator(session) %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
         </li>
-        {% endif %}
-        
-             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="{{url_for('users.users_index')}}" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Mi perfil
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="{{url_for('users.profile')}}" >Ver mis Datos</a></li>
-                {% if is_member(session) %}
-                  <li><a class="dropdown-item" href="{{url_for('users.memberState')}}" >Estado societario</a></li> 
-                {% endif %}
-                <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
-              </ul>
-            </li>
-                
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Mi perfil
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="{{url_for('users.profile')}}">Ver mis Datos</a></li>
+            <li><a class="dropdown-item" href="{{url_for('users.update_password')}}">Cambiar mi contraseña</a></li>
+            {% if is_member(session) %}
+             <li><a class="dropdown-item" href="{{url_for('users.memberState')}}" >Estado societario</a></li> 
+            {% endif %}
+            <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
+          </ul>
+        </li>
+
+
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
         </li>
         {% endif %}
-
       </ul>
-
-      </div>
     </div>
+  </div>
 </nav>
