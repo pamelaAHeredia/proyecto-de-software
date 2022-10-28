@@ -117,15 +117,12 @@ class MovementService:
         Returns:
             list[Movement]: Lista de movimientos.
         """
-        member_movements = (
-            member.movements.filter(
-                Movement.date.between(
-                    specific_date.replace(day=1),
-                    specific_date + datetime.timedelta(days=1),
-                )
+        member_movements = member.movements.filter(
+            Movement.date.between(
+                specific_date.replace(day=1),
+                specific_date + datetime.timedelta(days=1),
             )
-            .order_by(Movement.date)
-        )
+        ).order_by(Movement.date)
         return member_movements
 
     def list_paginated_movements(
@@ -145,13 +142,12 @@ class MovementService:
         print(movements, member)
         return Paginator(movements, page, items_per_page, endpoint)
 
-
     def generate_mensual_payments(self, member: Member, month: int, year: int):
         movement_date = datetime.datetime(year, month, 1, 0, 0, 0)
         month = 12 if month == 1 else month - 1
         date_from = datetime.date(year, month, 1)
         date_to = self._last_month_day(date_from)
-        print(f"date_from: {date_from} date_to: {date_to}")
+
         previous_balance = self.get_balance(
             member=member, date_from=date_from, date_to=date_to
         )
@@ -159,10 +155,12 @@ class MovementService:
         movements_for_add = list()
 
         residue_movement = self.residue(
-            previous_balance, "Saldo mes anterior", member, movement_date=movement_date
+            previous_balance, "Saldo mes anterior",
+            member,
+            movement_date=movement_date
         )
         interest_movement = self.interest(
-            previous_balance,
+            previous_balance if previous_balance < 0 else 0,
             "Interes saldo mes anterior",
             member,
             movement_date=movement_date,
@@ -184,13 +182,10 @@ class MovementService:
         db.session.commit()
 
     def debit(self, amount, detail, member, movement_date=None, with_commit=False):
-
-        neg_amount = amount if amount < 0 else amount * -1
-
         movement = self.insert_movement(
             movement_date=movement_date,
             movement_type="D",
-            amount=neg_amount,
+            amount=amount if amount < 0 else amount * -1,
             detail=detail,
             member=member,
             with_commit=with_commit,
@@ -198,11 +193,10 @@ class MovementService:
         return movement
 
     def credit(self, amount, detail, member, movement_date=None, with_commit=False):
-        pos_amount = amount * -1 if amount < 0 else amount
         movement = self.insert_movement(
             movement_date=movement_date,
             movement_type="C",
-            amount=amount,
+            amount=amount * -1 if amount < 0 else amount,
             detail=detail,
             member=member,
             with_commit=with_commit,

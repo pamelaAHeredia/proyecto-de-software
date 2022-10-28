@@ -65,3 +65,11 @@ def is_operator_template(session):
         if r.name == "Operador":
             return True
     return False
+
+def can_do_it(session, perm):
+    user = User.query.filter_by(id=session.get("user")).first()
+    for r in user.roles:
+        for p in r.permissions:
+                if p.name == perm:
+                    return True
+    return False
