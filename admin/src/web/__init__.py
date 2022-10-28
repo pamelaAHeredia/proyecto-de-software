@@ -24,11 +24,11 @@ def create_app(env="development", static_folder="static"):
     # Carga configuracion
     app.config.from_object(config[env])
 
-    app.secret_key = "secret key"
+    # app.secret_key = "secret key"
 
     # Inicia base de datos
     database.init_app(app)
-
+    
     # Configura sesion de backend
     Session(app)
 
