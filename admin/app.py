@@ -4,8 +4,8 @@ from pathlib import Path
 
 static_folder = Path(__file__).parent.absolute().joinpath("src/web/public")
 
-app = create_app(env='production', static_folder=static_folder)
-
+app = create_app( static_folder=static_folder)
+# env='production',
 def main():
     app.run()
 
