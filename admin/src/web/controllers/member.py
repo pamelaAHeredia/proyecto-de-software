@@ -129,7 +129,9 @@ def update(member_id):
 @member_blueprint.post("/change_activity/<int:member_id>")
 @login_required
 def change_activity(member_id):
-    service.change_activity_member(member_id)
+    change = service.change_activity_member(member_id)
+    if not change:
+        flash("El socio es moroso no se puede activar", "warning")
     return redirect(url_for("members.index"))
 
 
