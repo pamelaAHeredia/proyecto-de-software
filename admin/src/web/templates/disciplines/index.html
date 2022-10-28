@@ -57,10 +57,12 @@
                                     href="{{ url_for('suscription.index', discipline_id=discipline.id, has_quota=discipline.has_quota) }} ">Inscripciones</a>
                             </li>
                             <li>
+                                {% if can_do_it(session, 'discipline_destroy') %}
                                 <button class="dropdown-item" type="button" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal{{ discipline.id }}">
                                     Eliminar
                                 </button>
+                                {% endif %}
 
                             </li>
 
@@ -72,11 +74,13 @@
         </tbody>
     </table>
     {% include('partials/paginator.html') %}
-    <div class="row">
-        <div class="col-sm-12 d-flex justify-content-center">
-            <a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
+    {% if can_do_it(session, 'discipline_create') %}
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <a class="btn btn-secondary" href="{{url_for('discipline.create')}}">Alta de una disciplina</a>
+            </div>
         </div>
-    </div>
+    {% endif %}
     <div class="row">
         <div class="col-sm-12 d-flex justify-content-center">
             <a href="{{url_for('home')}}"> Volver </a>
