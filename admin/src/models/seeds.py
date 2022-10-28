@@ -19,6 +19,7 @@ def run():
         "member_destroy",
         "member_update",
         "member_show",
+        "member_change_activity",
         "discipline_index",
         "discipline_create",
         "discipline_destroy",
