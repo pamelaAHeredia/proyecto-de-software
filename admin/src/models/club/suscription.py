@@ -38,3 +38,7 @@ class Suscription(db.Model):
     @property
     def is_active(self):
         return True if self.date_to == None else False
+
+    def end_suscription(self):
+        if not self.date_to:
+            self.date_to = datetime.datetime.now()    

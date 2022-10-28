@@ -24,11 +24,11 @@ def create_app(env="development", static_folder="static"):
     # Carga configuracion
     app.config.from_object(config[env])
 
-    app.secret_key = "secret key"
+    # app.secret_key = "secret key"
 
     # Inicia base de datos
     database.init_app(app)
-
+    
     # Configura sesion de backend
     Session(app)
 
@@ -65,7 +65,7 @@ def create_app(env="development", static_folder="static"):
     @app.template_filter()
     def format_datetime(value, format='dma'):
         if format == 'dmahm':
-            format="%d-%m-%Y H%:%M"
+            format="%d-%m-%Y %H:%M"
         elif format == 'dma':
             format="%d-%m-%Y"
         return value.strftime(format)
