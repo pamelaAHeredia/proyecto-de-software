@@ -1,14 +1,16 @@
-from calendar import month
+import datetime
 from decimal import Decimal
 from typing import List, Optional
-import datetime
 
+from sqlalchemy import and_
 
 from src.models.database import db
 from src.models.club.movement import Movement
 from src.models.club.member import Member
 from src.models.club.suscription import Suscription
 from src.services.settings import SettingsService
+
+TODAY = datetime.date.today()
 
 DATE_TO = datetime.date.today() + datetime.timedelta(days=1)
 DATE_FROM = DATE_TO.replace(day=1)
@@ -30,6 +32,40 @@ class MovementService:
     def _last_month_day(self, day: datetime.date) -> datetime.date:
         next_month = day.replace(day=28) + datetime.timedelta(days=4)
         return next_month - datetime.timedelta(days=next_month.day)
+
+    def is_defaulter(
+        self,
+        member: Member,
+        date_from: datetime.date = TODAY,
+    ) -> bool:
+        """Retorna si es moroso.
+
+        Dado un Socio retorna si es deudor al día solicitado.
+
+        Args:
+            member (Member): Un socio
+            date (datetime.date, optional): Fecha solicitada. Por defecto TODAY.
+
+        Returns:
+            Bool: True es moroso.
+        """
+        if date_from.day <= 10:
+            member_movements = member.movements.filter(
+                and_(
+                    Movement.movement_type.in_(["S", "I", "C"]),
+                    Movement.date.between(
+                        date_from.replace(day=1), date_from.replace(day=11)
+                    ),
+                )
+            ).all()
+        else:
+            member_movements = member.movements.filter(
+                Movement.date.between(
+                    date_from.replace(day=1), date_from + datetime.timedelta(days=1)
+                )
+            ).all()
+       
+        return True if sum(move.amount for move in member_movements) < 0 else False
 
     def get_balance(
         self,
@@ -59,12 +95,14 @@ class MovementService:
         date_from = datetime.date(year, month - 1, 1)
         date_to = self._last_month_day(date_from)
         previous_balance = self.get_balance(member=member)
-        
+
         movements_for_add = list()
 
         residue_movement = self.residue(previous_balance, "Saldo mes anterior", member)
-        interest_movement = self.interest(previous_balance, "Interes saldo mes anterior", member)
-        
+        interest_movement = self.interest(
+            previous_balance, "Interes saldo mes anterior", member
+        )
+
         movements_for_add.append(residue_movement)
         movements_for_add.append(interest_movement)
 
@@ -73,10 +111,9 @@ class MovementService:
                 suscription.amount, f"Debito {suscription.membership.name}", member
             )
             movements_for_add.append(debit_movement)
-        
+
         db.session.add_all(movements_for_add)
         db.session.commit()
-        
 
     def debit(self, amount, detail, member):
         movement = self._insert_movement(
