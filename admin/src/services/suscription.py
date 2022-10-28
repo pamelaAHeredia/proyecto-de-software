@@ -114,7 +114,6 @@ class SuscriptionService:
         """
         suscription = Suscription.query.get(suscription_id)
         suscription.end_suscription()
-        # db.session.add(suscription)
         db.session.commit()
         return suscription
 
