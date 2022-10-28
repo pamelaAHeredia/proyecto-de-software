@@ -59,7 +59,7 @@
 
     <div class="row my-3">
 
-        {% if movements %}
+        {% if moves %}
         <h1>Movimientos Registrados</h1>
         <table class="table table-hover">
             <thead>
@@ -71,12 +71,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in paginator.items %}
+                {% for move in moves  %}
                 <tr>
-                    <td>{{item.detail}}</td>
-                    <td>{{item.date}}</td>
-                    <td>{{item.movement_type}}</td>
-                    <td>{{item.amount}}</td>
+                    <td>{{move.detail}}</td>
+                    <td>{{move.date}}</td>
+                    <td>{{move.movement_type}}</td>
+                    <td>{{move.amount}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -88,6 +88,7 @@
 
     </div>
 </div>
+
 
 
 

@@ -16,8 +16,9 @@ settings = SettingsService()
 
 @movement_blueprint.route("/member_balance/<id>", methods=["GET", "POST"])
 @login_required
-# @verify_permission()
+@verify_permission("movement_update")
 def member_balance(id):
+    print(id)
     movement_form = CreateMovementForm()
     member = member_service.get_by_membership_number(id)
 
@@ -27,21 +28,25 @@ def member_balance(id):
             detail = movement_form.detail.data
             date = movement_form.date.data
             print(amount, detail, date)
-            service.credit(amount, detail, member, date)
+            service.credit(amount, detail, member, date, True)
             flash("Pago registrado con éxito.", "success")
+            # return redirect(url_for("members.index"))
 
-    page = request.args.get("page", 1, type=int)
+    # page = request.args.get("page", 1, type=int)
     balance = service.get_balance(member)
-    moves_paginator = service.list_paginated_movements(
-        page,
-        settings.get_items_per_page(),
-        "movements.member_balance.{member.membership_number}",
-        member
-    )
+    # paginator = service.list_paginated_movements(
+    #     page,
+    #     settings.get_items_per_page(),
+    #     'movements.member_balance',
+    #     member
+    # )
+    moves = service.get_movements(member)
     return render_template(
         "movements/member_balance.html",
         member=member,
         balance=balance,
-        moves_paginator=moves_paginator,
+        # paginator=paginator,
+        moves = moves,
         movement_form=movement_form,
     )
+
