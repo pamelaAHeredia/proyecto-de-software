@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center">Balance del socio nro: {{member.membership_number}}</h1>
+
+    <div class="row my-5 justify-content-center">
+        <div class="col-9">
+            <h3>Monto: ${{balance}}</h3>
+        </div>
+        <div class="col-3">
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">
+                Nuevo Pago
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Registro de Pago. Socio
+                                {{member.membership_number}}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- formulario de pago -->
+                            <form action="{{ url_for('movements.member_balance', id=member.membership_number)}}" method="post">
+                                {{ movement_form.hidden_tag() }}
+                                <div class="form-gorup">
+                                    {{ movement_form.amount.label }} {{ movement_form.amount(class_="form-control") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ movement_form.detail.label }} {{ movement_form.detail(class_="form-control") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ movement_form.date.label }} {{ movement_form.date(class_="form-control") }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Registrar Pago</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3">
+
+        {% if movements %}
+        <h1>Movimientos Registrados</h1>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Detalle</th>
+                    <th>fecha</th>
+                    <th>Tipo de movimiento</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in paginator.items %}
+                <tr>
+                    <td>{{item.detail}}</td>
+                    <td>{{item.date}}</td>
+                    <td>{{item.movement_type}}</td>
+                    <td>{{item.amount}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {%else%}
+        <h2>no hay movimientos para mostrar</h2>
+        {% endif %}
+
+    </div>
+</div>
+
+
+
+
+{% endblock %}

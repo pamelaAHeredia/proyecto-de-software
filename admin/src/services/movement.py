@@ -9,6 +9,7 @@ from src.models.club.movement import Movement
 from src.models.club.member import Member
 from src.models.club.suscription import Suscription
 from src.services.settings import SettingsService
+from src.services.paginator import Paginator
 
 TODAY = datetime.date.today()
 
@@ -217,4 +218,8 @@ class MovementService:
             detail=detail,
             member=member,
         )
+        db.session.add(movement)
+        db.session.commit()
         return movement
+
+    
