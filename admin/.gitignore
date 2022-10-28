@@ -162,3 +162,7 @@ cython_debug/
 
 flask_session/
 .vscode/
+*.pdf
+*.csv
+
+../.vscode/settings.json

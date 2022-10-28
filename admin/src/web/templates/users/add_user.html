@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Agregar usuario{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center" > Nuevo usuario</h1>
+    <div class="row my-2">
+      <form action="{{ url_for('users.users_add')}}" method="post">
+        {{ form.hidden_tag() }}
+      <div class="form-group my-2">
+        {{ form.email.label }} {{ form.email(class_="form-control") }}
+      </div>
+      <div class="form-group my-2">
+        {{ form.username.label }} {{ form.username(class_="form-control") }}
+      </div>
+      <div class="form-group my-2">
+        {{ form.first_name.label }} {{ form.first_name(class_="form-control") }}
+      </div>
+      <div class="form-group my-2">
+        {{ form.last_name.label }} {{ form.last_name(class_="form-control") }}
+      </div>
+      <div class="form-group my-2">
+        {{ form.roles.label }} {{ form.roles(class_="form-control") }}
+      </div>
+      <div class="row my-3 mx-auto">
+        <input type="submit" value="Crear Usuario" class="btn btn-outline-success">
+      </div>
+    </form>
+
+    
+  </div>
+
+  <div class="row my-5">
+    <a href="{{url_for('home')}}"> Volver al inicio </a></li>
+  </div>
+    
+</div>
+
+
+{% endblock %}

@@ -1,4 +1,6 @@
+from math import perm
 from src.models.database import db
+
 
 # Define la tabla que relaciona Roles con Permisos
 role_has_permission = db.Table('role_has_permission',
@@ -17,3 +19,6 @@ class Role(db.Model):
         lazy='subquery',
         backref=db.backref('roles', lazy=True)
         )
+
+    def __init__(self, name):
+        self.name = name

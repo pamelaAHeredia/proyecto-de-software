@@ -1,7 +1,7 @@
 from datetime import datetime
-
 from src.models.database import db
-
+from src.models.club.movement import Movement
+from src.models.club.suscription import Suscription
 
 # Define la clase Socio
 class Member(db.Model):
@@ -23,6 +23,12 @@ class Member(db.Model):
     email = db.Column(db.String(50))
     creation_date = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    movements = db.relationship("Movement", back_populates="member", lazy="dynamic")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    suscriptions = db.relationship(
+        "Suscription", back_populates="member", lazy="dynamic"
+    )
 
     def __init__(
         self,
@@ -43,3 +49,13 @@ class Member(db.Model):
         self.address = address
         self.phone_number = phone_number
         self.email = email
+
+    @property
+    def username(self):
+        if self.user:
+           return self.user.username
+        return None
+    
+    @property
+    def active_suscriptions(self):
+        return self.suscriptions.filter_by(date_to=None)

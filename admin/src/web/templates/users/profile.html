@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %} Login {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h1 class="text-center" >Mi perfil</h1>
+  <div class="row my-3">
+    
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>#ID </th>
+          <th>Email</th>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>{{ user.id }}</th>
+          <th>{{ user.email }}</th>
+          <th>{{ user.username }}</th>
+          <th>{{ user.first_name }}</th>
+          <th>{{ user.last_name }}</th>
+          {% for role in user.roles %}
+          <th>{{ role.name }}</th>
+          {% endfor %}
+      </tr>
+  </tbody>
+  </table>
+  </div>
+
+  <div class="row my-5">
+    <a href="{{url_for('home')}}"> Volver </a>
+  </div>
+
+</div>
+
+
+
+          
+{% endblock %}

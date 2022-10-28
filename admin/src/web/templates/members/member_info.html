@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block title %}Modulo de Socios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+{% if member %} 
+<div class="container">
+    <h1 class="text-center"> Socio</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>N° de Socio</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>N° de Documento</th>
+                <th>Género</th>
+                <th>Está Activo?</th>
+                {%if member.user_id %}
+                <th>Usuario</th>
+                {% endif %}
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>{{ member.membership_number }}</th>
+                <th>{{ member.first_name }}</th>
+                <th>{{ member.last_name }}</th>
+                <th>{{ member.document_type }}</th>
+                <th>{{ member.document_number}}</th>
+                <th>{{ member.gender }}</th>
+                <th>{%if member.is_active -%} {{"Activo"}}
+                    {%else -%}
+                    {{"Bloqueado"}}
+                    {% endif %}</th>
+                <th>{%if member.user_id %}
+                    {{member.user.email}}
+                    {% endif %}
+                </th>    
+                <th>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          Operaciones
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if not member.user_id and member.is_active %}
+                            <li><a class="dropdown-item" href="{{url_for('users.link_user', id=member.membership_number)}}">Asignar usuario</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="#">Editar</a></li>
+                        </ul>
+                    </div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <h1>Socio No Encontrado.</h1>
+    {% endif %}
+
+</div>
+
+{% endblock content%}

@@ -30,7 +30,7 @@
             <tr>
                 <td>{{ discipline.name }}</td>
                 <td>{{ discipline.category }}</td>
-                <td>{{ "%s, %s!"|format(discipline.instructor_last_name, discipline.instructor_first_name) }} </td>
+                <td>{{ discipline.instructor }} </td>
                 <td>{{ discipline.days_and_schedules }}</td>
                 <td>{{ discipline.amount }}</td>
                 <td>{{ discipline.registration_quota }}</td>
@@ -44,13 +44,27 @@
                     </div>
                 </td>
                 <td>
-                    <div class="btn-group mb-3">
-                        <a class="btn btn-sm btn-success rounded-pill d-inline" href="{{ url_for('discipline.update', discipline_id=discipline.id) }}" role="button">
-                            Editar
-                        </a>
-                        <a class="btn btn-sm btn-danger rounded-pill d-inline" href="#" role="button">
-                            Borrar
-                        </a>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Seleccionar
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('discipline.update', discipline_id=discipline.id) }}">Editar</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('suscription.index', discipline_id=discipline.id, has_quota=discipline.has_quota) }} ">Inscripciones</a>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ discipline.id }}">
+                                    Eliminar
+                                </button>
+
+                            </li>
+
+                        </ul>
                     </div>
                 </td>
             </tr>
@@ -71,6 +85,31 @@
 </div>
 
 
+{% for discipline in paginator.items %}
+<div class="modal fade" id="deleteModal{{ discipline.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Baja</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Se va a dar de baja la disciplina {{discipline.discipline_name}}.
+                (Se daran de baja todas las inscripciones)
+                ¿Está Seguro?
+            </div>
+            <form action="{{url_for('discipline.delete', discipline_id=discipline.id)}}" method="POST">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Si</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 
 {% endblock %}

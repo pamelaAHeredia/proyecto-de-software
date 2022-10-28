@@ -15,6 +15,7 @@ psycopg2-binary = "^2.9.3"
 Flask-WTF = "^1.0.1"
 reportlab = "^3.6.11"
 WTForms = {extras = ["email"], version = "^3.0.1"}
+marshmallow-sqlalchemy = "^0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]

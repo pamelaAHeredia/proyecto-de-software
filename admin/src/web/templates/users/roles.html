@@ -1,0 +1,45 @@
+<div class="row my-3">
+
+    <div class="col-6 ">
+        <h2 > Roles Asignados </h2>
+        <table class="table table-hover table-sm">
+            <tbody>
+                <tr>
+                    {% for role in user.roles %}
+                <tr>
+                    <th>{{ role.name }}</th>
+
+                    <th>
+                        <form action="{{url_for('users.users_delete_roles', id=user.id)}}" method="post">
+                            <div class="form-group">
+                                {{ delete_roles_form.hidden_tag() }}
+                                {{ delete_roles_form.role(type="hidden", value=role.name) }}
+                            </div>
+                            {% if user.roles|length > 1 %}
+                            {% if (role.name == "Socio" and not user.has_members) or (not role.name =="Socio") %}
+                            <button type="submit" class="btn btn-outline-danger"> Desasignar</button>
+                            {% endif %}
+                            {% endif %}
+                        </form>
+                    </th>
+
+                </tr>
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% if user.roles|length < 3 %}
+    <div class="col-6 mx-auto">
+
+        <h2 >Asignar nuevo rol </h2>
+        <form action="{{ url_for('users.users_add_roles', id=user.id)}}" method="post">
+            <div class="form group">
+                {{add_roles_form.hidden_tag()}}
+                {{add_roles_form.roles}}
+                <button class="btn btn-outline-success">Asignar</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>

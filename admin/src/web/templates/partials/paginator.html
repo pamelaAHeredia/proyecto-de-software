@@ -2,7 +2,7 @@
     <ul class="pagination">
         {% if paginator.pages %}
             {% if paginator.prev_url %}
-            <li class="page-item"></li>
+            <li class="page-item">
             <a class=page-link href="{{ paginator.prev_url }}">Anterior </a>
             </li>
             {% else %}
@@ -13,7 +13,8 @@
             {% for page in paginator.pages %}
             {% if page != paginator.page %}
             <li class="page-item">
-                <a class="page-link" href={{ url_for(paginator._endpoint, page=page) }}>
+                <a class="page-link" href="{{ url_for(paginator._endpoint, page=page, filter=paginator.filter,
+                     search=paginator.search) }}">
                     {{ page }} 
                 </a>
             </li>
@@ -28,7 +29,7 @@
 
             {% if paginator.next_url %}
             <li class="page-item">
-                <a class=page-link href={{ paginator.next_url }}>Siguiente</a>
+                <a class=page-link href="{{ paginator.next_url }}">Siguiente</a>
             </li>
             {% else %}
             <li class="page-item disabled">

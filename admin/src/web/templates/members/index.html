@@ -7,11 +7,45 @@
 
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 text-center">
-            <h1>Socios</h1>
+    <h1 class="text-center">Socios</h1>
+
+    <div class="row my-3">
+
+
+        <div class="col-9">
+            <h4>Filtrar listado por: </h4>
+            <form class="d-flex" action="{{ url_for('members.filter_by')}}" method="post">
+                <div class="form group my-2">
+                    {{ filter_form.filter(class="", id="filter_by_status") }}
+                    <div class="form-grpup my-2">
+                        {{ filter_form.search(class="form-control me-2", placeholder="Busqueda por Apellido",
+                        id="filter_by_last_name") }}
+                    </div>
+
+                    {{ filter_form.hidden_tag() }}
+                    <button class="btn btn btn-primary block" type="submit">Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-3">
+            <h4 class="text-center">Exportar listado</h4>
+            <div class="d-flex justify-content-center">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <input class="btn btn-sm btn-success rounded-pill d-inline" type="submit"
+                            onclick="return post_export()" value="Exportar en:">
+                    </div>
+                    <select class="custom-select" id="export_select">
+                        <option selected value="pdf">PDF</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
+
+<div class="row">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -35,44 +69,109 @@
                 <td>{{ member.document_number}}</td>
                 <td>{{ member.gender }}</td>
                 <td>
-                    <div class="row">
-                        <div class="btn-group mb-3">
-                            {% if member.is_active %}
-                            <span class="btn btn-sm btn-success rounded-pill d-inline">Si</span>
-                            {% else %}
-                            <span class="btn btn-sm btn-dark rounded-pill d-inline">No</span>
-                            {% endif %}
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop{{member.membership_number}}">
+                        {% if member.is_active%}
+                        {{"Sí"}}
+                        {% else %}
+                        {{"No"}}
+                        {% endif %}
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop{{member.membership_number}}" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">                        
+                                        {% if member.is_active%}
+                                        {{"Desactivar socio"}}
+                                        {% else %}
+                                        {{"Activar socio"}}
+                                        {% endif %}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Está seguro de que desea 
+                                    {% if member.is_active%}
+                                    {{" desactivar el socio"}}
+                                    {% else %}
+                                    {{" activar el socio"}}
+                                    {% endif %}
+                                    {{ member.membership_number }}
+                                </div>
+                                <form method="post"
+                                action="{{ url_for('members.change_activity', member_id=member.membership_number)}}">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Sí</button>
+                                </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>    
-                </td>
-                <td>
-                    <div class="btn-group mb-3">
-                        <a class="btn btn-sm btn-warning rounded-pill d-inline" href="{{ url_for('members.update',
-                         member_id=member.membership_number)}}" role="button">
-                            Editar
-                        </a>
                     </div>
                 </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Acciones
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('members.member_info',
+                                id=member.membership_number)}}">Ver Socio</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('members.update',
+                            member_id=member.membership_number)}}">Editar</a>
+                            </li>
+                            {% if not member.user_id and member.is_active %}
+                            <li><a class="dropdown-item" href="#">Asignar usuario</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </td>
+
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
     {% include('partials/paginator.html') %}
-    <div class="row">
+
+    </div>
+    
+    <div class="row my-3">
         <div class="col-sm-12 d-flex justify-content-center">
             <a class="btn btn-secondary btn-lg" href="{{url_for('members.create')}}">Agregar Socio</a>
         </div>
     </div>
-    <br />
-    <br />
-    <div class="row">
+
+
+    <div class="row my-2">
         <div class="col-sm-12 d-flex justify-content-center">
             <a class="btn btn-primary btn-sm" href="{{url_for('home')}}"> Volver </a>
         </div>
     </div>
+
 </div>
+{% block javascripts %}
+<script>
+
+    function post_export() {
+
+        window.open("./export_list?filter_by_status=" +
+            document.getElementById("filter_by_status").value + "&filter_by_last_name=" +
+            document.getElementById("filter_by_last_name").value + "&export_select=" +
+            document.getElementById("export_select").value)
+    }   
+</script>
+{% endblock javascripts %}
 
 
 
-
-{% endblock %}
+{% endblock content %}

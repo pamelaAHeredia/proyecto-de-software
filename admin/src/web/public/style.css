@@ -101,7 +101,7 @@ tr.disabled {
   color: #bbb !important;
 }
 
-p.flash {
+/* p.flash {
   width: 100%;
   padding: 5px;
 }
@@ -119,4 +119,4 @@ p.flash.success {
 p.flash.info {
   border: 3px solid blue;
   background-color: #0000ff6e;
-}
+} */
