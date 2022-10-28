@@ -62,7 +62,7 @@ def create_app(env="development", static_folder="static"):
     @app.template_filter()
     def format_datetime(value, format='dma'):
         if format == 'dmahm':
-            format="%d-%m-%Y H%:%M"
+            format="%d-%m-%Y %H:%M"
         elif format == 'dma':
             format="%d-%m-%Y"
         return value.strftime(format)

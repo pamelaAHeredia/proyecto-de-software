@@ -100,6 +100,32 @@ class MovementService:
             ).all()
         return sum(move.amount for move in member_movements)
 
+    def get_movements(
+        self,
+        member: Member,
+        specific_date: datetime.date = TODAY,
+    ) -> List[Movement]:
+        """Retorna los movimientos.
+
+        Dado un Socio retorna los movimiento de su cuenta
+        al día de la fecha dada.
+
+        Args:
+            member (Member): Un socio
+            specific_date (datetime.date, optional): Fecha hasta. Por defecto TODAY.
+
+        Returns:
+            list[Movement]: Lista de movimientos.
+        """
+        member_movements = member.movements.filter(
+            Movement.date.between(
+                specific_date.replace(day=1),
+                specific_date + datetime.timedelta(days=1),
+            )
+        ).order_by(Movement.date).all()
+        return member_movements
+
+
     def generate_mensual_payments(self, member: Member, month: int, year: int):
         movement_date = datetime.datetime(year, month, 1, 0, 0, 0)
         month = 1 if month==1 else month
