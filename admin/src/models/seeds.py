@@ -12,7 +12,7 @@ def run():
 
    
     service = UserService()
-    admin_perms = ["member_destroy", "discipline_destroy", "pays_destroy", "suscription_destroy","user_destroy", ]
+    admin_perms = ["member_destroy", "discipline_destroy", "pays_destroy", "suscription_destroy","user_destroy", "member_change_activity"]
     operator_perms = [ 
         "member_index",
         "member_create",
