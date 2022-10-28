@@ -41,7 +41,7 @@ def run():
     member_perms = [service.create_permission(perm) for perm in member_perms]
 
     role_1 = service.create_role(name="Administrador")
-    role_1.permissions = admin_perms + operator_perms
+    role_1.permissions = admin_perms + operator_perms + member_perms
     role_2 = service.create_role(name="Operador")
     role_2.permissions  = operator_perms + member_perms
     role_3 = service.create_role(name="Socio")
