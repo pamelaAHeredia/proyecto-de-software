@@ -1,11 +1,13 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask import session
+from services.movement import MovementService
 
 from src.services.settings import SettingsService
 from src.services.utils import hash_pass
 from src.services.utils import verify_pass
-from src.web.helpers.auth import login_required, verify_permission
+from src.web.helpers.auth import is_member, login_required, verify_permission
 from src.services.user import UserService
+from src.services.movement import MovementService
 from src.services.member import MemberService
 from src.web.forms.user import (
     CreateUserForm,
@@ -17,6 +19,7 @@ from src.web.forms.user import (
     UnlinkMemberForm,
     UpdatePassForm
 )
+from src.web.forms.member import FilterSearchForm
 from src.errors import database
 
 
@@ -25,6 +28,7 @@ user_blueprint = Blueprint("users", __name__, url_prefix="/users")
 service = UserService()
 member_service = MemberService()
 settings = SettingsService()
+movementService = MovementService()
 
 
 @user_blueprint.route("/", methods=["GET"])
@@ -286,6 +290,36 @@ def delete(id):
         flash(e, "danger")
     users = service.list_users()
     return render_template("users/index.html", users=users, filter_form=filter_form)
+
+
+@user_blueprint.route("/estado_societario/", methods=["GET"])
+@login_required
+@is_member
+def memberState():
+    filter_form = FilterSearchForm()
+    page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter")
+    search = request.args.get("search")
+    member_paginator = member_service.list_paginated_members(
+        page, settings.get_items_per_page(), "users.memberState", filter, search, True
+    )
+    return render_template(
+        "users/member_state.html", filter_form=filter_form, paginator=member_paginator
+    )
+
+@user_blueprint.route("/lista_movimientos/<id>", methods=["GET"])
+@login_required
+def viewMovements(id):
+    member = member_service.get_by_membership_number(id)
+
+    balance = movementService.get_balance(member)
+    moves= movementService.get_movements(member)
+    return render_template(
+        "users/view_movements.html",
+        movements=moves,
+        member=member,
+        saldo=balance,
+    )
 
 
 @user_blueprint.route("/link_user/<id>/<user_id>", methods=["POST", "GET"])

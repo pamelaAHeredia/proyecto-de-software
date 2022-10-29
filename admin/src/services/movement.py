@@ -141,7 +141,6 @@ class MovementService:
             Paginator: Un paginador.
         """
         movements = self.get_movements(member)
-        print(movements, member)
         return Paginator(movements, page, items_per_page, endpoint)
 
     def generate_mensual_payments(self, member: Member, month: int, year: int):

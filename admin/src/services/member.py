@@ -7,10 +7,12 @@ from reportlab.lib.pagesizes import A4
 
 from src.models.database import db
 from src.models.club.member import Member
+from src.models.auth.user import User
 from src.errors import database
 from src.services.paginator import Paginator
 from src.services.suscription import SuscriptionService
 from src.services.movement import MovementService
+from flask import session
 
 
 class MemberService:
@@ -35,7 +37,7 @@ class MemberService:
        return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
-        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str
+        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str, uniqueCase = False
     ) -> Paginator:
         """Función que retorna el paginador con los socios del sistema.
 
@@ -49,16 +51,23 @@ class MemberService:
         Returns:
            Un paginador.
         """
-        if (not filter or filter == "Todos") and search and search != "":
-            members = self.list_by_last_name(substring=search)
-        elif (filter) and search and search != "":
-            members = self.list_by_last_name(
-                substring=search, active=(filter == "Activos")
-            )
-        elif (not filter or filter == "Todos") and (not search or search == ""):
-            members = self.list_members()
+        if (uniqueCase == True):
+            id_user = session["user"]
+            members = self.list_by_id_user(id_user=id_user)
+            print("Entro")
+            for member in members:
+                print(member.first_name)
         else:
-            members = self.list_by_is_active(filter == "Activos")
+            if (not filter or filter == "Todos") and search and search != "":
+                members = self.list_by_last_name(substring=search)
+            elif (filter) and search and search != "":
+                members = self.list_by_last_name(
+                    substring=search, active=(filter == "Activos")
+                )
+            elif (not filter or filter == "Todos") and (not search or search == ""):
+                members = self.list_members()
+            else:
+                members = self.list_by_is_active(filter == "Activos")
         return Paginator(members, page, items_per_page, endpoint, filter, search)
     
 
@@ -247,6 +256,12 @@ class MemberService:
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado"""
         return Member.query.filter_by(is_active=active).order_by(
+            Member.membership_number
+        )
+
+    def list_by_id_user(self, id_user):
+        """Función que retorna la lista de todos los Socios asociados a un usuario"""
+        return Member.query.filter_by(user_id=id_user).order_by(
             Member.membership_number
         )
 

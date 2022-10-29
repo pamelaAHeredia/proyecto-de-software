@@ -58,13 +58,15 @@ def create_app(env="development", static_folder="static"):
     # Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
+    app.jinja_env.globals.update(is_member=auth.is_member_template)
     app.jinja_env.globals.update(is_operator=auth.is_operator_template)
+    app.jinja_env.globals.update(is_admin=auth.is_admin)
     app.jinja_env.globals.update(can_do_it=auth.can_do_it)
     # app.jinja_env.globals.update(is_admin=auth.is_admin)
 
     #Jinja datetime formater    
     @app.template_filter()
-    def format_datetime(value, format='dma'):
+    def format_datetime(value, format='dmahm'):
         if format == 'dmahm':
             format="%d-%m-%Y %H:%M"
         elif format == 'dma':
