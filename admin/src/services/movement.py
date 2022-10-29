@@ -1,18 +1,20 @@
-import datetime
+from calendar import month
 from decimal import Decimal
 from typing import List, Optional
+import datetime
 
 from sqlalchemy import and_
+
 
 from src.models.database import db
 from src.models.club.movement import Movement
 from src.models.club.member import Member
 from src.models.club.suscription import Suscription
 from src.services.settings import SettingsService
+from src.errors.database import MinValueValueError
+from src.services.paginator import Paginator
 
 TODAY = datetime.date.today()
-
-# DATE_TO = datetime.date.today() + datetime.timedelta(days=1)
 DATE_FROM = TODAY.replace(day=1)
 
 
@@ -122,25 +124,44 @@ class MovementService:
                 specific_date.replace(day=1),
                 specific_date + datetime.timedelta(days=1),
             )
-        ).order_by(Movement.date).all()
+        ).order_by(Movement.date)
         return member_movements
 
+    def list_paginated_movements(
+        self, page: int, items_per_page: int, endpoint: str, member:Member
+    ) -> Paginator:
+        """Retorna un paginador con las disciplinas.
+
+        Args:
+            page (int): Numero de pagina.
+            items_per_page (int): cantidad de registros por página.
+            endpoint (str): endpoint para el armado del url_for.
+
+        Returns:
+            Paginator: Un paginador.
+        """
+        movements = self.get_movements(member)
+        return Paginator(movements, page, items_per_page, endpoint)
 
     def generate_mensual_payments(self, member: Member, month: int, year: int):
         movement_date = datetime.datetime(year, month, 1, 0, 0, 0)
-        month = 1 if month==1 else month
+        month = 12 if month == 1 else month - 1
         date_from = datetime.date(year, month, 1)
         date_to = self._last_month_day(date_from)
-        print(f"date_from: {date_from} date_to: {date_to}")
-        previous_balance = self.get_balance(member=member, date_from=date_from, date_to=date_to)
+
+        previous_balance = self.get_balance(
+            member=member, date_from=date_from, date_to=date_to
+        )
 
         movements_for_add = list()
 
         residue_movement = self.residue(
-            previous_balance, "Saldo mes anterior", member, movement_date=movement_date
+            previous_balance, "Saldo mes anterior",
+            member,
+            movement_date=movement_date
         )
         interest_movement = self.interest(
-            previous_balance,
+            previous_balance if previous_balance < 0 else 0,
             "Interes saldo mes anterior",
             member,
             movement_date=movement_date,
@@ -161,37 +182,40 @@ class MovementService:
         db.session.add_all(movements_for_add)
         db.session.commit()
 
-    def debit(self, amount, detail, member, movement_date=None):
+    def debit(self, amount, detail, member, movement_date=None, with_commit=False):
         movement = self.insert_movement(
             movement_date=movement_date,
             movement_type="D",
-            amount=amount * -1,
+            amount=amount if amount < 0 else amount * -1,
             detail=detail,
             member=member,
+            with_commit=with_commit,
         )
         return movement
 
-    def credit(self, amount, detail, member, movement_date=None):
+    def credit(self, amount, detail, member, movement_date=None, with_commit=False):
         movement = self.insert_movement(
             movement_date=movement_date,
             movement_type="C",
-            amount=amount,
+            amount=amount * -1 if amount < 0 else amount,
             detail=detail,
             member=member,
+            with_commit=with_commit,
         )
         return movement
 
-    def residue(self, amount, detail, member, movement_date=None):
+    def residue(self, amount, detail, member, movement_date=None, with_commit=False):
         movement = self.insert_movement(
             movement_date=movement_date,
             movement_type="S",
             amount=amount,
             detail=detail,
             member=member,
+            with_commit=with_commit,
         )
         return movement
 
-    def interest(self, amount, detail, member, movement_date=None):
+    def interest(self, amount, detail, member, movement_date=None, with_commit=False):
         interest = self._settings_service.get_percentage_surcharge()
         movement = self.insert_movement(
             movement_date=movement_date,
@@ -199,7 +223,9 @@ class MovementService:
             amount=amount * Decimal(str((interest / 100))),
             detail=detail,
             member=member,
+            with_commit=with_commit,
         )
+
         return movement
 
     def insert_movement(
@@ -209,12 +235,17 @@ class MovementService:
         detail,
         member,
         movement_date=datetime.datetime.now(),
+        with_commit: bool = False,
     ):
         movement = Movement(
-            date=movement_date,
             movement_type=movement_type,
             amount=amount,
             detail=detail,
             member=member,
         )
+        if with_commit:
+            db.session.add(movement)
+            db.session.commit()
         return movement
+
+    

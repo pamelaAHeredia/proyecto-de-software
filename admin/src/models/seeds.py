@@ -12,41 +12,41 @@ def run():
 
    
     service = UserService()
-
-    perms = [ 
+    admin_perms = ["member_destroy", "discipline_destroy", "pays_destroy", "suscription_destroy","user_destroy", "member_change_activity"]
+    operator_perms = [ 
         "member_index",
         "member_create",
-        "member_destroy",
         "member_update",
         "member_show",
-        "discipline_index",
         "discipline_create",
-        "discipline_destroy",
         "discipline_update",
         "discipline_show",
         "pays_index",
         "pays_show",
         "pays_import",
-        "pays_destroy",
         "suscription_index",
         "suscription_create",
-        "suscription_destroy",
         "suscription_update",
         "suscription_show",
         "user_index", 
         "user_create",
-        "user_destroy", 
         "user_update", 
         "user_show", 
-        "user_search"
+        "user_search", 
+        "movement_update"
     ]
-
-    member_perms = [service.create_permission(perm) for perm in perms]
+    member_perms = ["discipline_index"]
+    
+    admin_perms = [service.create_permission(perm) for perm in admin_perms]
+    operator_perms = [service.create_permission(perm) for perm in operator_perms]
+    member_perms = [service.create_permission(perm) for perm in member_perms]
 
     role_1 = service.create_role(name="Administrador")
-    role_1.permissions = member_perms
+    role_1.permissions = admin_perms + operator_perms + member_perms
     role_2 = service.create_role(name="Operador")
+    role_2.permissions  = operator_perms + member_perms
     role_3 = service.create_role(name="Socio")
+    role_3.permissions  = member_perms
 
     admin = service.create_user(
         email="admin@gmail.com",
@@ -72,7 +72,7 @@ def run():
         password=hash_pass("socio"),
         first_name="Eduardo",
         last_name="socio",
-        roles=[role_2],
+        roles=[role_3],
     )
 
     user_3 = service.create_user(
@@ -108,3 +108,4 @@ def run():
         gender="M",
         address="La Plata",
     )
+
