@@ -57,6 +57,23 @@
                     </div>
                 </th>
             </tr>
+            
+        </tbody>
+        <thead> 
+            <tr>
+                <th>Domicilio</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+            </tr>
+        </thead>
+        <br>
+        <br>
+        <tbody>
+            <tr>
+                <th>{{ member.address }}</th>
+                <th>{{ member.email }}</th>
+                <th>{{ member.phone_number }}</th>
+            </tr>
         </tbody>
     </table>
     {% else %}

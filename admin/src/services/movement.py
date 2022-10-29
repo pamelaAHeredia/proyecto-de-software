@@ -1,8 +1,10 @@
-import datetime
+from calendar import month
 from decimal import Decimal
 from typing import List, Optional
+import datetime
 
 from sqlalchemy import and_
+
 
 from src.models.database import db
 from src.models.club.movement import Movement
@@ -237,7 +239,6 @@ class MovementService:
         with_commit: bool = False,
     ):
         movement = Movement(
-            date=movement_date,
             movement_type=movement_type,
             amount=amount,
             detail=detail,
