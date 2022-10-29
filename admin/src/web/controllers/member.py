@@ -185,7 +185,8 @@ def export_list():
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     if export_select == "pdf":
         report = service.export_list_to_pdf(members, setting.get_items_per_page())
-        filename = report._filename.replace("src/web/", "")
+        filename = report._filename
+        print(filename)
         return render_template("members/view_report.html", filename=filename)
     else:
         report = service.export_list_to_csv(members)

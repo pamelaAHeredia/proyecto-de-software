@@ -293,7 +293,7 @@ class MemberService:
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".pdf"
+        filename = "report" + str(random.randint(0, 99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
