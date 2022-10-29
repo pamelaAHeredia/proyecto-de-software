@@ -88,3 +88,11 @@ def is_admin(id):
     user = service.find_user_by_id(id)
     admin = service.find_role_by_name("Administrador")
     return user.roles.__contains__(admin)
+    
+def can_do_it(session, perm):
+    user = User.query.filter_by(id=session.get("user")).first()
+    for r in user.roles:
+        for p in r.permissions:
+                if p.name == perm:
+                    return True
+    return False

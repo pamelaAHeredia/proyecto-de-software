@@ -428,7 +428,7 @@ def link_members(id):
     )
 
 @user_blueprint.route("/update_password", methods=["GET","POST"])
-@verify_permission("user_update")
+@login_required
 def update_password(id=None):
     pass_form = UpdatePassForm()
     id = session["user"]
