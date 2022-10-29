@@ -26,6 +26,7 @@ suscription_blueprint = Blueprint("suscription", __name__, url_prefix="/inscripc
 
 @suscription_blueprint.get("/")
 @login_required
+@verify_permission("suscription_index")
 def index():
     page = request.args.get("page", 1, type=int)
     discipline_id = request.args.get("discipline_id", type=int)
@@ -44,7 +45,7 @@ def index():
 
 @suscription_blueprint.route("/find_member", methods=["GET", "POST"])
 @login_required
-# @verify_permission("discipline_create")
+@verify_permission("suscription_create")
 def find_member():
     form = SuscriptionForm()
     member = None
@@ -75,7 +76,7 @@ def find_member():
 
 @suscription_blueprint.post("/enroll/<int:member_id>/<int:discipline_id>")
 @login_required
-# @verify_permission("discipline_create")
+@verify_permission("suscription_create")
 def enroll(member_id, discipline_id):
     membership = service_discipline.membership(discipline_id)
     member = service_member.get_by_membership_number(member_id)
@@ -88,7 +89,7 @@ def enroll(member_id, discipline_id):
 
 @suscription_blueprint.post("/leave/<int:suscription_id>/<int:discipline_id>")
 @login_required
-# @verify_permission("discipline_create")
+@verify_permission("suscription_destroy")
 def leave(suscription_id, discipline_id):
 
     if service_suscription.leave(suscription_id):

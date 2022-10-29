@@ -173,10 +173,7 @@ class SuscriptionService:
         Returns:
             Suscription: La suscripcion del socio a la membresia cuota.
         """
-        social_quota = Membership.query.get(
-            1
-        )  # Esto es una chanchada hay que mejorarlo
-        # member = Member.query.filter_by(membership_number=member_id).first()
+        social_quota = Membership.query.get(1)
         suscription = Suscription(membership=social_quota, member=member)
         debt_movement = self._movements_service.insert_movement(
             "D",

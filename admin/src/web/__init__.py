@@ -24,11 +24,11 @@ def create_app(env="development", static_folder="static"):
     # Carga configuracion
     app.config.from_object(config[env])
 
-    app.secret_key = "secret key"
+    # app.secret_key = "secret key"
 
     # Inicia base de datos
     database.init_app(app)
-
+    
     # Configura sesion de backend
     Session(app)
 
@@ -56,6 +56,7 @@ def create_app(env="development", static_folder="static"):
     # Jinja
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(is_administrator=auth.is_administrator_template)
+    app.jinja_env.globals.update(can_do_it=auth.can_do_it)
     # app.jinja_env.globals.update(is_admin=auth.is_admin)
 
     #Jinja datetime formater    
