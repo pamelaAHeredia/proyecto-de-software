@@ -2,7 +2,7 @@ from src.web import create_app
 from pathlib import Path
 
 
-static_folder = Path(__file__).parent.absolute().joinpath("src/web/public")
+static_folder = Path(__file__).parent.absolute().joinpath("public")
 
 app = create_app(env='production', static_folder=static_folder)
 
