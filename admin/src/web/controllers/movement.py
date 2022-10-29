@@ -16,7 +16,7 @@ settings = SettingsService()
 
 @movement_blueprint.route("/member_balance/<id>", methods=["GET", "POST"])
 @login_required
-@verify_permission("movement_update")
+# @verify_permission("movement_create")
 def member_balance(id):
     print(id)
     movement_form = CreateMovementForm()
