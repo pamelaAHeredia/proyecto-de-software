@@ -32,7 +32,8 @@ def run():
         "user_create",
         "user_update", 
         "user_show", 
-        "user_search"
+        "user_search", 
+        "movement_update"
     ]
     member_perms = ["discipline_index"]
     
@@ -71,7 +72,7 @@ def run():
         password=hash_pass("socio"),
         first_name="Eduardo",
         last_name="socio",
-        roles=[role_2],
+        roles=[role_3],
     )
 
     user_3 = service.create_user(

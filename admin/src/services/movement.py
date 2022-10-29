@@ -128,7 +128,7 @@ class MovementService:
         return member_movements
 
     def list_paginated_movements(
-        self, page: int, items_per_page: int, endpoint: str
+        self, page: int, items_per_page: int, endpoint: str, member:Member
     ) -> Paginator:
         """Retorna un paginador con las disciplinas.
 
@@ -140,7 +140,8 @@ class MovementService:
         Returns:
             Paginator: Un paginador.
         """
-        movements = self.get_movements()
+        movements = self.get_movements(member)
+        print(movements, member)
         return Paginator(movements, page, items_per_page, endpoint)
 
     def generate_mensual_payments(self, member: Member, month: int, year: int):
@@ -248,24 +249,4 @@ class MovementService:
             db.session.commit()
         return movement
 
-        # if (type=="Debito" and datetime.datetime.now().day==1 and not is_inscription):
-        #     movements = Movement.query.filter_by(date.month = (now + dateutil.relativedelta.relativedelta(months=-1).month), date.year = (now + dateutil.relativedelta.relativedelta(months=-1).year)
-        #     aux = 0
-        #     for movement in movements
-        #         aux += movement.amount
-        #     saldo = Movement(datetime.datetime.now,"Saldo",aux,member_id)
-        #     newMovement = Movement(datetime.datetime.now,"Debito",(amount*-1),member_id)
-        #     db.session.add_all([saldo,newMovement])
-        #     db.session.commit()
-        # else:
-        #     if (type=="Debito" and is_inscription):
-        #         newDebito = Movement(datetime.datetime.now,"Debito",(amount*-1),member_id)
-        #         newCredito = Movement(datetime.datetime.now,"Credito",amount,member_id)
-        #         db.session.add_all([newDebito,newCredito])
-        #         db.session.commit()
-        #     else:
-        #         if (type=="Credito" and)
-        #         # Como aplicar en un credito, el interes? tipo si quisiera saber cuanto debo antes de pagar, me va a decir un saldo, y despues si cuando pago se aplica interes, estare pagando algo distinto
-        #         # Debo tener dos If de Credito, uno antes del 10 y otro despues del 10 para lo de interes que todavia no se aplicar
-        
-        
+    
