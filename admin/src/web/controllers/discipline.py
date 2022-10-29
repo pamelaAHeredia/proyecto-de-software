@@ -21,6 +21,7 @@ service_suscription = SuscriptionService()
 
 @discipline_blueprint.get("/")
 @login_required
+@verify_permission("discipline_index")
 def index():
     """Render de la lista de disciplinas con paginación"""
     page = request.args.get("page", 1, type=int)

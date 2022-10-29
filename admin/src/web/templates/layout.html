@@ -34,6 +34,14 @@
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous"></script>
   <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+  
+  <script>
+    //evita reenvíos de formularios
+    if (window.history.replaceState) { // verificamos disponibilidad
+    window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Estado societario{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    
+        <div class="col-12 text-center">
+            <h1>Estado societario de los socios administrados</h1>
+        </div>  
+   <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>N° de Socio</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>N° de Documento</th>
+                <th>Género</th>
+                <th>Movimientos y saldos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in paginator.items %}
+            <tr>
+                <td>{{ member.membership_number }}</td>
+                <td>{{ member.first_name }}</td>
+                <td>{{ member.last_name }}</td>
+                <td>{{ member.document_type }}</td>
+                <td>{{ member.document_number}}</td>
+                <td>{{ member.gender }}</td>
+                <td><a href="{{url_for('users.viewMovements', id=member.membership_number)}}">Ver</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include('partials/paginator.html') %}
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-primary btn-sm" href="{{url_for('home')}}"> Volver </a>
+        </div>
+    </div>
+</div> 
+
+{% endblock content %}
