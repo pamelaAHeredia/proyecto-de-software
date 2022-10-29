@@ -63,7 +63,7 @@ def create_app(env="development", static_folder="static"):
 
     #Jinja datetime formater    
     @app.template_filter()
-    def format_datetime(value, format='dma'):
+    def format_datetime(value, format='dmahm'):
         if format == 'dmahm':
             format="%d-%m-%Y %H:%M"
         elif format == 'dma':

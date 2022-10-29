@@ -20,8 +20,7 @@
                 <th>Tipo de Documento</th>
                 <th>N° de Documento</th>
                 <th>Género</th>
-                <th>Saldo</th>
-                <th>Movimientos</th>
+                <th>Movimientos y saldos</th>
             </tr>
         </thead>
         <tbody>
@@ -33,8 +32,7 @@
                 <td>{{ member.document_type }}</td>
                 <td>{{ member.document_number}}</td>
                 <td>{{ member.gender }}</td>
-                <td>100</td>
-                <td>Ver</td>
+                <td><a href="{{url_for('users.viewMovements', id=member.membership_number)}}">Ver</a></td>
             </tr>
             {% endfor %}
         </tbody>

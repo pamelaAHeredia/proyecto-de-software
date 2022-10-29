@@ -129,7 +129,7 @@ class MovementService:
         return member_movements
 
     def list_paginated_movements(
-        self, page: int, items_per_page: int, endpoint: str
+        self, page: int, items_per_page: int, endpoint: str, member: Member
     ) -> Paginator:
         """Retorna un paginador con las disciplinas.
 
@@ -141,7 +141,7 @@ class MovementService:
         Returns:
             Paginator: Un paginador.
         """
-        movements = self.get_movements()
+        movements = self.get_movements(member)
         return Paginator(movements, page, items_per_page, endpoint)
 
 
