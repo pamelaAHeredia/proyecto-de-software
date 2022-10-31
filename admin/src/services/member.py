@@ -1,5 +1,5 @@
 import csv, random
-from importlib.resources import path
+from pathlib import Path
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
@@ -21,6 +21,7 @@ class MemberService:
     _instance = None
     _suscription_service = SuscriptionService()
     _movements_service = MovementService()
+    _static_folder = Path(__file__).parents[2].absolute().joinpath("public")
 
     def __new__(cls):
         if cls._instance is None:
@@ -275,7 +276,7 @@ class MemberService:
     def format_pdf(self, pdf):
         """Función que define el formato de las paginas del pdf"""
         pdf.drawImage(
-            "../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50
+            "../admin/public/logoclub.jpg", 5, 790, width=50, height=50
         )
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
@@ -293,7 +294,7 @@ class MemberService:
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "report" + str(random.randint(0, 99999)) + ".pdf"
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -323,7 +324,7 @@ class MemberService:
 
     def export_list_to_csv(self, members):
         """Funcion que exporta una lista de Socios a un archivo report.csv"""
-        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".csv"
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".csv"
         file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",
