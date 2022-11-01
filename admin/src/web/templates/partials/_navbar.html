@@ -6,7 +6,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav w-100">
       {% if is_authenticated(session) %}
       {% if is_administrator(session) or is_operator(session)%}
 
@@ -21,10 +21,6 @@
               <li><a class="dropdown-item" href="{{url_for('users.users_add')}}">Agregar nuevo usuario</a></li>
               <li><a class="dropdown-item" href="{{url_for('users.users_search')}}">Buscar un Usuario</a></li>
             </ul>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
           </li>
           {% endif %}
 
@@ -48,24 +44,33 @@
             <a class="nav-link" href="{{url_for('discipline.index')}}">Disciplinas</a>
           </li>
         {% endif %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Mi perfil
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark">
-              <li><a class="dropdown-item" href="{{url_for('users.profile')}}">Ver mis Datos</a></li>
-              <li><a class="dropdown-item" href="{{url_for('users.update_password')}}">Cambiar mi contraseña</a></li>
-              {% if is_member(session) %}
-                <li><a class="dropdown-item" href="{{url_for('users.memberState')}}" >Estado societario</a></li> 
-              {% endif %}
-              <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
-            </ul>
-          </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
-        </li>
-        {% endif %}
+        <div class="w-100 d-flex flex-row-reverse">
+          {% if is_authenticated(session) %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{session.username}}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                <li><a class="dropdown-item" href="{{url_for('users.profile')}}">Ver mis Datos</a></li>
+                <li><a class="dropdown-item" href="{{url_for('users.update_password')}}">Cambiar mi contraseña</a></li>
+                {% if is_member(session) %}
+                  <li><a class="dropdown-item" href="{{url_for('users.memberState')}}" >Estado societario</a></li> 
+                {% endif %}
+                <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Cerrar sesión</a></li>
+              </ul>
+            </li>
+            {% if is_administrator(session) %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('settings.index')}}">Configuraciones</a>
+              </li>
+            {% endif %}
+          {% endif %}
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.login')}}">Iniciar sesión</a>
+            </li>
+          {% endif %}
+        </div>
       </ul>
     </div>
   </div>
