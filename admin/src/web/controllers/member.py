@@ -1,5 +1,4 @@
-from crypt import methods
-from fileinput import filename
+from pathlib import Path
 from flask import (
     Blueprint,
     request,
@@ -31,6 +30,7 @@ setting = SettingsService()
 
 @member_blueprint.get("/")
 @login_required
+@verify_permission("member_index")
 def index():
     filter_form = FilterSearchForm()
     page = request.args.get("page", 1, type=int)
@@ -46,6 +46,7 @@ def index():
 
 @member_blueprint.route("/create", methods=["GET", "POST"])
 @login_required
+@verify_permission("member_create")
 def create():
     """Por metodo POST toma del request los datos y se los pasa al modelo para que agregue un Socio,
     si no lo puede agregar lo informa"""
@@ -81,6 +82,7 @@ def create():
 
 @member_blueprint.route("/update/<int:member_id>", methods=["GET", "POST"])
 @login_required
+@verify_permission("member_update")
 def update(member_id):
     """Por metodo POST toma del request los datos y se los pasa al modelo para que agregue un Socio,
     si no lo puede agregar lo informa"""
@@ -128,6 +130,7 @@ def update(member_id):
 
 @member_blueprint.post("/change_activity/<int:member_id>")
 @login_required
+@verify_permission("member_change_activity")
 def change_activity(member_id):
     change = service.change_activity_member(member_id)
     if not change:
@@ -136,6 +139,7 @@ def change_activity(member_id):
 
 
 @member_blueprint.route("/filter_by", methods=["POST", "GET"])
+@verify_permission("member_index")
 def filter_by():
     filter_form = FilterSearchForm()
     if filter_form.validate_on_submit:
@@ -151,6 +155,7 @@ def filter_by():
 
 
 @member_blueprint.route("/filter_by_dni", methods=["POST", "GET"])
+@verify_permission("member_index")
 def filter_by_doc():
     filter_form = FilterByDocForm()
     if request.method == "POST":
@@ -164,12 +169,14 @@ def filter_by_doc():
 
 
 @member_blueprint.route("/member_info/<id>", methods=["GET"])
+@verify_permission("member_show")
 def member_info(id):
     member = service.get_by_membership_number(id)
     return render_template("members/member_info.html", member=member)
 
 
 @member_blueprint.get("/export_list")
+@verify_permission("member_index")
 def export_list():
     filter_by_status = request.args.get("filter_by_status")
     filter_by_last_name = request.args.get("filter_by_last_name")
@@ -177,11 +184,11 @@ def export_list():
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     if export_select == "pdf":
         report = service.export_list_to_pdf(members, setting.get_items_per_page())
-        filename = report._filename.replace("src/web/", "")
+        filename = Path(report._filename).name
         return render_template("members/view_report.html", filename=filename)
     else:
         report = service.export_list_to_csv(members)
-        filename = report.name.replace("src/web/", "")
+        filename = report.name
         return send_file(
             filename,
             mimetype="text/csv",

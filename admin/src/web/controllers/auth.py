@@ -30,6 +30,7 @@ def authenticate():
             password = login_form.password.data
             user = service.find_by_username_and_pass(username, password)
             session["user"] = user.id
+            session["username"] = user.username
             flash("La sesión se inicio correctamente.", "success")
         except database.PermissionDenied as e:
             flash(e, "danger")

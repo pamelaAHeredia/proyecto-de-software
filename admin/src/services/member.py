@@ -1,16 +1,18 @@
 import csv, random
-from importlib.resources import path
-from typing import Optional
+from pathlib import Path
+from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 
 from src.models.database import db
 from src.models.club.member import Member
+from src.models.auth.user import User
 from src.errors import database
 from src.services.paginator import Paginator
 from src.services.suscription import SuscriptionService
 from src.services.movement import MovementService
+from flask import session
 
 
 class MemberService:
@@ -19,19 +21,24 @@ class MemberService:
     _instance = None
     _suscription_service = SuscriptionService()
     _movements_service = MovementService()
+    _static_folder = Path(__file__).parents[2].absolute().joinpath("public")
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(MemberService, cls).__new__(cls)
         return cls._instance
 
-    def list_members(self):
-        """Función que retorna la query de todos los Socios de la Base de Datos ordenada por
-        Nro de Socio"""
-        return Member.query.order_by(Member.membership_number)
+    def list_members(self) -> List[Member]:
+
+       """Retorna todos las socios cargadas en la Base de Datos.
+
+        Returns:
+            List[Member]: Una lista con todas las disciplinas
+        """
+       return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
-        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str
+        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str, uniqueCase = False
     ) -> Paginator:
         """Función que retorna el paginador con los socios del sistema.
 
@@ -39,25 +46,31 @@ class MemberService:
            page: Número de pagina.
            items_per_page: cantidad de registros por página.
            endpoint: endpoint para el armado del url_for.
+           filter: define que tipo de filtro aplicar (Activos-Inactivos-Todos) 
+           search: string que utiliza para buscar por Apellido
 
         Returns:
            Un paginador.
         """
-        if (not filter or filter == "Todos") and search and search != "":
-            members = self.list_by_last_name(substring=search)
-        elif (filter) and search and search != "":
-            members = self.list_by_last_name(
-                substring=search, active=(filter == "Activos")
-            )
-        elif (not filter or filter == "Todos") and (not search or search == ""):
-            members = self.list_members()
+        if (uniqueCase == True):
+            id_user = session["user"]
+            members = self.list_by_id_user(id_user=id_user)
+            print("Entro")
+            for member in members:
+                print(member.first_name)
         else:
-            members = self.list_by_is_active(filter == "Activos")
+            if (not filter or filter == "Todos") and search and search != "":
+                members = self.list_by_last_name(substring=search)
+            elif (filter) and search and search != "":
+                members = self.list_by_last_name(
+                    substring=search, active=(filter == "Activos")
+                )
+            elif (not filter or filter == "Todos") and (not search or search == ""):
+                members = self.list_members()
+            else:
+                members = self.list_by_is_active(filter == "Activos")
         return Paginator(members, page, items_per_page, endpoint, filter, search)
     
-    def api_get_members(self):
-        members = Member.query.filter_by(id=1)
-        return self._member_schema.dump(members, many=True)
 
     def create_member(
         self,
@@ -69,9 +82,28 @@ class MemberService:
         address,
         phone_number="",
         email="",
-    ):
-        """Función que instancia un Socio, lo agrega a la Base de Datos y lo retorna solo en caso
-        de que no exista el tipo y numero de documento"""
+    ) -> Member:
+    
+        """Crea un Socio.
+
+        Método que instancia un Socio, lo agrega a la Base de Datos y lo retorna
+
+        Args:
+            first_name (str): Nombre del Socio.
+            last_name (str): Apellido del Socio.
+            document_type (str): Tipo de documento del Socio.
+            document_number (str): N° de documento del Socio.
+            gender (str): Género del Socio.
+            address (str): Domicilio del Socio.
+            phone_number (str): N° de Telefono del Socio.Es opcional.
+            email (str): Correo electrónico del Socio.Es opcional.
+
+        Raises:
+            database.ExistingData: El Socio ya existe.
+
+        Returns:
+            Member: Un Socio.
+        """
         member = self.find_member(document_type, document_number)
         if not member:
             member = Member(
@@ -97,17 +129,39 @@ class MemberService:
         )
 
     def find_member(self, document_type, document_number):
-        """Funcion que busca un socio en la base de datos por tipo y numero de documento"""
-        return Member.query.filter_by(
+         """Función que busca un Socio por su tipo y N° de documento.
+
+        Args:
+           document_type (str): Tipo de documento del Socio.
+           document_number (str): N° de documento del Socio.
+           
+        Returns:
+           Un Member si lo encuentra o None si no lo encuentra.
+        """
+         return Member.query.filter_by(
             document_type=document_type, document_number=document_number, deleted=False
         ).first()
 
     def find_member_by_mail(self, email):
+        """Función que busca un Socio por su email.
 
+        Args:
+            email (str): Correo electrónico del Socio.
+
+        Returns:
+           Un Member si lo encuentra o None si no lo encuentra.
+        """
         return Member.query.filter_by(email=email, deleted=False).first()
 
-    def get_by_membership_number(self, id):
-        """Funcion que retorna un Socio de la base de Datos por su Nro de Socio"""
+    def get_by_membership_number(self, id) -> Member:
+        """Función que retorna un Socio por su N° de Socio.
+
+        Args:
+            id (int): N° de Socio
+
+        Returns:
+           Un Member
+        """
         return Member.query.get(id)
 
     def update_member(
@@ -122,8 +176,27 @@ class MemberService:
         phone_number="",
         email="",
     ):
-        """Función que actualiza un Socio modificando sus datos en la base, controla que
-        no se duplique el tipo y numero de documento"""
+        """Actualiza un Socio.
+
+        Método que instancia un Socio, lo actualiza en la Base de Datos y lo guarda.
+
+        Args:
+            id (int): N° de Socio
+            first_name (str): Nombre del Socio.
+            last_name (str): Apellido del Socio.
+            document_type (str): Tipo de documento del Socio.
+            document_number (str): N° de documento del Socio.
+            gender (str): Género del Socio.
+            address (str): Domicilio del Socio.
+            phone_number (str): N° de Telefono del Socio.Es opcional.
+            email (str): Correo electrónico del Socio.Es opcional.
+
+        Raises:
+            database.ExistingData: El Socio ya existe.
+
+        Returns:
+            Member: Un Socio actualizado.
+        """
         member_found = self.find_member(document_type, document_number)
         if not member_found or (id == member_found.membership_number):
             member = self.get_by_membership_number(id)
@@ -142,8 +215,15 @@ class MemberService:
             message="Ya existe el Socio con ese tipo y numero de documento",
         )
 
-    def change_activity_member(self, id):
-        """Función que cambia el estado activo/inactivo del Socio"""
+    def change_activity_member(self, id) -> bool:
+        """Función que cambia el estado de un Socio de Activo a Inactivo y viceversa.
+           
+        Args:
+            id (int): N° de Socio
+
+        Returns:
+           Un booleano si pudo o no cambiar el estado
+        """
         member = self.get_by_membership_number(id)
         change = False
         if not member.is_active:
@@ -163,7 +243,15 @@ class MemberService:
 
     def list_by_last_name(self, substring, active: Optional[bool] = None):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
-        el substring enviado por parametro"""
+        el substring enviado por parametro
+           
+        Args:
+            substring (String) = Cadena de caracteres a buscar en el campo Apellido del Socio
+            active (bool) = Filtro que determina si el Socio es Activo o Inactivo (Opcional) 
+
+        Returns:
+           Una lista de Socios 
+        """
         if active is not None:
             return Member.query.filter(
                 Member.last_name.ilike("%" + substring + "%"),
@@ -175,22 +263,52 @@ class MemberService:
 
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
-        segun el parametro enviado"""
+        segun el parametro enviado
+                  
+        Args:
+            active (bool)= Filtra por Socios Activos(True) o Inactivos(False)
+
+        Returns:
+            Una lista de Socios
+        """
         return Member.query.filter_by(is_active=active).order_by(
+            Member.membership_number
+        )
+
+    def list_by_id_user(self, id_user):
+        """Función que retorna la lista de todos los Socios asociados a un usuario
+        Args:
+            id_user (int): id de Usuario
+
+        Returns:
+           Una lista de Socios
+        """
+        return Member.query.filter_by(user_id=id_user).order_by(
             Member.membership_number
         )
 
     def list_active_and_no_user(self):
         """Función que retorna la lista de todos los Socios activos que no tengan Usuario
-        asignado"""
+        asignado
+        
+        Returns:
+            Una lista de Socios
+        """
         return Member.query.filter_by(is_active=True, user=None).order_by(
             Member.membership_number
         )
 
     def format_pdf(self, pdf):
-        """Función que define el formato de las paginas del pdf"""
+        """Función que define el formato de las paginas del pdf
+         
+         Args:
+            pdf : un pdf(Canvas) para formatear
+
+        Returns:
+           Un pdf(Canvas)
+        """
         pdf.drawImage(
-            "../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50
+            "../admin/public/logoclub.jpg", 5, 790, width=50, height=50
         )
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
@@ -207,8 +325,16 @@ class MemberService:
         return pdf
 
     def export_list_to_pdf(self, members, line_per_page):
-        """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".pdf"
+        """Funcion que exporta una lista de Socios a un archivo report.pdf
+                
+         Args:
+            members : Lista de Socios
+            line_per_page (int): La cantidad de socios por pagina.
+
+        Returns:
+           Un archivo PDF paginado con la lista de Socios recibida
+        """
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -231,14 +357,28 @@ class MemberService:
         pdf.save()
         return pdf
 
-    def no_user(self, id):
-        """Funcion que retorna True si el Socio NO tiene asignado un Usuario"""
+    def no_user(self, id) -> bool:
+        """Funcion que retorna True si el Socio NO tiene asignado un Usuario
+         
+         Args:
+            id (int): N° de Socio
+
+        Returns:
+            True si el socio no tiene asignado un Usuario
+        """
         member = self.get_by_membership_number(id)
         return member.user == None
 
     def export_list_to_csv(self, members):
-        """Funcion que exporta una lista de Socios a un archivo report.csv"""
-        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".csv"
+        """Funcion que exporta una lista de Socios a un archivo report.csv
+         
+         Args:
+            members : Lista de Socios
+
+        Returns:
+           Un archivo CSV con la lista de Socios recibida
+        """
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".csv"
         file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",
@@ -263,20 +403,45 @@ class MemberService:
         return file
 
     def link_management(self, id_member, id_user):
-        """Funcion que vincula un socio con un usuario para ser gestionado"""
+        """Funcion que vincula un socio con un usuario para ser gestionado
+                 
+         Args:
+            id_member (int) : N° de Socio
+            id_user (int) : id de Usuario
+
+        Returns:
+           Un socio vinculado al usuario.
+        """
         member = self.get_by_membership_number(id_member)
         member.user_id = id_user
         db.session.commit()
         return member
 
     def unlink_management(self, id_member):
-        """Funcion que desvincula un socio del usuario que lo gestiona"""
+        """Funcion que desvincula un socio del usuario que lo gestiona
+                         
+         Args:
+            id_member (int) : N° de Socio
+           
+        Returns:
+           Un socio sin usuario vinculado.
+        """
         member = self.get_by_membership_number(id_member)
         member.user_id = None
         db.session.commit()
         return member
 
     def members_for_export(self, filter_by_status, filter_by_last_name):
+        """Funcion que retorna una lista de Socios a exportar segun los filtros enviados
+           por parametro
+                     
+         Args:
+            filter_by_status (string) : Define que filtro aplicar para el estado de actividad del Socio
+            filter_by_last_name (string) : Define la busqueda por Apellido del Socio.
+
+        Returns:
+            Una lista de Socios filtrada.
+        """
 
         if filter_by_status == "Todos":
             if filter_by_last_name != "":
