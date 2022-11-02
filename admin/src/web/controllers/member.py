@@ -1,5 +1,4 @@
-from crypt import methods
-from fileinput import filename
+from pathlib import Path
 from flask import (
     Blueprint,
     request,
@@ -185,12 +184,11 @@ def export_list():
     members = service.members_for_export(filter_by_status, filter_by_last_name)
     if export_select == "pdf":
         report = service.export_list_to_pdf(members, setting.get_items_per_page())
-        filename = report._filename
-        print(filename)
+        filename = Path(report._filename).name
         return render_template("members/view_report.html", filename=filename)
     else:
         report = service.export_list_to_csv(members)
-        filename = report.name.replace("src/web/", "")
+        filename = report.name
         return send_file(
             filename,
             mimetype="text/csv",

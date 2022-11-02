@@ -1,5 +1,5 @@
 import csv, random
-from importlib.resources import path
+from pathlib import Path
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
@@ -21,6 +21,7 @@ class MemberService:
     _instance = None
     _suscription_service = SuscriptionService()
     _movements_service = MovementService()
+    _static_folder = Path(__file__).parents[2].absolute().joinpath("public")
 
     def __new__(cls):
         if cls._instance is None:
@@ -242,7 +243,15 @@ class MemberService:
 
     def list_by_last_name(self, substring, active: Optional[bool] = None):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
-        el substring enviado por parametro"""
+        el substring enviado por parametro
+           
+        Args:
+            substring (String) = Cadena de caracteres a buscar en el campo Apellido del Socio
+            active (bool) = Filtro que determina si el Socio es Activo o Inactivo (Opcional) 
+
+        Returns:
+           Una lista de Socios 
+        """
         if active is not None:
             return Member.query.filter(
                 Member.last_name.ilike("%" + substring + "%"),
@@ -254,28 +263,52 @@ class MemberService:
 
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
-        segun el parametro enviado"""
+        segun el parametro enviado
+                  
+        Args:
+            active (bool)= Filtra por Socios Activos(True) o Inactivos(False)
+
+        Returns:
+            Una lista de Socios
+        """
         return Member.query.filter_by(is_active=active).order_by(
             Member.membership_number
         )
 
     def list_by_id_user(self, id_user):
-        """Función que retorna la lista de todos los Socios asociados a un usuario"""
+        """Función que retorna la lista de todos los Socios asociados a un usuario
+        Args:
+            id_user (int): id de Usuario
+
+        Returns:
+           Una lista de Socios
+        """
         return Member.query.filter_by(user_id=id_user).order_by(
             Member.membership_number
         )
 
     def list_active_and_no_user(self):
         """Función que retorna la lista de todos los Socios activos que no tengan Usuario
-        asignado"""
+        asignado
+        
+        Returns:
+            Una lista de Socios
+        """
         return Member.query.filter_by(is_active=True, user=None).order_by(
             Member.membership_number
         )
 
     def format_pdf(self, pdf):
-        """Función que define el formato de las paginas del pdf"""
+        """Función que define el formato de las paginas del pdf
+         
+         Args:
+            pdf : un pdf(Canvas) para formatear
+
+        Returns:
+           Un pdf(Canvas)
+        """
         pdf.drawImage(
-            "../admin/src/web/public/logoclub.jpg", 5, 790, width=50, height=50
+            "../admin/public/logoclub.jpg", 5, 790, width=50, height=50
         )
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
@@ -292,8 +325,16 @@ class MemberService:
         return pdf
 
     def export_list_to_pdf(self, members, line_per_page):
-        """Funcion que exporta una lista de Socios a un archivo report.pdf"""
-        filename = "report" + str(random.randint(0, 99999)) + ".pdf"
+        """Funcion que exporta una lista de Socios a un archivo report.pdf
+                
+         Args:
+            members : Lista de Socios
+            line_per_page (int): La cantidad de socios por pagina.
+
+        Returns:
+           Un archivo PDF paginado con la lista de Socios recibida
+        """
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".pdf"
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -316,14 +357,28 @@ class MemberService:
         pdf.save()
         return pdf
 
-    def no_user(self, id):
-        """Funcion que retorna True si el Socio NO tiene asignado un Usuario"""
+    def no_user(self, id) -> bool:
+        """Funcion que retorna True si el Socio NO tiene asignado un Usuario
+         
+         Args:
+            id (int): N° de Socio
+
+        Returns:
+            True si el socio no tiene asignado un Usuario
+        """
         member = self.get_by_membership_number(id)
         return member.user == None
 
     def export_list_to_csv(self, members):
-        """Funcion que exporta una lista de Socios a un archivo report.csv"""
-        filename = "src/web/public/report" + str(random.randint(0, 99999)) + ".csv"
+        """Funcion que exporta una lista de Socios a un archivo report.csv
+         
+         Args:
+            members : Lista de Socios
+
+        Returns:
+           Un archivo CSV con la lista de Socios recibida
+        """
+        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".csv"
         file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",
@@ -348,14 +403,29 @@ class MemberService:
         return file
 
     def link_management(self, id_member, id_user):
-        """Funcion que vincula un socio con un usuario para ser gestionado"""
+        """Funcion que vincula un socio con un usuario para ser gestionado
+                 
+         Args:
+            id_member (int) : N° de Socio
+            id_user (int) : id de Usuario
+
+        Returns:
+           Un socio vinculado al usuario.
+        """
         member = self.get_by_membership_number(id_member)
         member.user_id = id_user
         db.session.commit()
         return member
 
     def unlink_management(self, id_member):
-        """Funcion que desvincula un socio del usuario que lo gestiona"""
+        """Funcion que desvincula un socio del usuario que lo gestiona
+                         
+         Args:
+            id_member (int) : N° de Socio
+           
+        Returns:
+           Un socio sin usuario vinculado.
+        """
         member = self.get_by_membership_number(id_member)
         member.user_id = None
         db.session.commit()
@@ -363,7 +433,16 @@ class MemberService:
 
     def members_for_export(self, filter_by_status, filter_by_last_name):
         """Funcion que retorna una lista de Socios a exportar segun los filtros enviados
-           por parametro"""
+           por parametro
+                     
+         Args:
+            filter_by_status (string) : Define que filtro aplicar para el estado de actividad del Socio
+            filter_by_last_name (string) : Define la busqueda por Apellido del Socio.
+
+        Returns:
+            Una lista de Socios filtrada.
+        """
+
         if filter_by_status == "Todos":
             if filter_by_last_name != "":
                 members = self.list_by_last_name(substring=filter_by_last_name)
