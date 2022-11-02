@@ -374,7 +374,7 @@ def link_members(id):
         unlink_form = UnlinkMemberForm()
 
         members = request.form.getlist("selected")
-        print(members)
+
         for member_id in members:
             member = member_service.get_by_membership_number(member_id)
             member_service.link_management(member.membership_number, user.id)

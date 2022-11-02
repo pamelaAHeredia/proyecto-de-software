@@ -8,7 +8,6 @@
                     {% for role in user.roles %}
                 <tr>
                     <th>{{ role.name }}</th>
-
                     <th>
                         <form action="{{url_for('users.users_delete_roles', id=user.id)}}" method="post">
                             <div class="form-group">
@@ -22,7 +21,6 @@
                             {% endif %}
                         </form>
                     </th>
-
                 </tr>
                 {% endfor %}
                 </tr>

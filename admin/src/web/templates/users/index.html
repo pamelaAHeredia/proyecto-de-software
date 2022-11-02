@@ -109,7 +109,7 @@
                 <li><a class="dropdown-item" href="{{url_for('users.user_info', id=user.id)}}">Ver usuario</a></li>
                 <li><a class="dropdown-item" href="{{url_for('users.users_update', id=user.id)}}">Editar Usuario</a>
                 </li>
-                {% if user.is_member %}
+                {% if user.is_member and user.is_active%}
                 <li><a class="dropdown-item" href="{{url_for('users.link_members', id=user.id)}}">Asignar Socios</a>
                 </li>
                 {% endif %}
