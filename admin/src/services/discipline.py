@@ -25,12 +25,20 @@ class DisciplineService:
             cls._instance = super(DisciplineService, cls).__new__(cls)
         return cls._instance
 
-    def api_get_disciplines(self):
-        disciplines = (
-            Discipline.query.filter(Discipline.membership.has(is_active=True))
-            .order_by(Discipline.id)
-            .all()
-        )
+    def api_get_disciplines(self, members = None):
+        if not members:
+            disciplines = (
+                Discipline.query.filter(Discipline.membership.has(is_active=True))
+                .order_by(Discipline.id)
+                .all()
+            )
+        else:
+            disciplines = []
+            for m in members:
+                for s in m.active_suscriptions:
+                    if s.membership_id!=1:
+                        disciplines.append(s.membership.discipline)
+        
         return self._discipline_schema.dump(disciplines, many=True)
 
     def active(self, discipline_id):

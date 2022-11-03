@@ -459,3 +459,7 @@ class MemberService:
                     filter_by_status == "Activos"
                 )
         return list(members)
+
+    def get_disciplines_subscribed(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.members.all()
