@@ -2,6 +2,7 @@ from typing import List
 from decimal import Decimal
 from src.models.database import db
 from src.models.club.suscription import Suscription
+from src.models.club.tariff import Tariff
 
 class Membership(db.Model):
     """

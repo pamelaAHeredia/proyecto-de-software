@@ -5,10 +5,11 @@ from src.services.discipline import DisciplineService
 
 
 service = DisciplineService()
-discipline_api_blueprint = Blueprint("dicipline_api", __name__, url_prefix="/api/club")
+public_api_blueprint = Blueprint("club_api", __name__, url_prefix="/api/club")
 
 
-@discipline_api_blueprint.get("/disciplines")
+@public_api_blueprint.get("/disciplines")
 def discipline_list():
     disciplines = service.api_get_disciplines()
+    print(type(disciplines))
     return jsonify(disciplines), 200

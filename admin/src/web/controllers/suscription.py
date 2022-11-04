@@ -80,10 +80,15 @@ def find_member():
 def enroll(member_id, discipline_id):
     membership = service_discipline.membership(discipline_id)
     member = service_member.get_by_membership_number(member_id)
+    able_to_suscribe = service_suscription.enroll(member, membership)
+    if not able_to_suscribe["can_suscribe"]:
+        for k, v in able_to_suscribe["reason"].items():
+            if not v:
+                flash(f"Imposible inscribir al socio. Razon: {k}: {v}.", "danger")
+        
+        return redirect(url_for("suscription.index", discipline_id=discipline_id))
 
-    if service_suscription.enroll(member, membership):
-        flash("Socio suscripto correctamente", "success")
-
+    flash("Socio suscripto correctamente", "success")
     return redirect(url_for("suscription.index", discipline_id=discipline_id))
 
 
