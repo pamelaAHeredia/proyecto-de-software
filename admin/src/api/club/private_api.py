@@ -21,7 +21,7 @@ private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 def discipline_list(current_user):
     disciplines = []
     members = current_user.members.all()
-    disciplines = _discipline_service.api_get_disciplines(members=members)
+    disciplines = _discipline_service.api_members_disciplines(members=members)
 
     return jsonify(disciplines), 200
 

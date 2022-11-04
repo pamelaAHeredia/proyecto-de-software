@@ -10,6 +10,5 @@ public_api_blueprint = Blueprint("club_api", __name__, url_prefix="/api/club")
 
 @public_api_blueprint.get("/disciplines")
 def discipline_list():
-    disciplines = service.api_get_disciplines()
-    print(type(disciplines))
+    disciplines = service.api_disciplines()
     return jsonify(disciplines), 200
