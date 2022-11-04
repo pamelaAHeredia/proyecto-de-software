@@ -59,7 +59,12 @@ class User(db.Model):
                 aux = True
         return aux
     
+    @property
+    def is_main_admin(self): 
+        """Función que devuelve si el usuario es el administrador principal."""
+        return self.id == 1; 
      
     @property
     def has_members(self):
+        """Función que devuelve true si el usuario tiene socios asignados."""
         return len(list(self.members)) > 0
