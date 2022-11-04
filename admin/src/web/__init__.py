@@ -13,7 +13,7 @@ from src.web.controllers.suscription import suscription_blueprint
 from src.web.controllers.movement import movement_blueprint
 from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
-from src.api.club.public_api import club_api_blueprint
+from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
 
 
@@ -48,7 +48,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(settings_blueprint)
     app.register_blueprint(suscription_blueprint)
     app.register_blueprint(movement_blueprint)
-    app.register_blueprint(club_api_blueprint)
+    app.register_blueprint(public_api_blueprint)
     app.register_blueprint(private_api_blueprint)
 
     # Handler Error
