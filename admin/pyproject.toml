@@ -16,6 +16,7 @@ Flask-WTF = "^1.0.1"
 reportlab = "^3.6.11"
 WTForms = {extras = ["email"], version = "^3.0.1"}
 marshmallow-sqlalchemy = "^0.28.1"
+PyJWT = "^2.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
