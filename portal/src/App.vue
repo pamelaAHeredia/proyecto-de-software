@@ -8,7 +8,7 @@ import HelloWorld from "./components/HelloWorld.vue";
     <img
       alt="Club logo"
       class="logo"
-      src="@/assets/logo club.jpg"
+      src="@/assets/logoclub.jpg"
       width="125"
       height="125"
     />

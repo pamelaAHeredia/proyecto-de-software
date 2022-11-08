@@ -1,45 +1,55 @@
 <template>
-    <div class="wrapper fadeInDown">
-        <div id="formContent">
-            <!-- Icon -->
-            <div class="fadeIn first">
-                <img src="@/assets/logo club.jpg" id="icon" alt="User Icon" />
-            </div>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Icon -->
+      <div class="fadeIn first">
+        <img src="@/assets/logoclub.jpg" id="icon" alt="User Icon" />
+      </div>
 
-            <!-- Login Form -->
-            <form v-on:submit.prevent="login">
-                <input type="text" id="login" class="fadeIn second" name="login" placeholder="Usuario"
-                    v-model="usuario">
-                <input type="text" id="password" class="fadeIn third" name="login" placeholder="contraseña"
-                    v-model="password">
-                <input type="submit" class="fadeIn fourth" value="Log In">
-            </form>
+      <!-- Login Form -->
+      <form v-on:submit.prevent="login">
+        <input
+          type="text"
+          id="login"
+          class="fadeIn second"
+          name="login"
+          placeholder="Usuario"
+          v-model="usuario"
+        />
+        <input
+          type="text"
+          id="password"
+          class="fadeIn third"
+          name="login"
+          placeholder="contraseña"
+          v-model="password"
+        />
+        <input type="submit" class="fadeIn fourth" value="Log In">
+      </form>
 
-            <!-- Remind Passowrd -->
-            <div id="formFooter">
-                <a class="underlineHover" href="#">olvidaste la contraseña?</a>
-            </div>
-
-        </div>
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" href="#">olvidaste la contraseña?</a>
+      </div>
     </div>
-
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-    name: "Login",
+  //name: "Login",
 
-    data: function () {
-        return {
-            usuario: "",
-            password: "",
-            error: false,
-            error_msg: "",
-        }
-    },
-    methods: {
+  data: function () {
+    return {
+      usuario: "",
+      password: "",
+      error: false,
+      error_msg: "",
+    };
+  },
+  methods: {
     login() {
       let data = {};
 
@@ -57,7 +67,7 @@ export default {
         .catch((err) => console.log(err.response));
     },
   },
-};
+}
 
 </script>
 
@@ -226,6 +236,7 @@ input[type="text"]:placeholder {
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
   }
+
   100% {
     opacity: 1;
     -webkit-transform: none;
@@ -239,6 +250,7 @@ input[type="text"]:placeholder {
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
   }
+
   100% {
     opacity: 1;
     -webkit-transform: none;
@@ -251,22 +263,27 @@ input[type="text"]:placeholder {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 @-moz-keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
