@@ -53,9 +53,11 @@
                             <li><a class="dropdown-item"
                                     href="{{ url_for('discipline.update', discipline_id=discipline.id) }}">Editar</a>
                             </li>
-                            <li><a class="dropdown-item"
-                                    href="{{ url_for('suscription.index', discipline_id=discipline.id, has_quota=discipline.has_quota) }} ">Inscripciones</a>
-                            </li>
+                            {% if discipline.membership.is_active %}
+                                <li><a class="dropdown-item"
+                                        href="{{ url_for('suscription.index', discipline_id=discipline.id, has_quota=discipline.has_quota) }} ">Inscripciones</a>
+                                </li>
+                            {% endif %}
                             <li>
                                 {% if can_do_it(session, 'discipline_destroy') %}
                                 <button class="dropdown-item" type="button" data-bs-toggle="modal"

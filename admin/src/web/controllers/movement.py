@@ -18,7 +18,6 @@ settings = SettingsService()
 @login_required
 # @verify_permission("movement_create")
 def member_balance(id):
-    print(id)
     movement_form = CreateMovementForm()
     member = member_service.get_by_membership_number(id)
 

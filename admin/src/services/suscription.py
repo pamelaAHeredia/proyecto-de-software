@@ -76,8 +76,12 @@ class SuscriptionService:
         Returns:
             bool: True si se puede inscribir.
         """
+
         member_active = (
             Member.query.filter_by(membership_number=member_id).first().is_active
+        )
+        member_defaulter = self._movements_service.is_defaulter(
+            Member.query.filter_by(membership_number=member_id).first()
         )
         member_enrolled = (
             True
@@ -91,12 +95,25 @@ class SuscriptionService:
             if self._membership_service.available_quota(discipline_id) == 0
             else True
         )
-        return (
+        can_member_suscribe = (
             member_active
+            and not member_defaulter
             and member_enrolled
             and membership_active
             and membership_has_quota
-        )
+        ) 
+
+        result = {
+            "can_suscribe": can_member_suscribe,
+            "reason": {
+                "member_active": member_active,
+                "member_defaulter": not member_defaulter,
+                "member_enrolled": member_enrolled,
+                "membership_active": membership_active,
+                "membership_has_quota": membership_has_quota,
+            },
+        }
+        return result
 
     def _get_suscription(self, member_id: int, membership_id: int) -> Suscription:
         return Suscription.query.filter_by(
@@ -117,7 +134,7 @@ class SuscriptionService:
         db.session.commit()
         return suscription
 
-    def enroll(self, member: Member, membership: Membership) -> Suscription:
+    def enroll(self, member: Member, membership: Membership) -> Dict:
         """Inscribe a un socio en una membresia.
 
         Si el socio no ya no se encuentra inscripto a la membresia y
@@ -128,17 +145,15 @@ class SuscriptionService:
             member (Member): Un objeto socio
             membership (Membership): Un objeto membresia
 
-        Raises:
-            ExistingData: Elsocio ya esta inscripto
-
         Returns:
-            Suscription: La suscripcion del socio a la membresia.
+            Dict: _description_
         """
         member_id = member.membership_number
         discipline_id = membership.discipline_id
 
-        if not self.can_suscribe(member_id, discipline_id):
-            raise ExistingData(message="El socio ya se encuentra inscripto.")
+        can_member_suscribe = self.can_suscribe(member_id, discipline_id)
+        if not can_member_suscribe["can_suscribe"]:
+            return can_member_suscribe
 
         suscription = Suscription(
             member_id=member.membership_number, membership_id=membership.id
@@ -159,7 +174,7 @@ class SuscriptionService:
 
         db.session.add_all([suscription, debt_movement, credit_movement])
         db.session.commit()
-        return suscription
+        return can_member_suscribe
 
     def associate_member(self, member: Member) -> Suscription:
         """Genera la inscripcion a la cuota societaria.

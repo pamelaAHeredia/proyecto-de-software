@@ -120,3 +120,8 @@ p.flash.info {
   border: 3px solid blue;
   background-color: #0000ff6e;
 } */
+
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
