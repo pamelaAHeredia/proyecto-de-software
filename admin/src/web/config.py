@@ -1,11 +1,12 @@
 from os import environ
+import secrets
 from datetime import timedelta
 
 
 class Config(object):
     """Base configuration."""
 
-    SECRET_KEY = "98c5125f7de55305fdfc720090eddf11b2e587e83731235604dae5adef1d3a0c2c07b512b313da43d418133947d7f9f3373980c17c0786ce5147bdf2e798da7f"
+    SECRET_KEY = secrets.token_urlsafe(32)
     DEBUG = False
     TESTING = False
     SESSION_PERMANENT = True

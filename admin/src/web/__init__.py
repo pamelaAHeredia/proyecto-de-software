@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_session import Session
+from flask_cors import CORS
 
 from src.web.helpers import handlers
 from src.web.helpers import auth
@@ -13,7 +14,8 @@ from src.web.controllers.suscription import suscription_blueprint
 from src.web.controllers.movement import movement_blueprint
 from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
-from src.api.club.discipline import discipline_api_blueprint
+from src.api.club.public_api import public_api_blueprint
+from src.api.club.private_api import private_api_blueprint
 
 
 def create_app(env="development", static_folder="static"):
@@ -21,6 +23,8 @@ def create_app(env="development", static_folder="static"):
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
+    
+    CORS(app)
    
     # Carga configuracion
     app.config.from_object(config[env])
@@ -47,7 +51,8 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(settings_blueprint)
     app.register_blueprint(suscription_blueprint)
     app.register_blueprint(movement_blueprint)
-    app.register_blueprint(discipline_api_blueprint)
+    app.register_blueprint(public_api_blueprint)
+    app.register_blueprint(private_api_blueprint)
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)
