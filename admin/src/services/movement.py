@@ -145,6 +145,7 @@ class MovementService:
 
     def generate_mensual_payments(self, member: Member, month: int, year: int):
         movement_date = datetime.datetime(year, month, 1, 0, 0, 0)
+        print(movement_date)
         month = 12 if month == 1 else month - 1
         date_from = datetime.date(year, month, 1)
         date_to = self._last_month_day(date_from)

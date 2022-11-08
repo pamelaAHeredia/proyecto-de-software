@@ -4,10 +4,66 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Configuraciones</h1>
 
 <div class="container">
+    <!-- <form action="{{ url_for('settings.index')}}" method="post">
+        <h2>Cargar pagos</h2>
+        {{ payment.hidden_tag() }}
+
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                {{ payment.month.label(class="sr-only") }}
+                {{ payment.month(class="form-control mb-2", placeholder="Mes") }}
+            </div>
+            <div class="col-auto">
+                {{ payment.year.label(class="sr-only") }}
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">/</div>
+                    </div>
+                    {{ payment.year(class="form-control", placeholder="Año") }}
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
+            </div>
+        </div>
+    </form> -->
+
+
+    <!-- <form class="form-inline" action="{{ url_for('settings.index')}}" method="post">
+        <h2>Cargar pagos</h2>
+        {{ payment.hidden_tag() }}
+        {{ payment.month.label(class="sr-only") }}
+        {{ payment.month(class="form-control mb-2 mr-sm-2", placeholder="Mes") }}
+        {{ payment.year.label(class="sr-only") }}
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">/</div>
+            </div>
+            {{ payment.year(class="form-control", placeholder="Año") }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
+    </form> -->
+
+    <form class="d-flex flex-row align-items-center flex-wrap" action="{{ url_for('settings.index')}}" method="post">
+        <h2>Cargar pagos</h2>
+        {{ payment.hidden_tag() }}
+        {{ payment.month.label(class="sr-only") }}
+        {{ payment.month(class="form-control mb-2 mr-sm-2", placeholder="Mes") }}
+        {{ payment.year.label(class="sr-only") }}
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">/</div>
+            </div>
+            {{ payment.year(class="form-control", placeholder="Año") }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
+    </form>
+
+
     <form action="{{ url_for('settings.index')}}" method="post">
+        <h1>Configuraciones</h1>
         {{ form.hidden_tag() }}
         {{ form.items_per_page.label(class="form-label") }}
         {{ form.items_per_page(class="form-control") }}
@@ -23,8 +79,7 @@
         {{ form.amount_monthly(class="form-control") }}
         {{ form.percentage_surcharge.label(class="form-label") }}
         {{ form.percentage_surcharge(class="form-control") }}
-        <input type="submit" value="Cambiar" class="btn btn-success">
-
+        <input type="submit" value="Cambiar configuraciones" class="btn btn-success">
     </form>
 </div>
 {% endblock %}
