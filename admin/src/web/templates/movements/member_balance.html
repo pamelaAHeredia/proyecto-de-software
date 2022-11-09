@@ -32,7 +32,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- formulario de pago -->
-                            <form action="{{ url_for('movements.member_balance', id=member.membership_number)}}" method="post">
+                            <form action="{{ url_for('movements.member_balance', member_id=member.membership_number)}}" method="post">
                                 {{ movement_form.hidden_tag() }}
                                 <div class="form-gorup">
                                     {{ movement_form.amount.label }} {{ movement_form.amount(class_="form-control") }}
@@ -59,7 +59,7 @@
 
     <div class="row my-3">
 
-        {% if moves %}
+        {% if paginator.items %}
         <h1>Movimientos Registrados</h1>
         <table class="table table-hover">
             <thead>
@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for move in moves  %}
+                {% for move in paginator.items %}
                 <tr>
                     <td>{{move.detail}}</td>
                     <td>{{move.date}}</td>
@@ -81,7 +81,7 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        {% include('partials/paginator.html') %}
         {%else%}
         <h2>no hay movimientos para mostrar</h2>
         {% endif %}
