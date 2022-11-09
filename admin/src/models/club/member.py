@@ -3,6 +3,10 @@ from src.models.database import db
 from src.models.club.movement import Movement
 from src.models.club.suscription import Suscription
 
+
+class Photo(db.Model):
+    pass
+
 # Define la clase Socio
 class Member(db.Model):
     __tablename__ = "member"
