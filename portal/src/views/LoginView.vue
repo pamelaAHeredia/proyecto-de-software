@@ -24,7 +24,7 @@
           placeholder="contraseña"
           v-model="password"
         />
-        <input type="submit" class="fadeIn fourth" value="Log In">
+        <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
 
       <!-- Remind Passowrd -->
@@ -39,7 +39,7 @@
 import axios from "axios";
 
 export default {
-  //name: "Login",
+  name: "LoginComponent",
 
   data: function () {
     return {
