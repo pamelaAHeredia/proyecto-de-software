@@ -1,7 +1,9 @@
 import datetime
 from flask import current_app, Blueprint
 from flask import jsonify, request, make_response
+from flask_cors import cross_origin 
 import jwt
+ 
 
 from src.services.utils import verify_pass
 from src.services.member import MemberService
@@ -15,7 +17,7 @@ _user_service = UserService()
 _discipline_service = DisciplineService()
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 
-
+@cross_origin
 @private_api_blueprint.get("/me/disciplines")
 @token_required
 def discipline_list(current_user):
@@ -25,10 +27,12 @@ def discipline_list(current_user):
 
     return jsonify(disciplines), 200
 
-
+@cross_origin
 @private_api_blueprint.post("/auth")
 def auth():
     auth_data = request.authorization
+
+    print(auth_data)
 
     if not auth_data or not auth_data.username or not auth_data.password:
         return make_response(
