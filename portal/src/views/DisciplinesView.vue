@@ -23,6 +23,7 @@
 
 <script>
 import axios from "axios";
+const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
@@ -37,7 +38,7 @@ export default {
   methods: {
     getDisciplines() {
       axios
-        .get("http://127.0.0.1:5000/api/club/disciplines")
+        .get(PATH_SERVER + "/api/club/disciplines")
         .then((response) => {
           this.disciplines = response.data;
         })
