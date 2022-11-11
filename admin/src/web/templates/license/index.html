@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Disciplinas{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('license.upload_files')}}" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>{{form.picture}}</p>
+    <p>{{form.submit}}</p>
+</form>
+
+{% endblock %}

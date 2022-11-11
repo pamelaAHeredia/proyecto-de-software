@@ -1,11 +1,20 @@
+import base64
 from datetime import datetime
 from src.models.database import db
 from src.models.club.movement import Movement
 from src.models.club.suscription import Suscription
 
 
-class Photo(db.Model):
-    pass
+class Picture(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    image_type = db.Column(db.String(50), nullable=False)
+    image = db.Column(db.LargeBinary)
+    member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
+    member = db.relationship("Member", back_populates="picture")
+
+    @property
+    def decoded_image(self):
+        return self.image.decode('utf-8')
 
 # Define la clase Socio
 class Member(db.Model):
@@ -33,7 +42,7 @@ class Member(db.Model):
     suscriptions = db.relationship(
         "Suscription", back_populates="member", lazy="dynamic"
     )
-
+    picture = db.relationship("Picture", back_populates="member", uselist=False)
     def __init__(
         self,
         first_name,

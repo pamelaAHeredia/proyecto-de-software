@@ -16,6 +16,8 @@ from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
 from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
+from src.web.controllers.license import license_blueprint
+
 
 
 def create_app(env="development", static_folder="static"):
@@ -53,6 +55,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(movement_blueprint)
     app.register_blueprint(public_api_blueprint)
     app.register_blueprint(private_api_blueprint)
+    app.register_blueprint(license_blueprint)
 
     # Handler Error
     app.register_error_handler(401, handlers.unauthorized)
