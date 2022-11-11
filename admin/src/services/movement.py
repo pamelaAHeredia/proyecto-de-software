@@ -91,19 +91,20 @@ class MovementService:
             Decimal: Monto del balance de cuenta
         """
         if specific_date:
-            member_movements = member.movements.filter(
+            member_movements = member.movements.filter(and_(
                 Movement.date.between(
                     specific_date.replace(day=1),
                     specific_date + datetime.timedelta(days=1),
-                )
+                ), ~Movement.movement_type.in_(['S']))
             ).all()
             return sum(move.amount for move in member_movements)
         if all:
-            member_movements = member.movements.all()
+            member_movements = member.movements.filter(~Movement.movement_type.in_(['S'])).all()
             return sum(move.amount for move in member_movements)
 
-        member_movements = member.movements.filter(
-            Movement.date.between(date_from, date_to + datetime.timedelta(days=1))
+        member_movements = member.movements.filter(and_(
+            Movement.date.between(date_from, date_to + datetime.timedelta(days=1)),
+            ~Movement.movement_type.in_(['S']))
         ).all()
         return sum(move.amount for move in member_movements)
 
@@ -151,8 +152,7 @@ class MovementService:
 
     def generate_mensual_payments(self, member: Member, month: int, year: int):
         movement_date = datetime.datetime(year, month, 1, 0, 0, 0)
-        print(movement_date)
-        month = 12 if month == 1 else month - 1
+        month, year = (12, year-1) if month == 1 else (month - 1, year)
         date_from = datetime.date(year, month, 1)
         date_to = self._last_month_day(date_from)
 

@@ -11,29 +11,34 @@
 
 <div class="row">
     <h2>Saldo: {{saldo}}</h2>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Detalle</th>
-                <th>fecha</th>
-                <th>Tipo de movimiento</th>
-                <th>Monto</th>
+    {% if paginator.items %}
+        <h1>Movimientos Registrados</h1>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Detalle</th>
+                    <th>fecha</th>
+                    <th>Tipo de movimiento</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for move in paginator.items %}
+                    <tr>
+                        <td>{{move.detail}}</td>
+                        <td>{{move.date | format_datetime}}</td>
+                        <td>{{move.movement_type}}</td>
+                        <td>{{move.amount}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include('partials/paginator.html') %}
+    {%else%}
+        <h2>no hay movimientos para mostrar</h2>
+    {% endif %}
 
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in movements %}
-            <tr>
-                <td>{{item.detail}}</td>
-                <td>{{item.date | format_datetime}}</td>
-                <td>{{item.movement_type}}</td>
-                <td>{{item.amount}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    </div>
+</div>
 
 
 </div>

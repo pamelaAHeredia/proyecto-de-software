@@ -10,7 +10,7 @@
 
     <div class="row my-5 justify-content-center">
         <div class="col-9">
-            <h3>Monto: ${{balance}}</h3>
+            <h3>Monto: {{balance|format_currency}}</h3>
         </div>
         <div class="col-3">
 
@@ -74,9 +74,9 @@
                 {% for move in paginator.items %}
                 <tr>
                     <td>{{move.detail}}</td>
-                    <td>{{move.date}}</td>
+                    <td>{{move.date | format_datetime}}</td>
                     <td>{{move.movement_type}}</td>
-                    <td>{{move.amount}}</td>
+                    <td>{{move.amount | format_currency}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

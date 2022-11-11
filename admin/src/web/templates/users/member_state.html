@@ -32,7 +32,7 @@
                 <td>{{ member.document_type }}</td>
                 <td>{{ member.document_number}}</td>
                 <td>{{ member.gender }}</td>
-                <td><a href="{{url_for('users.viewMovements', id=member.membership_number)}}">Ver</a></td>
+                <td><a href="{{url_for('users.viewMovements', member_id=member.membership_number)}}">Ver</a></td>
             </tr>
             {% endfor %}
         </tbody>
