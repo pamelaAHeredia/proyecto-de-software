@@ -1,8 +1,9 @@
 <template>
   <div class="about">
-    <h1 class="display-3">Portal del Club Deportivo Villa Elisa creado por el Grupo 06</h1>
+    <h1 class="display-3">
+      Portal del Club Deportivo Villa Elisa creado por el Grupo 06
+    </h1>
   </div>
-
 </template>
 
 <style>
