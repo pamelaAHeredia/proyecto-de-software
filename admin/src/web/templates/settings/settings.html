@@ -46,7 +46,9 @@
         <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
     </form> -->
 
-    <form class="d-flex flex-row align-items-center flex-wrap" action="{{ url_for('settings.index')}}" method="post">
+    <!--ANDA-->
+
+    <!-- <form class="d-flex flex-row align-items-center flex-wrap" action="{{ url_for('settings.index')}}" method="post">
         <h2>Cargar pagos</h2>
         {{ payment.hidden_tag() }}
         {{ payment.month.label(class="sr-only") }}
@@ -57,6 +59,23 @@
               <div class="input-group-text">/</div>
             </div>
             {{ payment.year(class="form-control", placeholder="Año") }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
+    </form> -->
+
+    <h2>Cargar pagos</h2>
+    <form class="d-flex flex-row align-items-center flex-wrap" action="{{ url_for('settings.index')}}" method="post">
+        {{ payment.hidden_tag() }}
+        <div class="p-2">
+            {{ payment.month(class="form-control mb-2 mr-sm-2", placeholder="Mes") }}
+        </div>
+        <div class="p-2">
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">/</div>
+                </div>
+                {{ payment.year(class="form-control", placeholder="Año") }}
+            </div>
         </div>
         <button type="submit" class="btn btn-primary mb-2">Cargar pagos</button>
     </form>
