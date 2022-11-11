@@ -53,7 +53,8 @@ def index():
             year = payment.year.data
             members = service_member.list_members()
             for member in members:
-                service_movement.generate_mensual_payments(member,month,year)
+                if member.is_active:
+                    service_movement.generate_mensual_payments(member,month,year)
             flash("Pagos cargados.","success")
             return redirect(url_for("settings.index"))
 
