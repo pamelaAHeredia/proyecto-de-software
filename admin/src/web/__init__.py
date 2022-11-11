@@ -22,7 +22,7 @@ def create_app(env="development", static_folder="static"):
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-   
+
     # Carga configuracion
     app.config.from_object(config[env])
 
@@ -30,7 +30,7 @@ def create_app(env="development", static_folder="static"):
 
     # Inicia base de datos
     database.init_app(app)
-    
+
     # Configura sesion de backend
     Session(app)
 
@@ -66,14 +66,19 @@ def create_app(env="development", static_folder="static"):
     app.jinja_env.globals.update(can_do_it=auth.can_do_it)
     # app.jinja_env.globals.update(is_admin=auth.is_admin)
 
-    #Jinja datetime formater    
+    # Jinja datetime formater
     @app.template_filter()
-    def format_datetime(value, format='dmahm'):
-        if format == 'dmahm':
-            format="%d-%m-%Y %H:%M"
-        elif format == 'dma':
-            format="%d-%m-%Y"
+    def format_datetime(value, format="dmahm"):
+        if format == "dmahm":
+            format = "%d-%m-%Y %H:%M"
+        elif format == "dma":
+            format = "%d-%m-%Y"
         return value.strftime(format)
+
+    @app.template_filter()
+    def format_currency(value):
+        currency = "${:,.2f}".format(value)
+        return currency.replace(",", "~").replace(".", ",").replace("~", ".")
 
     # Command Flask
     @app.cli.command(name="resetdb")
