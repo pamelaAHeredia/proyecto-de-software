@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_session import Session
+from flask_cors import CORS
 
 from src.web.helpers import handlers
 from src.web.helpers import auth
@@ -22,7 +23,9 @@ def create_app(env="development", static_folder="static"):
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-
+    
+    CORS(app)
+   
     # Carga configuracion
     app.config.from_object(config[env])
 
