@@ -28,12 +28,12 @@ def index():
 
 @license_blueprint.post("/crop_image")
 def upload_files():
-    
-    print(f"aca: {request.form}")
-    if request.form.get('send_crop'):
+    img_raw=request.form.get('send_crop')
+    # print(f"aca: {request.form.get('send_crop')}")
+    if img_raw:
         print("entre")
-        crop_hidden = request.form.get('send_crop')
-        print(crop_hidden)
+        # crop_hidden = request.form.get('send_crop')
+        # print(crop_hidden)
     
     uploaded_file = request.files['picture']
     filename = secure_filename(uploaded_file.filename)
