@@ -3,7 +3,7 @@
     <div id="formContent">
       <!-- Icon -->
       <div class="fadeIn first">
-        <img src="@/assets/logo club.jpg" id="icon" alt="User Icon" />
+        <img src="@/assets/logoclub.jpg" id="icon" alt="User Icon" />
       </div>
 
       <!-- Login Form -->

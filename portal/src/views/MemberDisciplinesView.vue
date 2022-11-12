@@ -4,12 +4,12 @@
       <h1 class="display-3">
         Disciplinas registradas para el usuario: {{ authStore.user_name }}
       </h1>
-      {{ disciplines }}
       <div class="table-responsive">
         <table class="table-light">
           <thead>
             <tr>
-              <th>#</th>
+              <th>Socio</th>
+              <th>Id</th>
               <th>Disciplina</th>
               <th>Categorìa</th>
               <th>Horario</th>
@@ -17,12 +17,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(discipline, index) in disciplines" :key="discipline.id">
-              <th scope="row">{{ index }}</th>
-              <td>{{ discipline }}</td>
-              <td>{{ discipline.category }}</td>
-              <td>{{ discipline.days_and_schedules }}</td>
-              <td>{{ discipline.instructor }}</td>
+            <tr v-for="(member, index) in memberDisciplines" :key="index">
+              <div v-for="(discipline, id) in member" :key="id">
+                <td>{{ index }}</td>
+                <td>{{ discipline.id }}</td>
+                <td>{{ discipline.name }}</td>
+                <td>{{ discipline.category }}</td>
+                <td>{{ discipline.days_and_schedules }}</td>
+                <td>{{ discipline.instructor }}</td>
+              </div>
             </tr>
           </tbody>
         </table>
@@ -34,6 +37,7 @@
 <script>
 import { useAuthStore } from "../stores/auth";
 import axios from "axios";
+const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
 
 export default {
   setup() {
@@ -42,22 +46,22 @@ export default {
   },
   data() {
     return {
-      disciplines: null,
+      memberDisciplines: null,
     };
   },
   mounted() {
-    this.getDisciplines();
+    this.getMemberDisciplines();
   },
   methods: {
-    getDisciplines() {
+    getMemberDisciplines() {
       const access_token = localStorage.getItem("token");
       const headers = {
         headers: { "x-access-token": access_token },
       };
       axios
-        .get("http://127.0.0.1:5000/api/me/disciplines", headers)
+        .get(PATH_SERVER + "/api/me/disciplines", headers)
         .then((response) => {
-          this.disciplines = response.data;
+          this.memberDisciplines = response.data;
           console.log(response);
         })
         .catch((e) => console.log(e));
