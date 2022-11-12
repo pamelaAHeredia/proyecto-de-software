@@ -23,7 +23,8 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("../views/Login.vue"),
+      // component: () => import("../views/Login.vue"),
+      component: () => import("../views/LoginView.vue"),
     },
     {
       path: "/member-disciplines",
@@ -37,6 +38,8 @@ const router = createRouter({
       component: () => import("../views/WelcomeUserView.vue"),
       meta: { requiresAuth: true },
     },
+      // component: () => import("../views/LoginView.vue"),
+    // }
   ],
 });
 

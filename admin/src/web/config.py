@@ -10,7 +10,6 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SESSION_PERMANENT = True
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15) 
     SESSION_TYPE = "filesystem"
 
 class ProductionConfig(Config):
@@ -26,6 +25,7 @@ class ProductionConfig(Config):
     # Sesion valores
     SESSION_TYPE = "filesystem"
     SESSION_COOKIE_SECURE = True
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15) 
 
 class DevelopmentConfig(Config):
     """Development configuration."""
