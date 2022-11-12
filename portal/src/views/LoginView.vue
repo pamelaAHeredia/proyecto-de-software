@@ -45,7 +45,6 @@ export default {
     const authStore = useAuthStore();
     return { authStore };
   },
-  // name: "user-login",
   name: "LoginComponent",
 
   data: function () {
