@@ -3,7 +3,7 @@
     <div id="formContent">
       <!-- Icon -->
       <div class="fadeIn first">
-        <img src="@/assets/logoclub.jpg" id="icon" alt="User Icon" />
+        <img src="@/assets/logo club.jpg" id="icon" alt="User Icon" />
       </div>
 
       <!-- Login Form -->
@@ -17,14 +17,14 @@
           v-model="usuario"
         />
         <input
-          type="text"
+          type="password"
           id="password"
           class="fadeIn third"
           name="login"
           placeholder="contraseña"
           v-model="password"
         />
-        <input type="submit" class="fadeIn fourth" value="Log In">
+        <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
 
       <!-- Remind Passowrd -->
@@ -36,10 +36,15 @@
 </template>
 
 <script>
+import { useAuthStore } from "../stores/auth";
 import axios from "axios";
 
 export default {
-  //name: "Login",
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
+  name: "user-login",
 
   data: function () {
     return {
@@ -63,12 +68,13 @@ export default {
         .post("http://127.0.0.1:5000/api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);
+          this.authStore.auth();
+          this.$router.push("/welcome");
         })
         .catch((err) => console.log(err.response));
     },
   },
-}
-
+};
 </script>
 
 <style scope>
