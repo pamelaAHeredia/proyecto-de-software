@@ -36,8 +36,7 @@
 
 <script>
 import { useAuthStore } from "../stores/auth";
-import axios from "axios";
-const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
+import { apiService } from "@/api";
 
 export default {
   setup() {
@@ -58,8 +57,8 @@ export default {
       const headers = {
         headers: { "x-access-token": access_token },
       };
-      axios
-        .get(PATH_SERVER + "/api/me/disciplines", headers)
+      apiService
+        .get("/api/me/disciplines", headers)
         .then((response) => {
           this.memberDisciplines = response.data;
           console.log(response);

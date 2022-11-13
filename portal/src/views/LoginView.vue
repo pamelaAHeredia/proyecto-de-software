@@ -37,8 +37,7 @@
 
 <script>
 import { useAuthStore } from "../stores/auth";
-import axios from "axios";
-const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
+import { apiService } from "@/api";
 
 export default {
   setup() {
@@ -65,8 +64,8 @@ export default {
           Authorization: `Basic ${token}`,
         },
       };
-      axios
-        .post(PATH_SERVER + "/api/auth", data, headers)
+      apiService
+        .post("/api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);
           this.authStore.auth();

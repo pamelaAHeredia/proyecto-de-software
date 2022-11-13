@@ -69,3 +69,9 @@ def auth():
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
+
+@cross_origin
+@private_api_blueprint.get("/me/user_jwt")
+@token_required
+def user_jwt(current_user):
+    return jsonify(current_user), 200    
