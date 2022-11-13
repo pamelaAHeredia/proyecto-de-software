@@ -131,7 +131,7 @@
                             </li>
                             <li><a class="dropdown-item" href="{{url_for('movements.member_balance', member_id=member.membership_number)}}">Pagos</a></li>
                             {% if not member.user_id and member.is_active %}
-                            <li><a class="dropdown-item" href="{{url_for('users.link_user', member_id=member.membership_number)}}">Asignar usuario</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('users.link_user', id=member.membership_number)}}">Asignar usuario</a></li>
                             {% endif %}
                         </ul>
                     </div>
