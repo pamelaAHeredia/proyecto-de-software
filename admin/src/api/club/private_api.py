@@ -28,7 +28,7 @@ def discipline_list(current_user):
 
 
 @cross_origin
-@private_api_blueprint.post("/auth/")
+@private_api_blueprint.post("/auth")
 def auth():
     auth_data = request.authorization
 

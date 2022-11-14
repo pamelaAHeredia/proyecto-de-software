@@ -52,12 +52,12 @@ export default {
     this.getMemberDisciplines();
   },
   methods: {
-    getMemberDisciplines() {
+    async getMemberDisciplines() {
       const access_token = localStorage.getItem("token");
       const headers = {
         headers: { "x-access-token": access_token },
       };
-      apiService
+      await apiService
         .get("api/me/disciplines", headers)
         .then((response) => {
           this.memberDisciplines = response.data;

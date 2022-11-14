@@ -38,7 +38,7 @@
 <script>
 import { useAuthStore } from "../stores/auth/";
 import { apiService } from "@/api";
-apiService.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
+// apiService.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
 
 export default {
   setup() {
@@ -56,7 +56,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
       let data = {};
 
       const token = btoa(`${this.usuario}:${this.password}`);
@@ -65,7 +65,7 @@ export default {
           Authorization: `Basic ${token}`,
         },
       };
-      apiService
+      await apiService
         .post("api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);

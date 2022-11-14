@@ -22,7 +22,7 @@ const authStore = useAuthStore();
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/disciplines">disciplinas</RouterLink>
-        <div v-if="authStore.is_auth.authenticated">
+        <div v-if="authStore.is_auth">
           <RouterLink to="/member-disciplines"
             >Disciplinas del usuario</RouterLink
           >
