@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "../stores/auth/";
 import { apiService } from "@/api";
+apiService.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
 
 export default {
   setup() {
@@ -65,7 +66,7 @@ export default {
         },
       };
       apiService
-        .post("/api/auth", data, headers)
+        .post("api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);
           this.authStore.auth();

@@ -38,7 +38,7 @@ export default {
   methods: {
     getDisciplines() {
       axios
-        .get(PATH_SERVER + "/api/club/disciplines")
+        .get(PATH_SERVER + "api/club/disciplines")
         .then((response) => {
           this.disciplines = response.data;
         })

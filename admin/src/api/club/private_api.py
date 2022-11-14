@@ -15,6 +15,7 @@ _user_service = UserService()
 _discipline_service = DisciplineService()
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 
+
 @cross_origin
 @private_api_blueprint.get("/me/disciplines")
 @token_required
@@ -25,8 +26,9 @@ def discipline_list(current_user):
 
     return jsonify(disciplines), 200
 
+
 @cross_origin
-@private_api_blueprint.post("/auth")
+@private_api_blueprint.post("/auth/")
 def auth():
     auth_data = request.authorization
 
@@ -70,8 +72,16 @@ def auth():
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
 
+
 @cross_origin
 @private_api_blueprint.get("/me/user_jwt")
 @token_required
 def user_jwt(current_user):
-    return jsonify(current_user), 200    
+    user = {
+        "username": current_user.username,
+        "email": current_user.email,
+        "id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+    }
+    return jsonify(user), 200
