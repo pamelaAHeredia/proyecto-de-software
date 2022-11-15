@@ -29,8 +29,9 @@
     </div>
     <h3>Result</h3>
     <p>
-        <form id="form_crop" method="POST" action="{{ url_for('license.upload_files')}}" enctype="{{file_type}}">
-            <button type="button" id="button">Crop</button>
+        <form id="form_crop" method="POST" action="{{ url_for('license.upload_picture')}}" enctype="{{file_type}}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="button" id="button">Generar Foto</button>
         </form>
     </p>
     <div id="result"></div>
@@ -76,9 +77,12 @@
         // btn.type = "submit";
         // btn.name = "formBtn";
         
-        let inp = document.createElement("input")
-        inp.type = "hidden"
-        inp.name = "send_crop"
+        let cropped_img = document.createElement("input");
+        let cropped_img_type = document.createElement("input");
+        cropped_img.type = "hidden";
+        cropped_img.name = "cropped_img";
+        cropped_img_type.type = "hidden"
+        cropped_img_type = "cropped_img_type"
 
 
         var croppedCanvas;
@@ -101,9 +105,12 @@
         roundedImage.src = roundedCanvas.toDataURL()
         result.innerHTML = '';
         result.appendChild(roundedImage);
-        inp.value = roundedCanvas.toDataURL()
-        console.log(inp.value.split([","])[1])
-        form.appendChild(inp)
+        
+        cropped_img.value = roundedCanvas.toDataURL();
+        cropped_img_type.value = "{{file_type}}"
+        console.log(cropped_img.value.split([","])[1]);
+
+        form.appendChild(cropped_img)
         form.submit()
         
         

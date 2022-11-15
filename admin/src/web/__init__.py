@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_session import Session
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 
 from src.web.helpers import handlers
 from src.web.helpers import auth
@@ -18,14 +19,14 @@ from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
 from src.web.controllers.license import license_blueprint
 
-
+csrf = CSRFProtect()
 
 def create_app(env="development", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-    
+    csrf.init_app(app)
     CORS(app)
    
     # Carga configuracion

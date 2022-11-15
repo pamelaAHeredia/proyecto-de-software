@@ -26,22 +26,25 @@ def index():
     form=PictureForm()
     return render_template('license/index.html', form=form)
 
-@license_blueprint.post("/crop_image")
-def upload_files():
-    img_raw=request.form.get('send_crop')
-    # print(f"aca: {request.form.get('send_crop')}")
-    if img_raw:
-        print("entre")
-        # crop_hidden = request.form.get('send_crop')
-        # print(crop_hidden)
-    
-    uploaded_file = request.files['picture']
-    filename = secure_filename(uploaded_file.filename)
-    if filename != '':
-        file_ext = os.path.splitext(filename)[1]
-        if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
-                file_ext != validate_image(uploaded_file.stream):
-            abort(400)
+@license_blueprint.post("/crop")
+def crop_picture():
+    uploaded_file = request.files.get('picture')
+    if uploaded_file:
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
+                    file_ext != validate_image(uploaded_file.stream):
+                abort(400)
+
+        member_picture = base64.b64encode(uploaded_file.read())
+        file_type=uploaded_file.content_type
+        return render_template('license/crop.html', file_type=file_type, file=member_picture.decode('utf-8'))
+    return redirect(url_for("license.index"))
+
+@license_blueprint.post("/upload")
+def upload_picture():
+
     #     #uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     #     member = _service_member.get_by_membership_number(1)
         
@@ -51,7 +54,9 @@ def upload_files():
     #     member_picture.image = base64.b64encode(uploaded_file.read())
     #     member.picture = member_picture
     #     db.session.commit()
-    member_picture = base64.b64encode(uploaded_file.read())
-    file_type=uploaded_file.content_type
-    return render_template('license/img_show.html', file_type=file_type, file=member_picture.decode('utf-8'))
-    # return redirect(url_for('license.index'))
+
+    cropped_photo=request.form.get('cropped_img')
+    cropped_photo_type=request.form.get('cropped_img_type')
+    if cropped_photo:
+        binary_photo = cropped_photo.split(',')[1].encode('utf-8')        
+    return render_template('license/upload.html', image_type=cropped_photo_type, image=binary_photo.decode("utf-8"))
