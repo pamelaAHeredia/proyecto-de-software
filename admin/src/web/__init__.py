@@ -87,6 +87,11 @@ def create_app(env="development", static_folder="static"):
         currency = "${:,.2f}".format(value)
         return currency.replace(",", "~").replace(".", ",").replace("~", ".")
 
+    @app.template_filter()
+    def format_thousand(value):
+        formato = format(int(value), ",")
+        return formato.replace("," , ".")
+
     # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():

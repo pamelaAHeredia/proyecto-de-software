@@ -7,9 +7,11 @@ from werkzeug.utils import secure_filename
 from src.models.database import db
 from src.models.club.member import Picture
 from src.services.member import MemberService
+from src.services.movement import MovementService
 from src.web.forms.license.forms import PictureForm
 
 _service_member = MemberService()
+_service_movement = MovementService()
 app = current_app
 license_blueprint = Blueprint("license", __name__, url_prefix="/carnet")
 
@@ -68,4 +70,7 @@ def upload_picture():
 @license_blueprint.get("/plantillaCarnet/<id>")
 def viewCarnet(id): 
     member = _service_member.get_by_membership_number(id)
-    return render_template('license/carnet.html', member=member)
+    file  = member.picture.image
+    file_type = member.picture.image_type
+    is_defaulter = _service_movement.is_defaulter(member)
+    return render_template('license/carnet.html', member=member, is_defaulter=is_defaulter, file_type=file_type, file=file.decode('utf-8'))
