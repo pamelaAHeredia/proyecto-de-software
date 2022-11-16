@@ -13,7 +13,8 @@
     }
 
     img {
-      max-width: 100%;
+      width: 350px;
+      height: 350px;
     }
 
     .cropper-view-box,
@@ -44,11 +45,12 @@
     function getRoundedCanvas(sourceCanvas) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
-      var width = sourceCanvas.width;
-      var height = sourceCanvas.height;
+      var width = 350;
+      var height = 350;
 
-      canvas.width = 440;
-      canvas.height = 440;
+      console.log(width, height);
+      canvas.width = 350;
+      canvas.height = 350;
       context.imageSmoothingEnabled = true;
       context.drawImage(sourceCanvas, 0, 0, width, height);
       context.globalCompositeOperation = 'destination-in';
