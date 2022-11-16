@@ -1,7 +1,7 @@
 import os
 import imghdr
 import base64
-from flask import Flask, current_app, render_template, request, redirect, url_for, abort, Blueprint
+from flask import Flask, flash, current_app, render_template, request, redirect, url_for, abort, Blueprint
 from werkzeug.utils import secure_filename
 
 from src.models.database import db
@@ -21,16 +21,16 @@ def validate_image(stream):
         return None
     return '.' + (format if format != 'jpeg' else 'jpg')
 
+
+
 @license_blueprint.get("/<id>")
 def index(id):
-    
     form=PictureForm()
     return render_template('license/index.html', form=form, id=id)
     
 
 @license_blueprint.post("/crop/<id>")
 def crop_picture(id):
-    print(id)
     uploaded_file = request.files.get('picture')
     if uploaded_file:
         filename = secure_filename(uploaded_file.filename)
@@ -42,24 +42,25 @@ def crop_picture(id):
 
         member_picture = base64.b64encode(uploaded_file.read())
         file_type=uploaded_file.content_type
-        return render_template('license/crop.html', file_type=file_type, file=member_picture.decode('utf-8'))
+        return render_template('license/crop.html', file_type=file_type, file=member_picture.decode('utf-8'),member_id=id)
     return redirect(url_for("license.index"))
 
 @license_blueprint.post("/upload")
 def upload_picture():
 
-    #     #uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    #     member = _service_member.get_by_membership_number(1)
-        
-    #     member_picture = Picture()
-    #     member_picture.name= 'img1'
-    #     member_picture.image_type = uploaded_file.content_type
-    #     member_picture.image = base64.b64encode(uploaded_file.read())
-    #     member.picture = member_picture
-    #     db.session.commit()
 
+    member_id = request.form.get('member_id')
+    member = _service_member.get_by_membership_number(member_id)
     cropped_photo=request.form.get('cropped_img')
     cropped_photo_type=request.form.get('cropped_img_type')
     if cropped_photo:
-        binary_photo = cropped_photo.split(',')[1].encode('utf-8')        
-    return render_template('license/upload.html', image_type=cropped_photo_type, image=binary_photo.decode("utf-8"))
+        binary_photo = cropped_photo.split(',')[1].encode('utf-8')
+        member_picture = Picture()
+        member_picture.image_type = cropped_photo_type
+        member_picture.image = binary_photo
+        member.picture = member_picture
+        db.session.commit()
+        flash("Imagen guardada con éxito!", "success")
+
+    return redirect(url_for("members.index"))
+    # return render_template('license/upload.html', image_type=cropped_photo_type, image=member_picture.image.decode("utf-8"))

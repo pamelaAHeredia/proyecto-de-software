@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
 
-from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 class PictureForm(FlaskForm):
-    picture = FileField('File')
+    picture = FileField('File', validators=[
+        FileRequired(),
+        FileAllowed(['png', 'pdf', 'jpg'], "wrong format!")
+    ])
     submit = SubmitField('Submit')
