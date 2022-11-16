@@ -14,7 +14,7 @@ export const useAuthStore = defineStore("authenticated", {
       this.current_user();
     },
     unauth() {
-      localStorage.removeItem("token");
+      sessionStorage.clear();
       this.authenticated = false;
       this.user = {};
     },
@@ -40,6 +40,7 @@ export const useAuthStore = defineStore("authenticated", {
         if (decoded["exp"] * 1000 <= Date.now()) {
           state.authenticated = false;
           state.user = {};
+          sessionStorage.clear();
         }
       }
       return state.authenticated;

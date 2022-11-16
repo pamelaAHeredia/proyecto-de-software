@@ -26,11 +26,6 @@
         />
         <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
-
-      <!-- Remind Passowrd -->
-      <div id="formFooter">
-        <a class="underlineHover" href="#">olvidaste la contraseña?</a>
-      </div>
     </div>
   </div>
 </template>
