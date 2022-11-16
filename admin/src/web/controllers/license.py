@@ -63,3 +63,8 @@ def upload_picture():
     if cropped_photo:
         binary_photo = cropped_photo.split(',')[1].encode('utf-8')        
     return render_template('license/upload.html', image_type=cropped_photo_type, image=binary_photo.decode("utf-8"))
+
+@license_blueprint.get("/plantillaCarnet/<id>")
+def viewCarnet(id): 
+    member = _service_member.get_by_membership_number(id)
+    return render_template('license/carnet.html', member=member)

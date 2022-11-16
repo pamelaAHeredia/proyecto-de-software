@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Modulo de Socios{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='carnetStyle.css') }}" />
+{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div>
+            <img class="imagen" src="/public/logoclub.jpg" alt="">
+            <div>
+                <span>Club Deportivo Villa Elisa</span>
+            </div>
+        </div>
+        <hr>
+        <div class="containerDos">
+            <div class="centrar">
+                <img class="imagenAjustada" src="/public/emma.jpeg" alt="imagen de perfil">
+            </div>
+            <div class="centrar">
+                <div class="container">
+                    <h1>{{member.first_name}} {{member.last_name}}</h1>
+                    <h3>DNI: {{member.document_number}}</h3>
+                    <h3>Socio: #{{member.membership_number}}</h3>
+                    <h3>Fecha alta: {{member.creation_date | format_datetime}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="containerDos">
+            <div class="centrar">
+                <div class="container">
+                    <h2>Estado:</h2>
+                    <h2>al dia</h2>
+                </div>
+            </div>
+            <div class="centrar">
+                <img class="imagenAjustada" src="/public/qr.jpeg" alt="Codigo QR">
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

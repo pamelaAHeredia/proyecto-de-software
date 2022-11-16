@@ -1,0 +1,42 @@
+html{
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.containerDos {
+    display: flex;
+    flex-direction: row;
+}
+
+.centrar {
+    display: flex;
+    width:50%;
+    align-items: center;
+    justify-content:center;
+    text-align: center;
+}
+
+.imagen {
+    float: left;
+    width: 10%;
+    height: 10%;
+}
+
+span{
+    margin: 0 auto;
+    font-size: 3rem;
+    font-weight: bolder;
+    font-stretch: ultra-expanded;
+    display: table;
+    margin: 0 auto;
+}
+
+.imagenAjustada {
+    width: 350px;
+    height: 350px;
+}
