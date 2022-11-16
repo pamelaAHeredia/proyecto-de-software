@@ -24,7 +24,7 @@
           placeholder="contraseña"
           v-model="password"
         />
-        <input type="submit" class="fadeIn fourth" value="Log In">
+        <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
 
       <!-- Remind Passowrd -->
@@ -37,9 +37,10 @@
 
 <script>
 import axios from "axios";
+const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
 
 export default {
-  //name: "Login",
+  name: "LoginComponent",
 
   data: function () {
     return {
@@ -60,7 +61,7 @@ export default {
         },
       };
       axios
-        .post("http://127.0.0.1:5000/api/auth", data, headers)
+        .post(PATH_SERVER + "/api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);
         })

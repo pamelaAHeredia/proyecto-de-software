@@ -29,13 +29,15 @@ class Paginator:
 
     """
 
-    def __init__(self, query, page, items_per_page, endpoint, filter="", search=""):
+    def __init__(self, query, page, items_per_page, endpoint, member_id=None, filter="", search=""):
         self._query = query.paginate(page, items_per_page, False)
         self._endpoint = endpoint
         self._page = page
         self._items_per_page = items_per_page
+        self._member_id = member_id
         self._filter = filter
         self._search = search
+
 
     def _next_page(self):
         if not self._query.has_next:
@@ -55,6 +57,15 @@ class Paginator:
     def next_url(self):
         if not self._next_page():
             return None
+        
+        if self.member_id:
+            return url_for(
+                self._endpoint,
+                member_id=self.member_id,
+                page=self._next_page(),
+                filter=self._filter,
+                search=self._search,
+                )
         return url_for(
             self._endpoint,
             page=self._next_page(),
@@ -72,6 +83,15 @@ class Paginator:
     def prev_url(self):
         if not self._prev_page():
             return None
+
+        if self.member_id:
+            return url_for(
+                self._endpoint,
+                member_id=self.member_id,
+                page=self._prev_page(),
+                filter=self._filter,
+                search=self._search,
+                )
         return url_for(
             self._endpoint,
             page=self._prev_page(),
@@ -90,3 +110,7 @@ class Paginator:
     @property
     def search(self):
         return self._search
+    
+    @property
+    def member_id(self):
+        return self._member_id
