@@ -2,13 +2,22 @@ html{
     font-family:Arial, Helvetica, sans-serif;
 }
 
+.alto {
+    height: 100vh;
+}
+
 .container {
     display: flex;
     flex-direction: column;
 
 }
 
+.containerLogo {
+    height: 20vh;
+}
+
 .containerDos {
+    height: 40vh;
     display: flex;
     flex-direction: row;
 }
@@ -16,6 +25,7 @@ html{
 .centrar {
     display: flex;
     width:50%;
+    max-height: auto;
     align-items: center;
     justify-content:center;
     text-align: center;
@@ -23,8 +33,10 @@ html{
 
 .imagen {
     float: left;
-    width: 10%;
-    height: 10%;
+    /*width: 10%;
+    height: 10%;*/
+    width: auto;
+    max-height: 100%;
 }
 
 span{
@@ -37,6 +49,8 @@ span{
 }
 
 .imagenAjustada {
-    width: 350px;
-    height: 350px;
+    /*width: 350px;
+    height: 350px;*/
+    height: 100%;
+    width: auto;
 }
