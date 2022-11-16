@@ -34,10 +34,10 @@
           <button type="button" id="button">Generar Foto</button>
         </form>
     </p>
-    <div id="result"></div>
+    <!-- <div id="result"></div> -->
 </div>
 
-<script src="{{ url_for('static', filename='cropperjs/dist/cropper.js')}}"></script>
+<script src="{{ url_for('static', filename='cropperjs/cropper.js')}}"></script>
 <script>
     function getRoundedCanvas(sourceCanvas) {
       var canvas = document.createElement('canvas');
@@ -101,10 +101,10 @@
         roundedCanvas = getRoundedCanvas(croppedCanvas);
 
         // Show
-        roundedImage = document.createElement('img');
-        roundedImage.src = roundedCanvas.toDataURL()
-        result.innerHTML = '';
-        result.appendChild(roundedImage);
+        // roundedImage = document.createElement('img');
+        // roundedImage.src = roundedCanvas.toDataURL()
+        // result.innerHTML = '';
+        // result.appendChild(roundedImage);
         
         cropped_img.value = roundedCanvas.toDataURL();
         cropped_img_type.value = "{{file_type}}"

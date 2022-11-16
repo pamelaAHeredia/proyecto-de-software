@@ -21,13 +21,16 @@ def validate_image(stream):
         return None
     return '.' + (format if format != 'jpeg' else 'jpg')
 
-@license_blueprint.get("/")
-def index():
+@license_blueprint.get("/<id>")
+def index(id):
+    
     form=PictureForm()
-    return render_template('license/index.html', form=form)
+    return render_template('license/index.html', form=form, id=id)
+    
 
-@license_blueprint.post("/crop")
-def crop_picture():
+@license_blueprint.post("/crop/<id>")
+def crop_picture(id):
+    print(id)
     uploaded_file = request.files.get('picture')
     if uploaded_file:
         filename = secure_filename(uploaded_file.filename)
