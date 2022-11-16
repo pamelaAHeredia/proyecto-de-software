@@ -9,6 +9,7 @@ from src.models.club.member import Picture
 from src.services.member import MemberService
 from src.services.movement import MovementService
 from src.web.forms.license.forms import PictureForm
+from src.web.helpers.auth import login_required, verify_permission
 
 _service_member = MemberService()
 _service_movement = MovementService()
@@ -68,9 +69,15 @@ def upload_picture():
     # return render_template('license/upload.html', image_type=cropped_photo_type, image=member_picture.image.decode("utf-8"))
 
 @license_blueprint.get("/plantillaCarnet/<id>")
+@login_required
+@verify_permission("member_index")
 def viewCarnet(id): 
     member = _service_member.get_by_membership_number(id)
-    file  = member.picture.image
-    file_type = member.picture.image_type
-    is_defaulter = _service_movement.is_defaulter(member)
-    return render_template('license/carnet.html', member=member, is_defaulter=is_defaulter, file_type=file_type, file=file.decode('utf-8'))
+    if (member.picture is None):
+        flash("No se pude visualizar el carnet si el socio no posee imagen asignada", "danger")
+        return redirect(url_for("members.index"))
+    else:
+        file  = member.picture.image
+        file_type = member.picture.image_type
+        is_defaulter = _service_movement.is_defaulter(member)
+        return render_template('license/carnet.html', member=member, is_defaulter=is_defaulter, file_type=file_type, file=file.decode('utf-8'))

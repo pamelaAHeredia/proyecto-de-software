@@ -6,7 +6,7 @@ from datetime import timedelta
 class Config(object):
     """Base configuration."""
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-    UPLOAD_EXTENSIONS = ['.jpg', '.png']
+    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.jpeg']
     UPLOAD_PATH = 'uploads'
     SECRET_KEY = secrets.token_urlsafe(32)
     DEBUG = False

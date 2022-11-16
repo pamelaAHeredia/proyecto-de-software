@@ -59,6 +59,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(license_blueprint)
 
     # Handler Error
+    app.register_error_handler(400, handlers.bad_request)
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(403, handlers.forbidden)
     app.register_error_handler(404, handlers.not_found_error)

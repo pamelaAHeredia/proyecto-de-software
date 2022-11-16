@@ -6,6 +6,6 @@ from wtforms import SubmitField
 class PictureForm(FlaskForm):
     picture = FileField('File', validators=[
         FileRequired(),
-        FileAllowed(['png', 'pdf', 'jpg'], "wrong format!")
+        FileAllowed(['png', 'jpeg', 'jpg'], "wrong format!")
     ])
     submit = SubmitField('Submit')
