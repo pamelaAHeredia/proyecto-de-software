@@ -1,3 +1,8 @@
+<script setup>
+import DisciplinesAll from "@/components/DisciplinesAll.vue";
+const disciplines = DisciplinesAll.mounted();
+</script>
+
 <template>
   <div class="container">
     <div class="table-responsive">
@@ -21,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<!-- <script>
 import axios from "axios";
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
@@ -46,6 +51,6 @@ export default {
     },
   },
 };
-</script>
+</script> -->
 
 <style></style>
