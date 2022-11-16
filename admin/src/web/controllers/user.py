@@ -307,18 +307,25 @@ def memberState():
         "users/member_state.html", filter_form=filter_form, paginator=member_paginator
     )
 
-@user_blueprint.route("/lista_movimientos/<id>", methods=["GET"])
+@user_blueprint.route("/lista_movimientos/<member_id>", methods=["GET"])
 @login_required
-def viewMovements(id):
-    member = member_service.get_by_membership_number(id)
+def viewMovements(member_id):
+    member = member_service.get_by_membership_number(member_id)
+    balance = movementService.get_balance(member, all=True)
+    page = request.args.get("page", 1, type=int)
 
-    balance = movementService.get_balance(member)
-    moves= movementService.get_movements(member)
+    paginator = movementService.list_paginated_movements(
+        page,
+        settings.get_items_per_page(),
+        'users.viewMovements',
+        member
+    )
+
     return render_template(
         "users/view_movements.html",
-        movements=moves,
         member=member,
         saldo=balance,
+        paginator=paginator,
     )
 
 
