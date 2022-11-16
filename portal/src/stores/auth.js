@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-// import jwt_decode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 import { apiService } from "@/api";
 
 export const useAuthStore = defineStore("authenticated", {
@@ -9,7 +9,7 @@ export const useAuthStore = defineStore("authenticated", {
   }),
 
   actions: {
-    auth() {
+    set_auth() {
       this.authenticated = true;
       this.current_user();
     },
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("authenticated", {
       this.user = {};
     },
     async current_user() {
-      const access_token = localStorage.getItem("token");
+      const access_token = sessionStorage.getItem("token");
       const headers = {
         headers: { "x-access-token": access_token },
       };
@@ -34,9 +34,17 @@ export const useAuthStore = defineStore("authenticated", {
   },
   getters: {
     is_auth: (state) => {
+      const access_token = sessionStorage.getItem("token");
+      if (access_token) {
+        const decoded = jwt_decode(access_token);
+        if (decoded["exp"] * 1000 <= Date.now()) {
+          state.authenticated = false;
+          state.user = {};
+        }
+      }
       return state.authenticated;
     },
-    user_name: (state) => {
+    get_user: (state) => {
       return state.user;
     },
   },

@@ -68,8 +68,8 @@ export default {
       await apiService
         .post("api/auth", data, headers)
         .then((response) => {
-          localStorage.setItem("token", response.data.token);
-          this.authStore.auth();
+          sessionStorage.setItem("token", response.data.token);
+          this.authStore.set_auth();
           this.$router.push("/welcome");
         })
         .catch((err) => console.log(err.response));

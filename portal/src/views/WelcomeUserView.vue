@@ -7,7 +7,7 @@ const authStore = useAuthStore();
 <template>
   <div class="container">
     <h1 class="Display-1 text-center">
-      Bienvenido, {{ authStore.user_name.username }}!
+      Bienvenido, {{ authStore.get_user.username }}!
     </h1>
   </div>
 </template>

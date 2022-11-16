@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <div class="member-disciplines">
-      <h1 class="display-3">
-        Disciplinas registradas para el usuario: {{ authStore.user_name }}
-      </h1>
+      <h1 class="display-3">Disciplinas registradas para el usuario</h1>
       <div class="table-responsive">
         <table class="table-light">
           <thead>
@@ -53,7 +51,7 @@ export default {
   },
   methods: {
     async getMemberDisciplines() {
-      const access_token = localStorage.getItem("token");
+      const access_token = sessionStorage.getItem("token");
       const headers = {
         headers: { "x-access-token": access_token },
       };

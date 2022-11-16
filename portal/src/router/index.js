@@ -43,7 +43,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (authStore.is_auth.authenticated) {
+    if (authStore.is_auth) {
       next();
     } else {
       router.replace("/");
