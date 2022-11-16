@@ -3,7 +3,7 @@ html{
 }
 
 .alto {
-    height: 100vh;
+    height: 80vh;
 }
 
 .container {
@@ -13,11 +13,11 @@ html{
 }
 
 .containerLogo {
-    height: 20vh;
+    height: 10vh;
 }
 
 .containerDos {
-    height: 40vh;
+    height: 35vh;
     display: flex;
     flex-direction: row;
 }
