@@ -7,6 +7,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "aspose-words"
+version = "22.11.0"
+description = "Aspose.Words for Python is a Document Processing library that allows developers to work with documents in many popular formats without needing Office Automation."
+category = "main"
+optional = false
+python-versions = ">=3.5,<3.11"
+
+[[package]]
 name = "asttokens"
 version = "2.0.8"
 description = "Annotate AST trees with source code positions"
@@ -32,7 +40,7 @@ python-versions = ">=3.5"
 dev = ["cloudpickle", "coverage[toml] (>=5.0.2)", "furo", "hypothesis", "mypy (>=0.900,!=0.940)", "pre-commit", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "sphinx", "sphinx-notfound-page", "zope.interface"]
 docs = ["furo", "sphinx", "sphinx-notfound-page", "zope.interface"]
 tests = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "zope.interface"]
-tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
+tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "backcall"
@@ -309,7 +317,7 @@ notebook = ["ipywidgets", "notebook"]
 parallel = ["ipyparallel"]
 qtconsole = ["qtconsole"]
 test = ["pytest (<7.1)", "pytest-asyncio", "testpath"]
-test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.19)", "pandas", "pytest (<7.1)", "pytest-asyncio", "testpath", "trio"]
+test_extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.19)", "pandas", "pytest (<7.1)", "pytest-asyncio", "testpath", "trio"]
 
 [[package]]
 name = "itsdangerous"
@@ -630,19 +638,19 @@ aiomysql = ["aiomysql", "greenlet (!=0.4.17)"]
 aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing_extensions (!=3.10.0.1)"]
 asyncio = ["greenlet (!=0.4.17)"]
 asyncmy = ["asyncmy (>=0.2.3,!=0.2.4)", "greenlet (!=0.4.17)"]
-mariadb-connector = ["mariadb (>=1.0.1,!=1.1.2)"]
+mariadb_connector = ["mariadb (>=1.0.1,!=1.1.2)"]
 mssql = ["pyodbc"]
-mssql-pymssql = ["pymssql"]
-mssql-pyodbc = ["pyodbc"]
+mssql_pymssql = ["pymssql"]
+mssql_pyodbc = ["pyodbc"]
 mypy = ["mypy (>=0.910)", "sqlalchemy2-stubs"]
 mysql = ["mysqlclient (>=1.4.0)", "mysqlclient (>=1.4.0,<2)"]
-mysql-connector = ["mysql-connector-python"]
+mysql_connector = ["mysql-connector-python"]
 oracle = ["cx_oracle (>=7)", "cx_oracle (>=7,<8)"]
 postgresql = ["psycopg2 (>=2.7)"]
-postgresql-asyncpg = ["asyncpg", "greenlet (!=0.4.17)"]
-postgresql-pg8000 = ["pg8000 (>=1.16.6,!=1.29.0)"]
-postgresql-psycopg2binary = ["psycopg2-binary"]
-postgresql-psycopg2cffi = ["psycopg2cffi"]
+postgresql_asyncpg = ["asyncpg", "greenlet (!=0.4.17)"]
+postgresql_pg8000 = ["pg8000 (>=1.16.6,!=1.29.0)"]
+postgresql_psycopg2binary = ["psycopg2-binary"]
+postgresql_psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3_binary"]
 
@@ -741,13 +749,18 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "0a3da0d5c964c03c7060cd3e8b4035cf75919cb384a5648ee4f0608a4c102bd2"
+python-versions = ">=3.8,<3.11"
+content-hash = "426aa7c9d8a1cfaba8478f8db157ff308cc67dcfc7d9f3aa286bd3c00bf80224"
 
 [metadata.files]
 appnope = [
     {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
     {file = "appnope-0.1.3.tar.gz", hash = "sha256:02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24"},
+]
+aspose-words = [
+    {file = "aspose_words-22.11.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:ce2180d9d80cd5a486a5a2eefe5435d36470f070d4004ae960037297fa23b737"},
+    {file = "aspose_words-22.11.0-py3-none-win32.whl", hash = "sha256:5cf9026266c576034a99a7e810908d8c79cac22ec3dd1a3194ffd04e53e71dc3"},
+    {file = "aspose_words-22.11.0-py3-none-win_amd64.whl", hash = "sha256:fb87fd0662e3dcb9237d23c0799551f2dfcffce14d9b6498274ceeaa07d97b3c"},
 ]
 asttokens = [
     {file = "asttokens-2.0.8-py2.py3-none-any.whl", hash = "sha256:e3305297c744ae53ffa032c45dc347286165e4ffce6875dc662b205db0623d86"},
@@ -1100,7 +1113,6 @@ psycopg2-binary = [
     {file = "psycopg2_binary-2.9.5-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:46850a640df62ae940e34a163f72e26aca1f88e2da79148e1862faaac985c302"},
     {file = "psycopg2_binary-2.9.5-cp310-cp310-win32.whl", hash = "sha256:3d790f84201c3698d1bfb404c917f36e40531577a6dda02e45ba29b64d539867"},
     {file = "psycopg2_binary-2.9.5-cp310-cp310-win_amd64.whl", hash = "sha256:1764546ffeaed4f9428707be61d68972eb5ede81239b46a45843e0071104d0dd"},
-    {file = "psycopg2_binary-2.9.5-cp311-cp311-macosx_10_9_universal2.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:426c2ae999135d64e6a18849a7d1ad0e1bd007277e4a8f4752eaa40a96b550ff"},
     {file = "psycopg2_binary-2.9.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:7cf1d44e710ca3a9ce952bda2855830fe9f9017ed6259e01fcd71ea6287565f5"},
     {file = "psycopg2_binary-2.9.5-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:024030b13bdcbd53d8a93891a2cf07719715724fc9fee40243f3bd78b4264b8f"},
     {file = "psycopg2_binary-2.9.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bcda1c84a1c533c528356da5490d464a139b6e84eb77cc0b432e38c5c6dd7882"},
