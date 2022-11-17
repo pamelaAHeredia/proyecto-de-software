@@ -1,9 +1,10 @@
-import csv, random
+import csv, random, base64
 from pathlib import Path
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.colors import green, red
 
 from src.models.database import db
 from src.models.club.member import Member
@@ -30,15 +31,21 @@ class MemberService:
 
     def list_members(self) -> List[Member]:
 
-       """Retorna todos las socios cargadas en la Base de Datos.
+        """Retorna todos las socios cargadas en la Base de Datos.
 
         Returns:
             List[Member]: Una lista con todas las disciplinas
         """
-       return Member.query.order_by(Member.membership_number)
+        return Member.query.order_by(Member.membership_number)
 
     def list_paginated_members(
-        self, page: int, items_per_page: int, endpoint: str, filter: str, search: str, uniqueCase = False
+        self,
+        page: int,
+        items_per_page: int,
+        endpoint: str,
+        filter: str,
+        search: str,
+        uniqueCase=False,
     ) -> Paginator:
         """Función que retorna el paginador con los socios del sistema.
 
@@ -46,13 +53,13 @@ class MemberService:
            page: Número de pagina.
            items_per_page: cantidad de registros por página.
            endpoint: endpoint para el armado del url_for.
-           filter: define que tipo de filtro aplicar (Activos-Inactivos-Todos) 
+           filter: define que tipo de filtro aplicar (Activos-Inactivos-Todos)
            search: string que utiliza para buscar por Apellido
 
         Returns:
            Un paginador.
         """
-        if (uniqueCase == True):
+        if uniqueCase == True:
             id_user = session["user"]
             members = self.list_by_id_user(id_user=id_user)
             print("Entro")
@@ -70,7 +77,6 @@ class MemberService:
             else:
                 members = self.list_by_is_active(filter == "Activos")
         return Paginator(members, page, items_per_page, endpoint, filter, search)
-    
 
     def create_member(
         self,
@@ -83,7 +89,7 @@ class MemberService:
         phone_number="",
         email="",
     ) -> Member:
-    
+
         """Crea un Socio.
 
         Método que instancia un Socio, lo agrega a la Base de Datos y lo retorna
@@ -118,27 +124,28 @@ class MemberService:
             )
             self._suscription_service.associate_member(member)
             return member
-        if member.is_active:    
+        if member.is_active:
             raise database.ExistingData(
-            info="ATENCION!!!",
-            message="Ya existe un Socio ACTIVO con ese tipo y numero de documento",)
+                info="ATENCION!!!",
+                message="Ya existe un Socio ACTIVO con ese tipo y numero de documento",
+            )
         else:
             raise database.ExistingData(
-            info="ATENCION!!!",
-            message="Ya existe un Socio con ese tipo y numero de documento pero INACTIVO",
-        )
+                info="ATENCION!!!",
+                message="Ya existe un Socio con ese tipo y numero de documento pero INACTIVO",
+            )
 
     def find_member(self, document_type, document_number):
-         """Función que busca un Socio por su tipo y N° de documento.
+        """Función que busca un Socio por su tipo y N° de documento.
 
         Args:
            document_type (str): Tipo de documento del Socio.
            document_number (str): N° de documento del Socio.
-           
+
         Returns:
            Un Member si lo encuentra o None si no lo encuentra.
         """
-         return Member.query.filter_by(
+        return Member.query.filter_by(
             document_type=document_type, document_number=document_number, deleted=False
         ).first()
 
@@ -217,7 +224,7 @@ class MemberService:
 
     def change_activity_member(self, id) -> bool:
         """Función que cambia el estado de un Socio de Activo a Inactivo y viceversa.
-           
+
         Args:
             id (int): N° de Socio
 
@@ -235,22 +242,21 @@ class MemberService:
             member.is_active = False
             for suscription in member.suscriptions:
                 if suscription.is_active:
-                   self._suscription_service.leave(suscription.id)
+                    self._suscription_service.leave(suscription.id)
             db.session.commit()
-            change = True       
+            change = True
         return change
-
 
     def list_by_last_name(self, substring, active: Optional[bool] = None):
         """Función que retorna la lista de todos los Socios que en su apellido tenga
         el substring enviado por parametro
-           
+
         Args:
             substring (String) = Cadena de caracteres a buscar en el campo Apellido del Socio
-            active (bool) = Filtro que determina si el Socio es Activo o Inactivo (Opcional) 
+            active (bool) = Filtro que determina si el Socio es Activo o Inactivo (Opcional)
 
         Returns:
-           Una lista de Socios 
+           Una lista de Socios
         """
         if active is not None:
             return Member.query.filter(
@@ -264,7 +270,7 @@ class MemberService:
     def list_by_is_active(self, active):
         """Función que retorna la lista de todos los Socios activos o inactivos
         segun el parametro enviado
-                  
+
         Args:
             active (bool)= Filtra por Socios Activos(True) o Inactivos(False)
 
@@ -290,7 +296,7 @@ class MemberService:
     def list_active_and_no_user(self):
         """Función que retorna la lista de todos los Socios activos que no tengan Usuario
         asignado
-        
+
         Returns:
             Una lista de Socios
         """
@@ -300,16 +306,14 @@ class MemberService:
 
     def format_pdf(self, pdf):
         """Función que define el formato de las paginas del pdf
-         
+
          Args:
             pdf : un pdf(Canvas) para formatear
 
         Returns:
            Un pdf(Canvas)
         """
-        pdf.drawImage(
-            "../admin/public/logoclub.jpg", 5, 790, width=50, height=50
-        )
+        pdf.drawImage("../admin/public/logoclub.jpg", 5, 790, width=50, height=50)
         pdf.setFont("Helvetica", 20)
         pdf.setLineWidth(0.3)
         pdf.drawCentredString(300, 800, "Reporte de Asociados")
@@ -326,7 +330,7 @@ class MemberService:
 
     def export_list_to_pdf(self, members, line_per_page):
         """Funcion que exporta una lista de Socios a un archivo report.pdf
-                
+
          Args:
             members : Lista de Socios
             line_per_page (int): La cantidad de socios por pagina.
@@ -334,7 +338,12 @@ class MemberService:
         Returns:
            Un archivo PDF paginado con la lista de Socios recibida
         """
-        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".pdf"
+        filename = (
+            str(self._static_folder)
+            + "/report"
+            + str(random.randint(0, 99999))
+            + ".pdf"
+        )
         pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Reporte de Socios")
         members_per_page = 0
@@ -359,7 +368,7 @@ class MemberService:
 
     def no_user(self, id) -> bool:
         """Funcion que retorna True si el Socio NO tiene asignado un Usuario
-         
+
          Args:
             id (int): N° de Socio
 
@@ -371,14 +380,19 @@ class MemberService:
 
     def export_list_to_csv(self, members):
         """Funcion que exporta una lista de Socios a un archivo report.csv
-         
+
          Args:
             members : Lista de Socios
 
         Returns:
            Un archivo CSV con la lista de Socios recibida
         """
-        filename = str(self._static_folder) + "/report" + str(random.randint(0, 99999)) + ".csv"
+        filename = (
+            str(self._static_folder)
+            + "/report"
+            + str(random.randint(0, 99999))
+            + ".csv"
+        )
         file = open(filename, "w", newline="")
         fields = [
             "N° de Socio",
@@ -404,7 +418,7 @@ class MemberService:
 
     def link_management(self, id_member, id_user):
         """Funcion que vincula un socio con un usuario para ser gestionado
-                 
+
          Args:
             id_member (int) : N° de Socio
             id_user (int) : id de Usuario
@@ -419,10 +433,10 @@ class MemberService:
 
     def unlink_management(self, id_member):
         """Funcion que desvincula un socio del usuario que lo gestiona
-                         
+
          Args:
             id_member (int) : N° de Socio
-           
+
         Returns:
            Un socio sin usuario vinculado.
         """
@@ -434,7 +448,7 @@ class MemberService:
     def members_for_export(self, filter_by_status, filter_by_last_name):
         """Funcion que retorna una lista de Socios a exportar segun los filtros enviados
            por parametro
-                     
+
          Args:
             filter_by_status (string) : Define que filtro aplicar para el estado de actividad del Socio
             filter_by_last_name (string) : Define la busqueda por Apellido del Socio.
@@ -460,3 +474,55 @@ class MemberService:
                 )
         return list(members)
 
+
+
+    def license_to_pdf(self, member):
+        """Funcion que exporta un Carnet de Socio a un archivo report.pdf
+
+         Args:
+            member : Un Socio
+            
+        Returns:
+           Un archivo PDF con el carnet de Socio que viene por argumento
+        """
+        filename = (
+            str(self._static_folder)
+            + "/report"
+            + str(random.randint(0, 99999))
+            + ".pdf"
+        )
+        pdf = canvas.Canvas("report.pdf", pagesize=A4)
+        pdf.setTitle("Carnet de Socio")
+        pdf.drawImage("../admin/public/logoclub2.jpg", 30, 785, width=40, height=40)
+        pdf.drawImage("../admin/public/foto.jpg", 70, 640, width=130, height=130)
+        pdf.setFont("Helvetica", 25)
+        pdf.setLineWidth(0.2)
+        pdf.line(15, 830, 500, 830)
+        pdf.line(15, 780, 500, 780)
+        pdf.line(15, 560, 500, 560)
+        pdf.line(15, 830, 15, 560)
+        pdf.line(500, 830, 500, 560)
+        pdf.drawCentredString(260, 795, "Club Deportivo Villa Elisa")
+        pdf.setFontSize(15)
+        pdf.drawCentredString(350, 750, member.first_name + " " + member.last_name)
+        pdf.setFontSize(12)
+        pdf.drawCentredString(350, 730, member.document_type + ": " + member.document_number)
+        pdf.drawCentredString(350, 710, "Socio: #" + str(member.membership_number))
+        pdf.drawCentredString(350, 690, "Fecha alta: " + member.creation_date.strftime("%d-%m-%Y %H:%M"))
+        pdf.setFontSize(15)
+        pdf.drawString(120, 620, "Estado:")
+        is_defaulter = self._movements_service.is_defaulter(member)
+        if is_defaulter:
+            pdf.setFillColor(red)
+            pdf.drawString(125, 600, "Moroso")
+        else:
+            pdf.setFillColor(green)
+            pdf.drawString(125, 600, "Al dia")    
+        #file = member.picture.image
+        #fh = open("image.png", "wb")
+        #fh.write(file.decode('base64'))
+        #fh.close()
+        pdf.drawImage("../admin/public/qr.jpeg", 310, 590, width=90, height=90)
+        # pdf.showPage()
+        pdf.save()
+        return pdf

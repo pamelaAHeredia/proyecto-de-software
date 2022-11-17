@@ -7,14 +7,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "aspose-words"
-version = "22.11.0"
-description = "Aspose.Words for Python is a Document Processing library that allows developers to work with documents in many popular formats without needing Office Automation."
-category = "main"
-optional = false
-python-versions = ">=3.5,<3.11"
-
-[[package]]
 name = "asttokens"
 version = "2.0.8"
 description = "Annotate AST trees with source code positions"
@@ -750,17 +742,12 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "426aa7c9d8a1cfaba8478f8db157ff308cc67dcfc7d9f3aa286bd3c00bf80224"
+content-hash = "810608a852982171cd6678196b6d83c0fdcd6b33547ce2eab9d294bc9a2a026f"
 
 [metadata.files]
 appnope = [
     {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
     {file = "appnope-0.1.3.tar.gz", hash = "sha256:02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24"},
-]
-aspose-words = [
-    {file = "aspose_words-22.11.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:ce2180d9d80cd5a486a5a2eefe5435d36470f070d4004ae960037297fa23b737"},
-    {file = "aspose_words-22.11.0-py3-none-win32.whl", hash = "sha256:5cf9026266c576034a99a7e810908d8c79cac22ec3dd1a3194ffd04e53e71dc3"},
-    {file = "aspose_words-22.11.0-py3-none-win_amd64.whl", hash = "sha256:fb87fd0662e3dcb9237d23c0799551f2dfcffce14d9b6498274ceeaa07d97b3c"},
 ]
 asttokens = [
     {file = "asttokens-2.0.8-py2.py3-none-any.whl", hash = "sha256:e3305297c744ae53ffa032c45dc347286165e4ffce6875dc662b205db0623d86"},
