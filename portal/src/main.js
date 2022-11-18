@@ -20,6 +20,6 @@ app.mount("#app");
 console.log("En main.js, la app acaba de ser Montada");
 
 const access_token = sessionStorage.getItem("token");
-if (access_token){
+if (access_token) {
   authStore.set_auth();
 }
