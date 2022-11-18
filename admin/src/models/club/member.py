@@ -43,6 +43,7 @@ class Member(db.Model):
         "Suscription", back_populates="member", lazy="dynamic"
     )
     picture = db.relationship("Picture", back_populates="member", uselist=False)
+    
     def __init__(
         self,
         first_name,

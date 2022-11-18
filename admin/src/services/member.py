@@ -1,4 +1,4 @@
-import csv, random, base64
+import csv, random, base64, os, uuid
 from pathlib import Path
 from typing import Optional, List
 from datetime import date
@@ -474,55 +474,61 @@ class MemberService:
                 )
         return list(members)
 
-
-
-    def license_to_pdf(self, member):
+    def license_to_pdf(self, id_member):
         """Funcion que exporta un Carnet de Socio a un archivo report.pdf
 
          Args:
-            member : Un Socio
-            
+            id_member : id de un Socio
+
         Returns:
-           Un archivo PDF con el carnet de Socio que viene por argumento
+           Un archivo PDF con el carnet del Socio del id que viene por argumento
         """
+        member = self.get_by_membership_number(id_member)
         filename = (
             str(self._static_folder)
             + "/report"
             + str(random.randint(0, 99999))
             + ".pdf"
         )
-        pdf = canvas.Canvas("report.pdf", pagesize=A4)
+        pdf = canvas.Canvas(filename, pagesize=A4)
         pdf.setTitle("Carnet de Socio")
-        pdf.drawImage("../admin/public/logoclub2.jpg", 30, 785, width=40, height=40)
-        pdf.drawImage("../admin/public/foto.jpg", 70, 640, width=130, height=130)
+        pdf.drawImage("../admin/public/logoclub2.jpg", 87, 785, width=40, height=40)
         pdf.setFont("Helvetica", 25)
         pdf.setLineWidth(0.2)
-        pdf.line(15, 830, 500, 830)
-        pdf.line(15, 780, 500, 780)
-        pdf.line(15, 560, 500, 560)
-        pdf.line(15, 830, 15, 560)
+        pdf.line(72, 830, 500, 830)
+        pdf.line(72, 780, 500, 780)
+        pdf.line(72, 560, 500, 560)
+        pdf.line(72, 830, 72, 560)
         pdf.line(500, 830, 500, 560)
-        pdf.drawCentredString(260, 795, "Club Deportivo Villa Elisa")
+        pdf.drawCentredString(317, 795, "Club Deportivo Villa Elisa")
         pdf.setFontSize(15)
-        pdf.drawCentredString(350, 750, member.first_name + " " + member.last_name)
+        pdf.drawCentredString(407, 750, member.first_name + " " + member.last_name)
         pdf.setFontSize(12)
-        pdf.drawCentredString(350, 730, member.document_type + ": " + member.document_number)
-        pdf.drawCentredString(350, 710, "Socio: #" + str(member.membership_number))
-        pdf.drawCentredString(350, 690, "Fecha alta: " + member.creation_date.strftime("%d-%m-%Y %H:%M"))
+        pdf.drawCentredString(
+            407, 730, member.document_type + ": " + member.document_number
+        )
+        pdf.drawCentredString(407, 710, "Socio: #" + str(member.membership_number))
+        pdf.drawCentredString(
+            407, 690, "Fecha alta: " + member.creation_date.strftime("%d-%m-%Y %H:%M")
+        )
         pdf.setFontSize(15)
-        pdf.drawString(120, 620, "Estado:")
+        pdf.drawString(177, 620, "Estado:")
         is_defaulter = self._movements_service.is_defaulter(member)
         if is_defaulter:
             pdf.setFillColor(red)
-            pdf.drawString(125, 600, "Moroso")
+            pdf.drawString(177, 600, "Moroso")
         else:
             pdf.setFillColor(green)
-            pdf.drawString(125, 600, "Al dia")    
-        #file = member.picture.image
-        #fh = open("image.png", "wb")
-        #fh.write(file.decode('base64'))
-        #fh.close()
-        pdf.drawImage("../admin/public/qr.jpeg", 310, 590, width=90, height=90)
-        # pdf.showPage()
+            pdf.drawString(182, 600, "Al dia")
+        picture = member.picture.image
+        image_type = member.picture.image_type.replace("image/","")
+        image64 = base64.b64decode(picture)
+        img_file_name = str(uuid.uuid4()) + "." + image_type
+        image_result = open(img_file_name, "wb")
+        image_result.write(image64)
+        pdf.drawImage(img_file_name, 127, 640, width=130, height=130)
+        pdf.drawImage("../admin/public/qr.jpeg", 367, 590, width=90, height=90)
         pdf.save()
+        image_result.close
+        os.remove(img_file_name)
         return pdf
