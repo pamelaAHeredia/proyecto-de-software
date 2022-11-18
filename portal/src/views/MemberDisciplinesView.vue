@@ -4,6 +4,8 @@ import MemberDisciplines from "@/components/MemberDisciplines.vue";
 
 <template>
   <main>
-    <MemberDisciplines />
+    <KeepAlive>
+      <MemberDisciplines />
+    </KeepAlive>
   </main>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ info }}</h1>
+  <p>{{ info }}</p>
 </template>
 <script>
 import axios from "axios";
@@ -16,8 +16,8 @@ export default {
     this.getInfo();
   },
   methods: {
-    getInfo() {
-      axios
+    async getInfo() {
+      await axios
         .get(PATH_SERVER + "api/club/informacion")
         .then((response) => {
           this.info = response.data;

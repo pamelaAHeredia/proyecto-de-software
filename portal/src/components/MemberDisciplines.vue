@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class="member-disciplines">
-      <h1 class="display-3">Disciplinas registradas para el usuario</h1>
+      <h1 class="display-3">Disciplinas del</h1>
       <div class="table-responsive">
-        <table class="table-light">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th>Socio</th>
-              <th>Id</th>
+              <th>Id Disciplina</th>
               <th>Disciplina</th>
               <th>Categorìa</th>
               <th>Horario</th>

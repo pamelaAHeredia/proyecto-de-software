@@ -4,6 +4,8 @@ import LoginComponent from "@/components/LoginComponent.vue";
 
 <template>
   <main>
-    <LoginComponent />
+    <KeepAlive>
+      <LoginComponent />
+    </KeepAlive>
   </main>
 </template>

@@ -15,6 +15,7 @@
           name="login"
           placeholder="Usuario"
           v-model="usuario"
+          required
         />
         <input
           type="password"
@@ -23,6 +24,7 @@
           name="login"
           placeholder="contraseña"
           v-model="password"
+          required
         />
         <input type="submit" class="fadeIn fourth" value="Log In" />
       </form>
@@ -76,9 +78,9 @@ export default {
 <style scope>
 /* BASIC */
 
-html {
+/* html {
   background-color: #56baed;
-}
+} */
 
 body {
   font-family: "Poppins", sans-serif;
