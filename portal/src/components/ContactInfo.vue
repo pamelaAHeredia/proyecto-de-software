@@ -20,7 +20,7 @@ export default {
       await axios
         .get(PATH_SERVER + "api/club/informacion")
         .then((response) => {
-          this.info = response.data;
+          this.info = response.data.contact_info;
         })
         .catch((e) => console.log(e));
     },
