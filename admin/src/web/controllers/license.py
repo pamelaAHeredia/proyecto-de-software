@@ -1,6 +1,7 @@
 import os
 import imghdr
 import base64
+from pathlib import Path
 from flask import Flask, flash, current_app, render_template, request, redirect, url_for, abort, Blueprint
 from werkzeug.utils import secure_filename
 
@@ -70,8 +71,8 @@ def upload_picture():
 
 @license_blueprint.get("/plantillaCarnet/<id>")
 @login_required
-@verify_permission("member_index")
-def viewCarnet(id): 
+@verify_permission("member_show")
+def view_carnet(id): 
     member = _service_member.get_by_membership_number(id)
     if (member.picture is None):
         flash("No se pude visualizar el carnet si el socio no posee imagen asignada", "danger")
@@ -81,3 +82,12 @@ def viewCarnet(id):
         file_type = member.picture.image_type
         is_defaulter = _service_movement.is_defaulter(member)
         return render_template('license/carnet.html', member=member, is_defaulter=is_defaulter, file_type=file_type, file=file.decode('utf-8'))
+
+
+@license_blueprint.get("/exportPdf/<id>")
+@verify_permission("member_show")
+def export_pdf(id):
+    license_pdf = _service_member.license_to_pdf(id)
+    filename = Path(license_pdf._filename).name
+    return render_template("license/view_pdf.html", filename=filename)
+    

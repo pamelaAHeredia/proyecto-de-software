@@ -486,7 +486,7 @@ class MemberService:
         member = self.get_by_membership_number(id_member)
         filename = (
             str(self._static_folder)
-            + "/report"
+            + "/license"
             + str(random.randint(0, 99999))
             + ".pdf"
         )
