@@ -1,0 +1,29 @@
+.container-cover {
+    /* width: 100%;
+    height: 500px;
+    position: relative;
+    top: 40px;
+    background-image: url(../assets/backgroundClubApp.jpg); 
+    background-position: center;
+    background-size: cover; */
+    width: 100%;
+    height: 300px;
+    position: relative;
+    top: 40px;
+    background-position: center;
+    background-size: cover;
+}
+
+.club-logo {
+    margin: top;
+    justify-content: end;
+}
+
+/* .welcome {
+    width: 75%;
+    height: 500px;
+    position: relative;
+    top: 0px;
+    background-position: center;
+    background-size: cover;
+} */

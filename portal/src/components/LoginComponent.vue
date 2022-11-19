@@ -8,6 +8,7 @@
 
       <!-- Login Form -->
       <form v-on:submit.prevent="login">
+        {{ errors }}
         <input
           type="text"
           id="login"
@@ -50,6 +51,8 @@ export default {
       password: "",
       error: false,
       error_msg: "",
+
+      errors: {},
     };
   },
   methods: {
@@ -69,7 +72,10 @@ export default {
           this.authStore.set_auth();
           this.$router.push("/welcome");
         })
-        .catch((err) => console.log(err.response));
+        .catch((err) => {
+          console.log(err.response.headers),
+            (this.errors = err.response.headers);
+        });
     },
   },
 };

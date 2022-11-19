@@ -9,14 +9,14 @@ import FooterComponent from "@/components/Header-Footer/FooterComponent.vue";
 </script>
 
 <template>
-  <!-- <header>
-    <img
-      alt="Club logo"
-      class="logo"
-      src="@/assets/logoclub.jpg"
-      width="125"
-      height="125"
-    /> -->
+  <!-- <header> -->
+  <!-- <img
+    alt="Club logo"
+    class="logo"
+    src="@/assets/logoclub.jpg"
+    width="125"
+    height="125"
+  /> -->
   <div class="wrapper">
     <!-- <HelloWorld msg="⚠️En Construcción🚧" /> -->
     <!-- <NavBar /> -->

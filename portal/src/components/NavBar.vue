@@ -9,6 +9,9 @@ const authStore = useAuthStore();
 <template>
   <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
+      <div class="club-logo">
+        <img src="@/assets/logoclubNavBar.jpg" />
+      </div>
       <a class="navbar-brand" href="#">Club Deportivo Villa Elisa</a>
       <button
         class="navbar-toggler"
@@ -26,9 +29,7 @@ const authStore = useAuthStore();
         aria-labelledby="offcanvasDarkNavbarLabel"
       >
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
-            Acciones a relizar en el portal
-          </h5>
+          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
           <button
             type="button"
             class="btn-close btn-close-white"
@@ -50,47 +51,26 @@ const authStore = useAuthStore();
               <span class="material-symbols-outlined"> sports_basketball </span>
               <RouterLink to="/disciplines"> Disciplinas </RouterLink>
             </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Más...
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <div v-if="authStore.is_auth">
-                  <li class="dropdown-item">
-                    <RouterLink to="/member-disciplines"
-                      >Disciplinas del usuario</RouterLink
-                    >
-                  </li>
-                  <li>
-                    <RouterLink to="/" @click="authStore.unauth"
-                      >Cerrar Sesión</RouterLink
-                    >
-                  </li>
-                </div>
-                <div v-else>
-                  <li>
-                    <span class="material-symbols-outlined"> login </span>
-                    <RouterLink to="/login"> Login </RouterLink>
-                  </li>
-                </div>
-              </ul>
-            </li>
+
+            <div v-if="authStore.is_auth">
+              <li class="dropdown-item">
+                <RouterLink to="/member-disciplines"
+                  >Disciplinas del usuario</RouterLink
+                >
+              </li>
+              <li>
+                <RouterLink to="/" @click="authStore.unauth"
+                  >Cerrar Sesión</RouterLink
+                >
+              </li>
+            </div>
+            <div v-else>
+              <li>
+                <span class="material-symbols-outlined"> login </span>
+                <RouterLink to="/login"> Login </RouterLink>
+              </li>
+            </div>
           </ul>
-          <form class="d-flex mt-3" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-success" type="submit">Search</button>
-          </form>
         </div>
       </div>
     </div>

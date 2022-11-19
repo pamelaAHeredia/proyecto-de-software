@@ -2,6 +2,7 @@
   <div class="container">
     <div class="member-disciplines">
       <h1 class="display-3">Disciplinas del</h1>
+
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
@@ -16,14 +17,22 @@
           </thead>
           <tbody>
             <tr v-for="(member, index) in memberDisciplines" :key="index">
-              <div v-for="(discipline, id) in member" :key="id">
-                <td>{{ index }}</td>
-                <td>{{ discipline.id }}</td>
-                <td>{{ discipline.name }}</td>
-                <td>{{ discipline.category }}</td>
-                <td>{{ discipline.days_and_schedules }}</td>
-                <td>{{ discipline.instructor }}</td>
-              </div>
+              <td>{{ index }}</td>
+              <td v-for="(discipline, id) in member" :key="id">
+                {{ discipline.id }}
+              </td>
+              <td v-for="(discipline, id) in member" :key="id">
+                {{ discipline.name }}
+              </td>
+              <td v-for="(discipline, id) in member" :key="id">
+                {{ discipline.category }}
+              </td>
+              <td v-for="(discipline, id) in member" :key="id">
+                {{ discipline.days_and_schedules }}
+              </td>
+              <td v-for="(discipline, id) in member" :key="id">
+                {{ discipline.instructor }}
+              </td>
             </tr>
           </tbody>
         </table>
