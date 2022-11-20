@@ -557,7 +557,7 @@ class MemberService:
             box_size=10,
             border=4,
         )
-        qr_code.add_data(f'http://127.0.0.1:5000/carnet/plantillaCarnet/{member.membership_number}')
+        qr_code.add_data(f'{current_app.ADMIN_URL}/carnet/plantillaCarnet/{member.membership_number}')
         qr_code.make(fit=True)
         qr_img = qr_code.make_image(fill_color="black", back_color="transparent")
         qr_img_path = os.path.join(current_app.static_folder, f'qr_{member.membership_number}.jpg')
@@ -573,6 +573,9 @@ class MemberService:
         member_picture.image = photo
         member.picture = member_picture
         member.picture.qr_image = member_qr_image
+        with open(qr_img_path, "wb") as f:
+            f.write(base64.b64decode(member.picture.qr_image))
+
         try:
             db.session.commit()
         except:

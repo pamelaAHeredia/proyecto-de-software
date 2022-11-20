@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 from flask_session import Session
 from flask_cors import CORS
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, generate_csrf
+
 
 from src.web.helpers import handlers
 from src.web.helpers import auth
@@ -27,10 +28,10 @@ def create_app(env="development", static_folder="static"):
 
     app = Flask(__name__, static_folder=static_folder)
     csrf.init_app(app)
-    CORS(app)
    
     # Carga configuracion
     app.config.from_object(config[env])
+    CORS(app, origins=app.config["PORTAL_URL"])
 
     # app.secret_key = "secret key"
 
@@ -59,7 +60,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(license_blueprint)
 
     # Handler Error
-    app.register_error_handler(400, handlers.bad_request)
+    # app.register_error_handler(400, handlers.bad_request)
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(403, handlers.forbidden)
     app.register_error_handler(404, handlers.not_found_error)
@@ -102,4 +103,8 @@ def create_app(env="development", static_folder="static"):
     def seedsdb():
         seeds.run()
 
+    @app.after_request
+    def set_xsrf_cookie(response):
+        response.set_cookie('csrf_token', generate_csrf())
+        return response
     return app
