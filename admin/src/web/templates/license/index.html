@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('license.crop_picture', id=id)}}" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>{{form.picture}}</p>
+    <p>{{form.submit}}</p>
+</form>
+
+{% endblock %}
