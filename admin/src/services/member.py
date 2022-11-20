@@ -532,19 +532,18 @@ class MemberService:
         img_file_name = uuid_name + "." + image_type
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
+        image_result.close
         pdf.drawImage(img_file_name, 127, 640, width=130, height=130)
 
         qr_image = member.picture.qr_image
         qr_image64 = base64.b64decode(qr_image)
-        qr_file_name = "qr1.jpg"
+        qr_file_name = uuid_name + "qr.jpg"
         qr_result = open(qr_file_name, "wb")
         qr_result.write(qr_image64)
         qr_result.close
         pdf.drawImage(qr_file_name, 367, 590, width=90, height=90)
         pdf.save()
 
-        image_result.close
-        #qr_result.close
         os.remove(img_file_name)
         os.remove(qr_file_name)
         return pdf
