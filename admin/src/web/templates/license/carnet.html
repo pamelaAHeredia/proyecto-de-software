@@ -8,7 +8,7 @@
 {% block content %}
     <div class="row my-3">
         <div class="col-sm-12 d-flex justify-content-center">
-            <a class="btn btn-secondary btn-lg" href="{{ url_for('license.export_pdf', id=member.membership_number)}}">Exportar a PDF</a>
+            <a class="btn btn-secondary btn-lg" href="{{url_for('license.export_pdf', id=member.membership_number)}}">Exportar a PDF</a>
         </div>
     </div>
     <div class="containerPrincipal">
@@ -44,10 +44,19 @@
                 </div>
             </div>
             <div class="centrar">
-                <img class="imagenAjustada" src="/public/qr.jpeg" alt="Codigo QR">
+                <img class="imagenAjustada" src="data:image/jpeg;base64, {{qr}}" alt="Codigo QR">
             </div>
         </div>
     </div>
-
+{% block javascripts %}
+  <script>
+    
+      function pdf_export() {
+    
+            window.open("./exportPDF?member_id=" +
+             + document.getElementById("member_id").value)
+           }   
+  </script>
+{% endblock javascripts %}
 
 {% endblock content %}

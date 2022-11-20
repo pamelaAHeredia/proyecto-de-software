@@ -1,19 +1,22 @@
 import csv, random, base64, os, uuid
 from pathlib import Path
+import qrcode
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import green, red
 
+
 from src.models.database import db
 from src.models.club.member import Member
+from src.models.club.member import Picture
 from src.models.auth.user import User
 from src.errors import database
 from src.services.paginator import Paginator
 from src.services.suscription import SuscriptionService
 from src.services.movement import MovementService
-from flask import session
+from flask import session, current_app
 
 
 class MemberService:
@@ -473,6 +476,7 @@ class MemberService:
                     filter_by_status == "Activos"
                 )
         return list(members)
+        
 
     def license_to_pdf(self, id_member):
         """Funcion que exporta un Carnet de Socio a un archivo report.pdf
@@ -520,15 +524,57 @@ class MemberService:
         else:
             pdf.setFillColor(green)
             pdf.drawString(182, 600, "Al dia")
+        uuid_name = str(uuid.uuid4())  
+
         picture = member.picture.image
         image_type = member.picture.image_type.replace("image/","")
         image64 = base64.b64decode(picture)
-        img_file_name = str(uuid.uuid4()) + "." + image_type
+        img_file_name = uuid_name + "." + image_type
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
         pdf.drawImage(img_file_name, 127, 640, width=130, height=130)
-        pdf.drawImage("../admin/public/qr.jpeg", 367, 590, width=90, height=90)
+
+        qr_image = member.picture.qr_image
+        qr_image64 = base64.b64decode(qr_image)
+        qr_file_name = "qr1.jpg"
+        qr_result = open(qr_file_name, "wb")
+        qr_result.write(qr_image64)
+        qr_result.close
+        pdf.drawImage(qr_file_name, 367, 590, width=90, height=90)
         pdf.save()
+
         image_result.close
+        #qr_result.close
         os.remove(img_file_name)
+        os.remove(qr_file_name)
         return pdf
+
+
+    def save_member_photo(self, member, photo_type, photo):
+        qr_code = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr_code.add_data(f'http://127.0.0.1:5000/carnet/plantillaCarnet/{member.membership_number}')
+        qr_code.make(fit=True)
+        qr_img = qr_code.make_image(fill_color="black", back_color="transparent")
+        qr_img_path = os.path.join(current_app.static_folder, f'qr_{member.membership_number}.jpg')
+        qr_img.save(qr_img_path)
+        
+        with open(qr_img_path, 'rb') as img:
+            member_qr_image = base64.b64encode(img.read())
+            os.remove(qr_img_path)
+        
+
+        member_picture = Picture()
+        member_picture.image_type = photo_type
+        member_picture.image = photo
+        member.picture = member_picture
+        member.picture.qr_image = member_qr_image
+        try:
+            db.session.commit()
+        except:
+            return False
+        return True
