@@ -13,7 +13,7 @@ class Config(object):
     TESTING = False
     SESSION_PERMANENT = True
     SESSION_TYPE = "filesystem"
-    WTF_CSRF_TIME_LIMIT = 30
+    WTF_CSRF_TIME_LIMIT = 120
 
 class ProductionConfig(Config):
     """Production configuration."""
