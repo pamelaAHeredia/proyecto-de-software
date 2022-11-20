@@ -9,6 +9,7 @@ class Picture(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     image_type = db.Column(db.String(50), nullable=False)
     image = db.Column(db.LargeBinary)
+    qr_image = db.Column(db.LargeBinary)
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member", back_populates="picture")
 
