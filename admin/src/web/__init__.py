@@ -27,10 +27,10 @@ def create_app(env="development", static_folder="static"):
 
     app = Flask(__name__, static_folder=static_folder)
     csrf.init_app(app)
-    CORS(app)
    
     # Carga configuracion
     app.config.from_object(config[env])
+    CORS(app, origins=app.config["PORTAL_URL"])
 
     # app.secret_key = "secret key"
 
