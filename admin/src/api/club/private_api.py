@@ -18,12 +18,16 @@ _discipline_service = DisciplineService()
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 
 @cross_origin
-@private_api_blueprint.get("/me/disciplines")
+@private_api_blueprint.get("/me/disciplines/<int:id_member>")
 @token_required
-def discipline_list(current_user):
+def discipline_list(current_user, id_member):
     disciplines = []
-    members = current_user.members.all()
-    disciplines = _discipline_service.api_members_disciplines(members=members)
+
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        disciplines = _discipline_service.api_members_disciplines(member=member)
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 401
 
     return jsonify(disciplines), 200
 
