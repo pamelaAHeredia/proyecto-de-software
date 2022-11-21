@@ -10,7 +10,11 @@
 
     <div class="row my-5 justify-content-center">
         <div class="col-9">
-            <h3>Monto: ${{balance}}</h3>
+            {% if balance<0 %}
+                <h3 class="text-danger">Monto: {{balance|format_currency}}</h3>
+            {% else %}
+                <h3 class="text-success">Monto: {{balance|format_currency}}</h3>
+            {% endif %}
         </div>
         <div class="col-3">
 
@@ -32,7 +36,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- formulario de pago -->
-                            <form action="{{ url_for('movements.member_balance', id=member.membership_number)}}" method="post">
+                            <form action="{{ url_for('movements.member_balance', member_id=member.membership_number)}}" method="post">
                                 {{ movement_form.hidden_tag() }}
                                 <div class="form-gorup">
                                     {{ movement_form.amount.label }} {{ movement_form.amount(class_="form-control") }}
@@ -59,7 +63,7 @@
 
     <div class="row my-3">
 
-        {% if moves %}
+        {% if paginator.items %}
         <h1>Movimientos Registrados</h1>
         <table class="table table-hover">
             <thead>
@@ -71,17 +75,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for move in moves  %}
+                {% for move in paginator.items %}
                 <tr>
                     <td>{{move.detail}}</td>
-                    <td>{{move.date}}</td>
+                    <td>{{move.date | format_datetime}}</td>
                     <td>{{move.movement_type}}</td>
-                    <td>{{move.amount}}</td>
+                    <td>{{move.amount | format_currency}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
+        {% include('partials/paginator.html') %}
         {%else%}
         <h2>no hay movimientos para mostrar</h2>
         {% endif %}

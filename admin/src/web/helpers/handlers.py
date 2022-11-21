@@ -1,5 +1,13 @@
 from flask import render_template
 
+def bad_request(e):
+    """Handler de error 400, peticion mala"""
+    kwargs = {
+        "error_name": "400 Bad Request",
+        "error_description": "Se genero un problema en la peticion, revise los datos ingresados",
+    }
+    return render_template("error.html", **kwargs), 400
+
 
 def unauthorized(e):
     """Handler de error 401, acceso no autorizado"""
