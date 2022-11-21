@@ -32,6 +32,16 @@ const router = createRouter({
       name: "payment",
       component: () => import("../views/PaymentView.vue"),
     },
+    {
+      path: "/payment/uno",
+      name: "paymentList",
+      component: () => import("../views/AboutView.vue"),
+    },
+    {
+      path: "/payment/dos",
+      name: "paymentVoucher",
+      component: () => import("../views/DisciplinesView.vue"),
+    },
   ],
 });
 

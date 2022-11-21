@@ -21,7 +21,6 @@ import HelloWorld from "./components/HelloWorld.vue";
         <RouterLink to="/disciplines">disciplinas</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/payment">Pagos</RouterLink>
-        <button>Hola</button>
       </nav>
     </div>
   </header>
