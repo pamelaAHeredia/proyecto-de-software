@@ -38,7 +38,7 @@ def auth():
 
     if not auth_data or not auth_data.username or not auth_data.password:
         return make_response(
-            "No se pudo verificar",
+            {"message":"No se pudo verificar"},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -46,7 +46,7 @@ def auth():
 
     if not user:
         return make_response(
-            "No se pudo verificar",
+            {"message":"No se pudo verificar"},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -63,7 +63,7 @@ def auth():
         return jsonify({"token": token})
 
     return make_response(
-        "No se pudo verificar",
+        {"message":"No se pudo verificar"},
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
