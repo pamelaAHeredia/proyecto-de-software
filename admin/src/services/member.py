@@ -6,7 +6,7 @@ from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import green, red
-
+from reportlab.lib.utils import ImageReader
 
 from src.models.database import db
 from src.models.club.member import Member
@@ -529,7 +529,7 @@ class MemberService:
         picture = member.picture.image
         image_type = member.picture.image_type.replace("image/","")
         image64 = base64.b64decode(picture)
-        img_file_name = uuid_name + "." + image_type
+        img_file_name = os.path.join(current_app.static_folder,uuid_name + "." + image_type)
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
         image_result.close
@@ -537,11 +537,11 @@ class MemberService:
 
         qr_image = member.picture.qr_image
         qr_image64 = base64.b64decode(qr_image)
-        qr_file_name = uuid_name + "qr.jpg"
-        qr_result = open(qr_file_name, "wb")
-        qr_result.write(qr_image64)
-        qr_result.close
-        pdf.drawImage(qr_file_name, 367, 590, width=90, height=90)
+        qr_file_name = os.path.join(current_app.static_folder,f"{uuid_name}_qr.jpg")
+        with open(qr_file_name, "wb") as qr_result:
+            qr_result.write(qr_image64)
+        img = ImageReader(qr_file_name)
+        pdf.drawImage(img, 367, 590, width=90, height=90)
         pdf.save()
 
         os.remove(img_file_name)
@@ -558,7 +558,7 @@ class MemberService:
         )
         qr_code.add_data(f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}')
         qr_code.make(fit=True)
-        qr_img = qr_code.make_image(fill_color="black", back_color="transparent")
+        qr_img = qr_code.make_image(fill_color="black", back_color="white")
         qr_img_path = os.path.join(current_app.static_folder, f'qr_{member.membership_number}.jpg')
         qr_img.save(qr_img_path)
         
