@@ -36,8 +36,6 @@ def discipline_list(current_user, id_member):
 def auth():
     auth_data = request.authorization
 
-    print(auth_data)
-
     if not auth_data or not auth_data.username or not auth_data.password:
         return make_response(
             "No se pudo verificar",
