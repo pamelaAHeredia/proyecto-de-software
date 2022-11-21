@@ -529,7 +529,7 @@ class MemberService:
         picture = member.picture.image
         image_type = member.picture.image_type.replace("image/","")
         image64 = base64.b64decode(picture)
-        img_file_name = os.path.join(current_app.static_folder,uuid_name + "." + image_type)
+        img_file_name = os.path.join(_static_folder,uuid_name + "." + image_type)
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
         image_result.close
@@ -537,7 +537,7 @@ class MemberService:
 
         qr_image = member.picture.qr_image
         qr_image64 = base64.b64decode(qr_image)
-        qr_file_name = os.path.join(current_app.static_folder,f"{uuid_name}_qr.jpg")
+        qr_file_name = os.path.join(_static_folder,f"{uuid_name}_qr.jpg")
         with open(qr_file_name, "wb") as qr_result:
             qr_result.write(qr_image64)
         img = ImageReader(qr_file_name)
@@ -559,7 +559,7 @@ class MemberService:
         qr_code.add_data(f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}')
         qr_code.make(fit=True)
         qr_img = qr_code.make_image(fill_color="black", back_color="white")
-        qr_img_path = os.path.join(current_app.static_folder, f'qr_{member.membership_number}.jpg')
+        qr_img_path = os.path.join(_static_folder, f'qr_{member.membership_number}.jpg')
         qr_img.save(qr_img_path)
         
         with open(qr_img_path, 'rb') as img:
