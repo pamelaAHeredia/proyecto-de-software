@@ -572,9 +572,7 @@ class MemberService:
         member_picture.image = photo
         member.picture = member_picture
         member.picture.qr_image = member_qr_image
-        with open(qr_img_path, "wb") as f:
-            f.write(base64.b64decode(member.picture.qr_image))
-
+        
         try:
             db.session.commit()
         except:
