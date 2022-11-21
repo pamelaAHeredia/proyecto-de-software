@@ -68,8 +68,7 @@ export default {
         .catch((err) => console.log(err.response));
     },
   },
-}
-
+};
 </script>
 
 <style scope>

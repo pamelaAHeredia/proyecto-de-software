@@ -20,10 +20,10 @@ import HelloWorld from "./components/HelloWorld.vue";
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/disciplines">disciplinas</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/payment">Pagos</RouterLink>
+        <button>Hola</button>
       </nav>
     </div>
-
-
   </header>
 
   <RouterView />
@@ -69,8 +69,8 @@ nav a:first-of-type {
   header {
     display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2); 
-  } 
+    padding-right: calc(var(--section-gap) / 2);
+  }
 
   .logo {
     margin: 0 2rem 0 0;
