@@ -1,12 +1,12 @@
-import os
-import base64
-import csv, random
+import csv, random, base64, os, uuid
 from pathlib import Path
+import qrcode
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-import qrcode
+from reportlab.lib.colors import green, red
+from reportlab.lib.utils import ImageReader
 
 from src.models.database import db
 from src.models.club.member import Member
@@ -476,6 +476,78 @@ class MemberService:
                     filter_by_status == "Activos"
                 )
         return list(members)
+        
+
+    def license_to_pdf(self, id_member):
+        """Funcion que exporta un Carnet de Socio a un archivo report.pdf
+
+         Args:
+            id_member : id de un Socio
+
+        Returns:
+           Un archivo PDF con el carnet del Socio del id que viene por argumento
+        """
+        member = self.get_by_membership_number(id_member)
+        filename = (
+            str(self._static_folder)
+            + "/license"
+            + str(random.randint(0, 99999))
+            + ".pdf"
+        )
+        pdf = canvas.Canvas(filename, pagesize=A4)
+        pdf.setTitle("Carnet de Socio")
+        pdf.drawImage("../admin/public/logoclub2.jpg", 87, 785, width=40, height=40)
+        pdf.setFont("Helvetica", 25)
+        pdf.setLineWidth(0.2)
+        pdf.line(72, 830, 500, 830)
+        pdf.line(72, 780, 500, 780)
+        pdf.line(72, 560, 500, 560)
+        pdf.line(72, 830, 72, 560)
+        pdf.line(500, 830, 500, 560)
+        pdf.drawCentredString(317, 795, "Club Deportivo Villa Elisa")
+        pdf.setFontSize(15)
+        pdf.drawCentredString(407, 750, member.first_name + " " + member.last_name)
+        pdf.setFontSize(12)
+        pdf.drawCentredString(
+            407, 730, member.document_type + ": " + member.document_number
+        )
+        pdf.drawCentredString(407, 710, "Socio: #" + str(member.membership_number))
+        pdf.drawCentredString(
+            407, 690, "Fecha alta: " + member.creation_date.strftime("%d-%m-%Y %H:%M")
+        )
+        pdf.setFontSize(15)
+        pdf.drawString(177, 620, "Estado:")
+        is_defaulter = self._movements_service.is_defaulter(member)
+        if is_defaulter:
+            pdf.setFillColor(red)
+            pdf.drawString(177, 600, "Moroso")
+        else:
+            pdf.setFillColor(green)
+            pdf.drawString(182, 600, "Al dia")
+        uuid_name = str(uuid.uuid4())  
+
+        picture = member.picture.image
+        image_type = member.picture.image_type.replace("image/","")
+        image64 = base64.b64decode(picture)
+        img_file_name = os.path.join(current_app.static_folder,uuid_name + "." + image_type)
+        image_result = open(img_file_name, "wb")
+        image_result.write(image64)
+        image_result.close
+        pdf.drawImage(img_file_name, 127, 640, width=130, height=130)
+
+        qr_image = member.picture.qr_image
+        qr_image64 = base64.b64decode(qr_image)
+        qr_file_name = os.path.join(current_app.static_folder,f"{uuid_name}_qr.jpg")
+        with open(qr_file_name, "wb") as qr_result:
+            qr_result.write(qr_image64)
+        img = ImageReader(qr_file_name)
+        pdf.drawImage(img, 367, 590, width=90, height=90)
+        pdf.save()
+
+        os.remove(img_file_name)
+        os.remove(qr_file_name)
+        return pdf
+
 
     def save_member_photo(self, member, photo_type, photo):
         qr_code = qrcode.QRCode(
@@ -486,7 +558,7 @@ class MemberService:
         )
         qr_code.add_data(f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}')
         qr_code.make(fit=True)
-        qr_img = qr_code.make_image(fill_color="black", back_color="transparent")
+        qr_img = qr_code.make_image(fill_color="black", back_color="white")
         qr_img_path = os.path.join(current_app.static_folder, f'qr_{member.membership_number}.jpg')
         qr_img.save(qr_img_path)
         
@@ -500,9 +572,7 @@ class MemberService:
         member_picture.image = photo
         member.picture = member_picture
         member.picture.qr_image = member_qr_image
-        with open(qr_img_path, "wb") as f:
-            f.write(base64.b64decode(member.picture.qr_image))
-
+        
         try:
             db.session.commit()
         except:

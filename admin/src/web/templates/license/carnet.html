@@ -4,8 +4,13 @@
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='carnetStyle.css') }}" />
 {% endblock %}
-{% block content %}
 
+{% block content %}
+    <div class="row my-3">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-success btn-sm" href="{{url_for('license.export_pdf', id=member.membership_number)}}">Exportar a PDF</a>
+        </div>
+    </div>
     <div class="containerPrincipal">
         <div class="containerLogo">
             <img class="imagen" src="/public/logoclub.jpg" alt="">
@@ -43,5 +48,15 @@
             </div>
         </div>
     </div>
+{% block javascripts %}
+  <script>
+    
+      function pdf_export() {
+    
+            window.open("./exportPDF?member_id=" +
+             + document.getElementById("member_id").value)
+           }   
+  </script>
+{% endblock javascripts %}
 
 {% endblock content %}
