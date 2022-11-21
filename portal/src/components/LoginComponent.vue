@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper fadeInDown">
+  <div class="wrapper-login fadeInDown">
     <div id="formContent">
       <!-- Icon -->
       <div class="fadeIn first">
@@ -73,8 +73,7 @@ export default {
           this.$router.push("/welcome");
         })
         .catch((err) => {
-          console.log(err.response.headers),
-            (this.errors = err.response.headers);
+          console.log(err.response.data), (this.errors = err.response.data);
         });
     },
   },
@@ -84,42 +83,19 @@ export default {
 <style scope>
 /* BASIC */
 
-/* html {
-  background-color: #56baed;
-} */
-
 body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
 }
-
-a {
-  color: #92badd;
-  display: inline-block;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-h2 {
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  display: inline-block;
-  margin: 40px 8px 10px 8px;
-  color: #cccccc;
-}
-
 /* STRUCTURE */
 
-.wrapper {
+.wrapper-login {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   width: 100%;
   min-height: 100%;
-  padding: 20px;
 }
 
 #formContent {
@@ -143,17 +119,6 @@ h2 {
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
-}
-
-/* TABS */
-
-h2.inactive {
-  color: #cccccc;
-}
-
-h2.active {
-  color: #0d0d0d;
-  border-bottom: 2px solid #5fbae9;
 }
 
 /* FORM TYPOGRAPHY*/

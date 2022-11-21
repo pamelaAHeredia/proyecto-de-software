@@ -1,5 +1,10 @@
 <template>
-  <p>{{ info }}</p>
+  <main class="container">
+    <div class="contact-info">
+      <h1>Información de contacto</h1>
+      <p>{{ info }}</p>
+    </div>
+  </main>
 </template>
 <script>
 import axios from "axios";
@@ -27,3 +32,12 @@ export default {
   },
 };
 </script>
+
+<style scope>
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+</style>

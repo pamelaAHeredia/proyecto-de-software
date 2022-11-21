@@ -20,6 +20,12 @@ const authStore = useAuthStore();
         data-bs-target="#offcanvasDarkNavbar"
         aria-controls="offcanvasDarkNavbar"
       >
+        <div v-if="authStore.is_auth" class="logged-user">
+          <span>
+            <span class="material-symbols-outlined"> person </span>
+            {{ authStore.get_user.username }}</span
+          >
+        </div>
         <span class="navbar-toggler-icon"></span>
       </button>
       <div
@@ -45,7 +51,7 @@ const authStore = useAuthStore();
             </li>
             <li class="nav-item">
               <span class="material-symbols-outlined"> star </span>
-              <RouterLink to="/about"> About </RouterLink>
+              <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
             </li>
             <li class="nav-item">
               <span class="material-symbols-outlined"> sports_basketball </span>
@@ -70,6 +76,12 @@ const authStore = useAuthStore();
                 <RouterLink to="/login"> Login </RouterLink>
               </li>
             </div>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> call </span>
+              <RouterLink to="/contact-info">
+                Información de contacto
+              </RouterLink>
+            </li>
           </ul>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { RouterView } from "vue-router";
 // import HelloWorld from "./components/HelloWorld.vue";
 // import NavBar from "@/components/NavBar.vue";
 import HeaderComponent from "@/components/Header-Footer/HeaderComponent.vue";
-import FooterComponent from "@/components/Header-Footer/FooterComponent.vue";
+// import FooterComponent from "@/components/Header-Footer/FooterComponent.vue";
 // const authStore = useAuthStore();
 </script>
 
@@ -23,7 +23,7 @@ import FooterComponent from "@/components/Header-Footer/FooterComponent.vue";
     <KeepAlive>
       <HeaderComponent />
     </KeepAlive>
-    <FooterComponent />
+    <!-- <FooterComponent /> -->
     <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>

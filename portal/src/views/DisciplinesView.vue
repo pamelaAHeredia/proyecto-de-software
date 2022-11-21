@@ -3,7 +3,7 @@ import AllDisciplines from "@/components/AllDisciplines.vue";
 </script>
 
 <template>
-  <main>
+  <main class="content">
     <AllDisciplines />
   </main>
 </template>
