@@ -8,6 +8,7 @@ import jwt
 from src.services.utils import verify_pass
 from src.services.member import MemberService
 from src.services.user import UserService
+from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
 
@@ -15,6 +16,8 @@ from src.web.helpers.api import token_required
 _member_service = MemberService()
 _user_service = UserService()
 _discipline_service = DisciplineService()
+_movements_service = MovementService()
+
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 
 @cross_origin
@@ -30,6 +33,18 @@ def discipline_list(current_user, id_member):
         return jsonify({"message": "El socio no pertenece al usuario"}), 401
 
     return jsonify(disciplines), 200
+
+@cross_origin
+@private_api_blueprint.get("/me/payments/<int:id_member>")
+@token_required
+def member_movements(current_user, id_member):
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        movements = _movements_service.api_member_movements(member=member, movement_type="C")
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+
+    return jsonify(movements), 200
 
 @cross_origin
 @private_api_blueprint.post("/auth")
