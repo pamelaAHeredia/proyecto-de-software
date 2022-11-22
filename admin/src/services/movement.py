@@ -116,6 +116,7 @@ class MovementService:
         self,
         member: Member,
         specific_date: datetime.date = TODAY,
+        movement_type: str = None
     ) -> List[Movement]:
         """Retorna los movimientos.
 
@@ -135,7 +136,12 @@ class MovementService:
         #         specific_date + datetime.timedelta(days=1),
         #     )
         # ).order_by(Movement.date)
-        member_movements = member.movements.order_by(Movement.date)
+        if movement_type:
+            member_movements = member.movements.filter(
+                Movement.movement_type == movement_type
+            ).order_by(Movement.date)
+        else:
+            member_movements = member.movements.order_by(Movement.date)
         return member_movements
 
     def list_paginated_movements(
@@ -264,3 +270,10 @@ class MovementService:
             db.session.add(movement)
             db.session.commit()
         return movement
+
+
+    def api_member_movements(self, member, movement_type):
+        data = dict()
+        movements = self.get_movements(member=member, movement_type=movement_type)
+        data["movements"] = [m.resume() for m in movements]
+        return data

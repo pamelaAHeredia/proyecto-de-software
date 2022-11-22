@@ -8,6 +8,7 @@ import jwt
 from src.services.utils import verify_pass
 from src.services.member import MemberService
 from src.services.user import UserService
+from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
 
@@ -15,28 +16,44 @@ from src.web.helpers.api import token_required
 _member_service = MemberService()
 _user_service = UserService()
 _discipline_service = DisciplineService()
+_movements_service = MovementService()
+
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
 
 @cross_origin
-@private_api_blueprint.get("/me/disciplines")
+@private_api_blueprint.get("/me/disciplines/<int:id_member>")
 @token_required
-def discipline_list(current_user):
+def discipline_list(current_user, id_member):
     disciplines = []
-    members = current_user.members.all()
-    disciplines = _discipline_service.api_members_disciplines(members=members)
+
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        disciplines = _discipline_service.api_members_disciplines(member=member)
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 401
 
     return jsonify(disciplines), 200
+
+@cross_origin
+@private_api_blueprint.get("")
+@token_required
+def member_movements(current_user, id_member):
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        movements = _movements_service.api_member_movements(member=member, movement_type="C")
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+
+    return jsonify(movements), 200
 
 @cross_origin
 @private_api_blueprint.post("/auth")
 def auth():
     auth_data = request.authorization
 
-    print(auth_data)
-
     if not auth_data or not auth_data.username or not auth_data.password:
         return make_response(
-            "No se pudo verificar",
+            {"message":"No se pudo verificar"},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -44,7 +61,7 @@ def auth():
 
     if not user:
         return make_response(
-            "No se pudo verificar",
+            {"message":"No se pudo verificar"},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -61,7 +78,14 @@ def auth():
         return jsonify({"token": token})
 
     return make_response(
-        "No se pudo verificar",
+        {"message":"No se pudo verificar"},
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
+
+@cross_origin
+@private_api_blueprint.post("/me/payment/<int:id_member>")
+# @token_required
+def member_pay(id_member):
+    receipt = request.form.files('image')
+    print(receipt)
