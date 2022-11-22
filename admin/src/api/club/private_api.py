@@ -85,7 +85,7 @@ def auth():
 
 @cross_origin
 @private_api_blueprint.post("/me/payment/<int:id_member>")
-@token_required
-def member_pay(current_user, id_member):
-    receipt = comrequest.form.files('image')
+# @token_required
+def member_pay(id_member):
+    receipt = request.form.files('image')
     print(receipt)
