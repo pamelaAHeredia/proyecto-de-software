@@ -22,5 +22,5 @@ export default {
       this.$router.push("/contact-info");
     },
   },
-}
+};
 </script>

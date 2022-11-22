@@ -1,10 +1,14 @@
 <template>
   <main class="container">
-    <div class="contact-info">
+    <div class="contact-info d-flex">
       <h1>Información de contacto</h1>
       <p>{{ info }}</p>
     </div>
+       <!-- shape divider -->
+       
+  <!-- shape divider -->
   </main>
+ 
 </template>
 <script>
 import axios from "axios";
@@ -34,10 +38,5 @@ export default {
 </script>
 
 <style scope>
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
-}
+
 </style>

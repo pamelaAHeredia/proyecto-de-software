@@ -57,6 +57,7 @@ import SupportIcon from "./icons/IconSupport.vue";
                 Podés ver las disciplinas que ofrecemos en el club, sus horarios
                 y los profes que dictan las clases.
               </p>
+              <a>ver disciplinas</a>
             </div>
           </div>
         </div>
@@ -83,6 +84,11 @@ import SupportIcon from "./icons/IconSupport.vue";
   </section>
 </template>
 
+<style scope>
+.carousel-item a {
+  color: #e3a72f;
+}
+</style>
 <!-- 
 <template>
   <WelcomeItem>
