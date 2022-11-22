@@ -133,6 +133,8 @@
                             {% if not member.user_id and member.is_active %}
                             <li><a class="dropdown-item" href="{{url_for('users.link_user', id=member.membership_number)}}">Asignar usuario</a></li>
                             {% endif %}
+                            <li><a class="dropdown-item" href="{{url_for('license.index', id=member.membership_number)}}">Subir Foto</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('license.view_carnet', id=member.membership_number)}}">Ver carnet</a></li>
                         </ul>
                     </div>
                 </td>

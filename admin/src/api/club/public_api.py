@@ -28,3 +28,12 @@ def members_by_gender():
     quantitys = member_service.api_members_by_gender()
     return jsonify(quantitys), 200
 
+@public_api_blueprint.get("/members_by_discipline")
+def members_by_discipline():
+    data = service.api_members_by_discipline()
+    return jsonify(data), 200
+
+@public_api_blueprint.get("/members_by_activated")
+def members_by_activated():
+    data = member_service.api_members_by_activated()
+    return jsonify(data), 200

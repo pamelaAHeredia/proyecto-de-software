@@ -1,18 +1,22 @@
+import os
+import base64
 import csv, random
 from pathlib import Path
 from typing import Optional, List
 from datetime import date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+import qrcode
 
 from src.models.database import db
 from src.models.club.member import Member
+from src.models.club.member import Picture
 from src.models.auth.user import User
 from src.errors import database
 from src.services.paginator import Paginator
 from src.services.suscription import SuscriptionService
 from src.services.movement import MovementService
-from flask import session
+from flask import session, current_app
 
 
 class MemberService:
@@ -478,4 +482,10 @@ class MemberService:
         female = Member.query.filter_by(is_active=True, gender="F").count()
         other = Member.query.filter_by(is_active=True, gender="Otro").count()
         data = {"M": male, "F": female, "Otro": other}
+        return data
+
+    def api_members_by_activated(self):
+        active = Member.query.filter_by(is_active=True).count()
+        inactive = Member.query.filter_by(is_active=False).count()
+        data = {"Active": active, "Inactive": inactive}
         return data
