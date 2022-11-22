@@ -74,4 +74,11 @@ def auth():
 @private_api_blueprint.get("/me/user_jwt")
 @token_required
 def user_jwt(current_user):
-    return jsonify(current_user), 200    
+    user = {
+        "username": current_user.username,
+        "email": current_user.email,
+        "id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+    }
+    return jsonify(user), 200
