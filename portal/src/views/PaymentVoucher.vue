@@ -22,12 +22,9 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default {
   data() {
     return {
-      disciplines: null,
+      file: null,
     };
   },
-  /*mounted() {
-    this.getDisciplines();
-  },*/
   methods: {
     submitForm() {
       const formData = new FormData();
@@ -36,9 +33,11 @@ export default {
       //formData.append("image", this.file);
       //formData.append("image", this.file);
       axios
-        .get(PATH_SERVER + "/api/me/payment/1")
+        .post(`${PATH_SERVER}/api/me/payment/1`, {
+          formData,
+        })
         .then((response) => {
-          this.disciplines = response.data;
+          console.log(response);
         })
         .catch((e) => console.log(e));
     },
