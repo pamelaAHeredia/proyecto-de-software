@@ -18,6 +18,8 @@ WTForms = {extras = ["email"], version = "^3.0.1"}
 marshmallow-sqlalchemy = "^0.28.1"
 PyJWT = "^2.6.0"
 flask-cors = "^3.0.10"
+Pillow = "^9.3.0"
+qrcode = {extras = ["pil"], version = "^7.3.1"}
 
 
 [tool.poetry.group.dev.dependencies]

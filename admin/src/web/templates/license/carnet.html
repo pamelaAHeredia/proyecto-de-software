@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Modulo de Socios{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='carnetStyle.css') }}" />
+{% endblock %}
+
+{% block content %}
+    <div class="row my-3">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <a class="btn btn-success btn-sm" href="{{url_for('license.export_pdf', id=member.membership_number)}}">Exportar a PDF</a>
+        </div>
+    </div>
+    <div class="containerPrincipal">
+        <div class="containerLogo">
+            <img class="imagen" src="/public/logoclub.jpg" alt="">
+            <div>
+                <span>Club Deportivo Villa Elisa</span>
+            </div>
+        </div>
+        <hr>
+        <div class="containerDos">
+            <div class="centrar">
+                <img class="imagenAjustada" src="data:{{file_type}};base64, {{file}}" alt="imagen de perfil">
+            </div>
+            <div class="centrar">
+                <div class="container">
+                    <h1>{{member.first_name}} {{member.last_name}}</h1>
+                    <h3>DNI: {{member.document_number | format_thousand}}</h3>
+                    <h3>Socio: #{{member.membership_number | format_thousand}}</h3>
+                    <h3>Fecha alta: {{member.creation_date | format_datetime}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="containerDos">
+            <div class="centrar">
+                <div class="container">
+                    <h2>Estado:</h2>
+                    {% if is_defaulter %}
+                        <h2 style="color: red;">Moroso</h2>
+                    {% else %}
+                        <h2 style="color: green;">Al dia</h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="centrar">
+                <img class="imagenAjustada" src="data:image/jpeg;base64, {{qr}}" alt="Codigo QR">
+            </div>
+        </div>
+    </div>
+{% endblock content %}

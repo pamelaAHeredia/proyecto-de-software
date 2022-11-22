@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% block title %}Consultas Disciplinas{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cropperjs/cropper.css') }}">
+<style>
+    .container {
+      margin: 20px auto;
+      max-width: 440px;
+    }
+
+    img {
+      width: 350px;
+      height: 350px;
+    }
+
+    .cropper-view-box,
+    .cropper-face {
+      border-radius: 50%;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div>
+        <img id="image" src="data:{{file_type}};base64, {{file}}">
+    </div>
+    <p>
+        <form id="form_crop" method="POST" action="{{ url_for('license.upload_picture')}}" enctype="{{file_type}}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <input type="hidden" name="member_id" id="member_id" value="{{member_id}}">
+          <input type="hidden" name="cropped_img_type" id="cropped_img_type" value="{{file_type}}">
+          <input type="hidden" name="cropped_img" id="cropped_img" value="">
+          <button type="button" id="button">Generar Foto</button>
+        </form>
+    </p>
+    <p>Imagen final:</p>
+    <div id="result"></div>
+</div>
+
+<script src="{{ url_for('static', filename='cropperjs/cropper.js')}}"></script>
+<script>
+    function getRoundedCanvas(sourceCanvas) {
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var width = 350;
+      var height = 350;
+
+      console.log(width, height);
+      canvas.width = 350;
+      canvas.height = 350;
+      context.imageSmoothingEnabled = true;
+      context.drawImage(sourceCanvas, 0, 0, width, height);
+      context.globalCompositeOperation = 'destination-in';
+      context.beginPath();
+      context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+      context.fill();
+      return canvas;
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      var image = document.getElementById('image');
+      var button = document.getElementById('button');
+      var form = document.getElementById('form_crop');
+      var result = document.getElementById('result');
+      var croppable = false;
+      var cropper = new Cropper(image, {
+        aspectRatio: 1,
+        viewMode: 1,
+        cropBoxResizable: false,
+        ready: function () {
+          croppable = true;
+        },
+      });
+
+      button.onclick = function () {
+        let btn = document.createElement("button");
+        btn.innerHTML = "Enviar";
+        btn.type = "submit";
+        btn.onclick = function(){
+          console.log(form.cropped_img.value)
+          form.submit()
+        }
+        
+
+        let cropped_img = document.getElementById("cropped_img");
+
+        // cropped_img.type = "hidden";
+        // cropped_img.name = "cropped_img";
+
+
+
+        var croppedCanvas;
+        var roundedCanvas;
+        var roundedImage;
+        // var input_hidden = document.getElementById('send_crop');
+
+        if (!croppable) {
+          return;
+        }
+
+        // Crop
+        croppedCanvas = cropper.getCroppedCanvas();
+
+        // Round
+        roundedCanvas = getRoundedCanvas(croppedCanvas);
+
+        // Show
+        roundedImage = document.createElement('img');
+        roundedImage.src = roundedCanvas.toDataURL()
+        result.innerHTML = '';
+        result.appendChild(roundedImage);
+        result.appendChild(btn);
+        cropped_img.value = roundedCanvas.toDataURL();
+        console.log(cropped_img.value.split([","])[1]);
+
+        form.appendChild(cropped_img)
+        // form.submit()
+        
+        
+      };
+    });
+  </script>
+{% endblock %}

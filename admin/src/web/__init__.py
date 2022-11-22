@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 from flask_session import Session
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect, generate_csrf
+
 
 from src.web.helpers import handlers
 from src.web.helpers import auth
@@ -16,18 +18,20 @@ from src.web.config import config
 from src.web.controllers.auth import auth_blueprint
 from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
+from src.web.controllers.license import license_blueprint
 
+#csrf = CSRFProtect()
 
 def create_app(env="development", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-    
-    CORS(app)
-   
+    #csrf.init_app(app)
+      
     # Carga configuracion
     app.config.from_object(config[env])
+    CORS(app, origins=app.config["PORTAL_URL"])
 
     # app.secret_key = "secret key"
 
@@ -53,8 +57,10 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(movement_blueprint)
     app.register_blueprint(public_api_blueprint)
     app.register_blueprint(private_api_blueprint)
+    app.register_blueprint(license_blueprint)
 
     # Handler Error
+    # app.register_error_handler(400, handlers.bad_request)
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(403, handlers.forbidden)
     app.register_error_handler(404, handlers.not_found_error)
@@ -83,6 +89,11 @@ def create_app(env="development", static_folder="static"):
         currency = "${:,.2f}".format(value)
         return currency.replace(",", "~").replace(".", ",").replace("~", ".")
 
+    @app.template_filter()
+    def format_thousand(value):
+        formato = format(int(value), ",")
+        return formato.replace("," , ".")
+
     # Command Flask
     @app.cli.command(name="resetdb")
     def resetdb():
@@ -92,4 +103,8 @@ def create_app(env="development", static_folder="static"):
     def seedsdb():
         seeds.run()
 
+    @app.after_request
+    def set_xsrf_cookie(response):
+        response.set_cookie('csrf_token', generate_csrf())
+        return response
     return app
