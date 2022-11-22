@@ -65,13 +65,3 @@ def auth():
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
-
-@cross_origin
-@private_api_blueprint.get("/me/payments")
-@token_required
-def payments_list(current_user):
-    #payments = []
-    #members = current_user.members.all()
-    #disciplines = _discipline_service.api_members_disciplines(members=members)
-
-    return jsonify(current_user), 200
