@@ -575,7 +575,7 @@ class MemberService:
         qr_img_path = os.path.join(self._static_folder, f'qr_{member.membership_number}.jpg')
         qr_img.save(qr_img_path)
         
-        with open(qr_img_path, 'rb') as img:ks
+        with open(qr_img_path, 'rb') as img:
             member_qr_image = base64.b64encode(img.read())
             os.remove(qr_img_path)
         
