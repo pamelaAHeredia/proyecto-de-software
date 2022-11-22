@@ -36,7 +36,7 @@ export default {
       //formData.append("image", this.file);
       //formData.append("image", this.file);
       axios
-        .get(PATH_SERVER + "/api/me/payments/1")
+        .get(PATH_SERVER + "/api/me/payment/1")
         .then((response) => {
           this.disciplines = response.data;
         })
