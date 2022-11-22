@@ -35,7 +35,7 @@ def discipline_list(current_user, id_member):
     return jsonify(disciplines), 200
 
 @cross_origin
-@private_api_blueprint.get("/me/payments/<int:id_member>")
+@private_api_blueprint.get("")
 @token_required
 def member_movements(current_user, id_member):
     member = _member_service.get_by_membership_number(id_member)
@@ -82,3 +82,10 @@ def auth():
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
+
+@cross_origin
+@private_api_blueprint.post("/me/payment/<int:id_member>")
+@token_required
+def member_pay(current_user, id_member):
+    receipt = comrequest.form.files('image')
+    print(receipt)
