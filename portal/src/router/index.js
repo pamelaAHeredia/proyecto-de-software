@@ -35,12 +35,12 @@ const router = createRouter({
     {
       path: "/payment/uno",
       name: "paymentList",
-      component: () => import("../views/AboutView.vue"),
+      component: () => import("../views/PaymentListView.vue"),
     },
     {
       path: "/payment/dos",
       name: "paymentVoucher",
-      component: () => import("../views/DisciplinesView.vue"),
+      component: () => import("../views/PaymentVoucher.vue"),
     },
   ],
 });

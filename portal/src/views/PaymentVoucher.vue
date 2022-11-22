@@ -1,7 +1,16 @@
 <template>
   <div class="container">
-    <button>Listado</button>
-    <button>Hacer pago</button>
+    <input
+      accept=".png, .jpg, .jpeg,"
+      type="file"
+      id="fileInput"
+      ref="fileInput"
+      placeholder="edit me"
+      v-on:change="onChangeFileUpload(this)"
+    />
+    <input type="number" placeholder="Monto" />
+    <input type="text" placeholder="Descripcion" />
+    <button v-on:click="submitForm()">Upload</button>
   </div>
 </template>
 
@@ -16,17 +25,32 @@ export default {
       disciplines: null,
     };
   },
-  mounted() {
+  /*mounted() {
     this.getDisciplines();
-  },
+  },*/
   methods: {
-    getDisciplines() {
+    submitForm() {
+      const formData = new FormData();
+      formData.append("image", this.file);
+      //formData.append("image", this.file);
+      //formData.append("image", this.file);
+      //formData.append("image", this.file);
       axios
-        .get(PATH_SERVER + "/api/club/disciplines")
+        .get(PATH_SERVER + "/api/me/payments/1")
         .then((response) => {
           this.disciplines = response.data;
         })
         .catch((e) => console.log(e));
+    },
+    onChangeFileUpload() {
+      this.file = document.querySelector("#fileInput").files[0];
+      console.log(this.file);
+      /*const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(this.file[0]);
+      this.image = files[0];*/
     },
   },
 };
