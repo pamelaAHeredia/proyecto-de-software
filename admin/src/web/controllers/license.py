@@ -84,7 +84,6 @@ def upload_picture():
             flash("Error al salvar la foto", "danger")
 
     return redirect(url_for("members.index"))
-    # return render_template('license/upload.html', image_type=cropped_photo_type, image=member_picture.image.decode("utf-8"))
 
 
 @license_blueprint.get("/plantillaCarnet/<id>")

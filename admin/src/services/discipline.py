@@ -276,3 +276,18 @@ class DisciplineService:
         discipline.deleted = True
         db.session.commit()
         return discipline
+
+    def api_members_by_discipline(self):
+
+        disciplines = (
+            Discipline.query.filter(Discipline.membership.has(is_active=True))
+            .order_by(Discipline.id)
+            .all()
+        )
+        data = []
+        for disciplina in disciplines:
+            info = { "Name": disciplina.discipline_name,
+                     "Enrolled": disciplina.membership.used_quota }
+            data.append(info)         
+            info = {}
+        return data

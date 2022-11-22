@@ -22,13 +22,13 @@ from src.web.controllers.license import license_blueprint
 
 csrf = CSRFProtect()
 
-def create_app(env="production", static_folder="static"):
+def create_app(env="development", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
     csrf.init_app(app)
-   
+      
     # Carga configuracion
     app.config.from_object(config[env])
     CORS(app, origins=app.config["PORTAL_URL"])

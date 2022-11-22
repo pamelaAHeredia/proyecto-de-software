@@ -529,7 +529,7 @@ class MemberService:
         picture = member.picture.image
         image_type = member.picture.image_type.replace("image/","")
         image64 = base64.b64decode(picture)
-        img_file_name = os.path.join(_static_folder,uuid_name + "." + image_type)
+        img_file_name = os.path.join(self._static_folder,uuid_name + "." + image_type)
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
         image_result.close
@@ -537,7 +537,7 @@ class MemberService:
 
         qr_image = member.picture.qr_image
         qr_image64 = base64.b64decode(qr_image)
-        qr_file_name = os.path.join(_static_folder,f"{uuid_name}_qr.jpg")
+        qr_file_name = os.path.join(self._static_folder,f"{uuid_name}_qr.jpg")
         with open(qr_file_name, "wb") as qr_result:
             qr_result.write(qr_image64)
         img = ImageReader(qr_file_name)
@@ -549,6 +549,19 @@ class MemberService:
         return pdf
 
 
+    def api_members_by_gender(self):
+        male = Member.query.filter_by(is_active=True, gender="M").count()
+        female = Member.query.filter_by(is_active=True, gender="F").count()
+        other = Member.query.filter_by(is_active=True, gender="Otro").count()
+        data = {"M": male, "F": female, "Otro": other}
+        return data
+
+    def api_members_by_activated(self):
+        active = Member.query.filter_by(is_active=True).count()
+        inactive = Member.query.filter_by(is_active=False).count()
+        data = {"Active": active, "Inactive": inactive}
+        return data
+
     def save_member_photo(self, member, photo_type, photo):
         qr_code = qrcode.QRCode(
             version=1,
@@ -559,10 +572,10 @@ class MemberService:
         qr_code.add_data(f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}')
         qr_code.make(fit=True)
         qr_img = qr_code.make_image(fill_color="black", back_color="white")
-        qr_img_path = os.path.join(_static_folder, f'qr_{member.membership_number}.jpg')
+        qr_img_path = os.path.join(self._static_folder, f'qr_{member.membership_number}.jpg')
         qr_img.save(qr_img_path)
         
-        with open(qr_img_path, 'rb') as img:
+        with open(qr_img_path, 'rb') as img:ks
             member_qr_image = base64.b64encode(img.read())
             os.remove(qr_img_path)
         
