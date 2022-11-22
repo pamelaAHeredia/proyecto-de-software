@@ -2,7 +2,7 @@
   <div class="container">
     <form v-on:submit.prevent="submitForm">
       <input
-        accept=".png, .jpg, .jpeg,"
+        accept=".png, .jpg, .jpeg, .pdf"
         type="file"
         id="fileInput"
         ref="fileInput"
