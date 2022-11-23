@@ -57,6 +57,10 @@ const authStore = useAuthStore();
               <span class="material-symbols-outlined"> sports_basketball </span>
               <RouterLink to="/disciplines"> Disciplinas </RouterLink>
             </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> monitoring </span>
+              <RouterLink to="/chart"> Estadisticas </RouterLink>
+            </li>
 
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
