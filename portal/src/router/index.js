@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import { useAuthStore } from "../stores/auth";
+// import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,14 +8,11 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      component: () => import("@/components/TheWelcome.vue"),
     },
     {
       path: "/about",
       name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
     {
@@ -26,6 +24,23 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
+    },
+    {
+      path: "/contact-info",
+      name: "contact-info",
+      component: () => import("../components/ContactInfo.vue"),
+    },
+    {
+      path: "/member-disciplines",
+      name: "member-disciplines",
+      component: () => import("../views/MemberDisciplinesView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/welcome",
+      name: "welcome",
+      component: () => import("../views/WelcomeUserView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/payment",
@@ -43,6 +58,19 @@ const router = createRouter({
       component: () => import("../views/PaymentVoucher.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (authStore.is_auth) {
+      next();
+    } else {
+      router.replace("/");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

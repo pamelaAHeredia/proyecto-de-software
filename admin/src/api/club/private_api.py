@@ -1,17 +1,16 @@
 import datetime
-from flask import current_app, Blueprint
-from flask import jsonify, request, make_response
-from flask_cors import cross_origin 
-import jwt
- 
 
-from src.services.utils import verify_pass
+import jwt
+from flask import Blueprint, current_app, jsonify, make_response, request
+from flask_cors import cross_origin
+
+from src.services.discipline import DisciplineService
 from src.services.member import MemberService
 from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
+from src.services.utils import verify_pass
 from src.web.helpers.api import token_required
-
 
 _member_service = MemberService()
 _user_service = UserService()
@@ -19,6 +18,7 @@ _discipline_service = DisciplineService()
 _movements_service = MovementService()
 
 private_api_blueprint = Blueprint("private_api", __name__, url_prefix="/api")
+
 
 @cross_origin
 @private_api_blueprint.get("/me/disciplines/<int:id_member>")
@@ -33,6 +33,7 @@ def discipline_list(current_user, id_member):
         return jsonify({"message": "El socio no pertenece al usuario"}), 401
 
     return jsonify(disciplines), 200
+
 
 @cross_origin
 @private_api_blueprint.get("")
@@ -61,7 +62,13 @@ def auth():
 
     if not user:
         return make_response(
-            {"message":"No se pudo verificar"},
+            "Usuario incorrecto",
+            401,
+            {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
+        )
+    if not user.is_active:
+        return make_response(
+            "Usuario inactivo",
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -78,7 +85,7 @@ def auth():
         return jsonify({"token": token})
 
     return make_response(
-        {"message":"No se pudo verificar"},
+        "Contraseña incorrecta",
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
@@ -89,3 +96,19 @@ def auth():
 def member_pay(id_member):
     receipt = request.form.files('image')
     print(receipt)
+
+@cross_origin
+@private_api_blueprint.get("/me/user_jwt")
+@token_required
+def user_jwt(current_user):
+    user_data = {
+        "username": current_user.username,
+        "email": current_user.email,
+        "id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+    }
+    list_members = _user_service.api_list_members(current_user.id)
+    user_data["members"] = list_members
+
+    return jsonify(user_data), 200

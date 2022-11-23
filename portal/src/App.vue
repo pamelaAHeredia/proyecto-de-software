@@ -1,34 +1,62 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
+import { RouterView } from "vue-router";
+// import { useAuthStore } from "./stores/auth";
+// import HelloWorld from "./components/HelloWorld.vue";
+// import NavBar from "@/components/NavBar.vue";
+import HeaderComponent from "@/components/Header-Footer/HeaderComponent.vue";
+// import FooterComponent from "@/components/Header-Footer/FooterComponent.vue";
+// const authStore = useAuthStore();
 </script>
 
 <template>
-  <header>
-    <img
-      alt="Club logo"
-      class="logo"
-      src="@/assets/logoclub.jpg"
-      width="125"
-      height="125"
-    />
-    <div class="wrapper">
-      <HelloWorld msg="⚠️En Construcción🚧" />
-
-      <nav>
+  <!-- <header> -->
+  <!-- <img
+    alt="Club logo"
+    class="logo"
+    src="@/assets/logoclub.jpg"
+    width="125"
+    height="125"
+  /> -->
+  <div class="wrapper">
+    <!-- <HelloWorld msg="⚠️En Construcción🚧" /> -->
+    <!-- <NavBar /> -->
+    <KeepAlive>
+      <HeaderComponent />
+    </KeepAlive>
+    <!-- <FooterComponent /> -->
+    <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/disciplines">disciplinas</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/payment">Pagos</RouterLink>
-      </nav>
-    </div>
-  </header>
+        <div v-if="authStore.is_auth">
+          <RouterLink to="/member-disciplines"
+            >Disciplinas del usuario</RouterLink
+          >
+          <RouterLink to="/" @click="authStore.unauth"
+            >Cerrar Sesión</RouterLink
+          >
+        </div>
+        <div v-else>
+          <RouterLink to="/login">Login</RouterLink>
+        </div>
+      </nav> -->
+  </div>
+  <!-- </header>  -->
 
   <RouterView />
 </template>
 
-<style scoped>
+<!-- <style>
+body {
+  margin: 0;
+  display: grid;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 3;
+}
+</style> -->
+
+<!-- <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -90,4 +118,4 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
-</style>
+</style> -->

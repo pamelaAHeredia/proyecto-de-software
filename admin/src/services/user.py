@@ -286,3 +286,17 @@ class UserService:
         user = self.find_user_by_id(id)
         user.password = new_pass
         db.session.commit()
+        return user
+
+    def api_list_members(self, id):
+        user = self.find_user_by_id(id)
+        members = user.members
+        list_members = []
+        for member in members:
+            info = { "Id": member.membership_number,
+                     "Name": member.last_name + ", " + member.first_name
+                      }
+            list_members.append(info)         
+            info = {}
+        return list_members
+
