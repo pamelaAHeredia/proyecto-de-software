@@ -32,7 +32,7 @@ class DisciplineService:
             .order_by(Discipline.id)
             .all()
         )
-       
+
         return self._discipline_schema.dump(disciplines, many=True)
 
     def api_members_disciplines(self, members):
@@ -40,9 +40,11 @@ class DisciplineService:
         data = dict()
         for m in members:
             for s in m.active_suscriptions:
-                if s.membership_id!=1:
+                if s.membership_id != 1:
                     disciplines.append(s.membership.discipline)
-            data[m.membership_number] = self._discipline_schema.dump(disciplines, many=True)
+            data[m.membership_number] = self._discipline_schema.dump(
+                disciplines, many=True
+            )
             disciplines = []
         return data
 
@@ -286,8 +288,10 @@ class DisciplineService:
         )
         data = []
         for disciplina in disciplines:
-            info = { "Name": disciplina.discipline_name,
-                     "Enrolled": disciplina.membership.used_quota }
-            data.append(info)         
+            info = {
+                "name": disciplina.discipline_name,
+                "enrolled": disciplina.membership.used_quota,
+            }
+            data.append(info)
             info = {}
         return data
