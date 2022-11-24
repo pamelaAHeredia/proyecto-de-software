@@ -42,7 +42,7 @@ def discipline_list(current_user, id_member):
 def member_movements(current_user, id_member):
     member = _member_service.get_by_membership_number(id_member)
     if member.user==current_user:
-        movements = _movements_service.api_member_movements(member=member, movement_type="C")
+        movements = _movements_service.api_member_movements(member=member, specific_date=datetime.date.today())
     else:
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
