@@ -549,6 +549,19 @@ class MemberService:
         return pdf
 
 
+    def api_members_by_gender(self):
+        male = Member.query.filter_by(is_active=True, gender="M").count()
+        female = Member.query.filter_by(is_active=True, gender="F").count()
+        other = Member.query.filter_by(is_active=True, gender="Otro").count()
+        data = {"M": male, "F": female, "Otro": other}
+        return data
+
+    def api_members_by_activated(self):
+        active = Member.query.filter_by(is_active=True).count()
+        inactive = Member.query.filter_by(is_active=False).count()
+        data = {"Active": active, "Inactive": inactive}
+        return data
+
     def save_member_photo(self, member, photo_type, photo):
         qr_code = qrcode.QRCode(
             version=1,
