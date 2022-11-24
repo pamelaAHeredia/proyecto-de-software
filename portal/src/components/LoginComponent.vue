@@ -35,13 +35,15 @@
 
 <script>
 import { useAuthStore } from "../stores/auth/";
+import { useSelectMember } from "../stores/useSelect";
 import { apiService } from "@/api";
 // apiService.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
 
 export default {
   setup() {
     const authStore = useAuthStore();
-    return { authStore };
+    const useSelect = useSelectMember();
+    return { authStore, useSelect };
   },
   name: "LoginComponent",
 
@@ -70,7 +72,9 @@ export default {
         .then((response) => {
           sessionStorage.setItem("token", response.data.token);
           this.authStore.set_auth();
+          this.useSelect.set_property();
           this.$router.push("/welcome");
+          console.log(`Desde Login ${sessionStorage.getItem("members")}`);
         })
         .catch((err) => {
           console.log(err.response.data), (this.errors = err.response.data);

@@ -48,12 +48,6 @@ export default {
     onChangeFileUpload() {
       this.file = document.querySelector("#fileInput").files[0];
       console.log(this.file);
-      /*const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imageUrl = fileReader.result;
-      });
-      fileReader.readAsDataURL(this.file[0]);
-      this.image = files[0];*/
     },
   },
 };

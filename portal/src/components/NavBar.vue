@@ -1,10 +1,12 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth";
+import { useSelectMember } from "../stores/useSelect";
 import { RouterLink } from "vue-router";
 import SelectComponent from "./SelectComponent.vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 
 const authStore = useAuthStore();
+const useSelect = useSelectMember();
 </script>
 
 <template>
@@ -14,7 +16,7 @@ const authStore = useAuthStore();
         <img src="@/assets/logoclubNavBar.jpg" />
       </div>
       <a class="navbar-brand" href="#">Club Deportivo Villa Elisa</a>
-      <div class="navbar-toggler">
+      <div class="navbar-toggler" v-if="authStore.is_auth">
         <SelectComponent />
       </div>
       <button
@@ -72,7 +74,12 @@ const authStore = useAuthStore();
                 <RouterLink to="/payment">Pagos</RouterLink>
               </li>
               <li>
-                <RouterLink to="/" @click="authStore.unauth"
+                <RouterLink
+                  to="/"
+                  @click="
+                    authStore.unauth();
+                    useSelect.delete_property();
+                  "
                   >Cerrar Sesión</RouterLink
                 >
               </li>

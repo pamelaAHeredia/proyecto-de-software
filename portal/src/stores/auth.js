@@ -29,11 +29,12 @@ export const useAuthStore = defineStore("authenticated", {
           this.user = response.data;
           sessionStorage.setItem("members", JSON.stringify(this.user.members));
           sessionStorage.setItem(
-            "currentUser",
+            "currentMember",
             JSON.stringify(this.user.members[0])
           );
         })
         .catch((e) => console.log(e));
+      console.log(`Desde auth ${sessionStorage.getItem("members")}`);
     },
   },
   getters: {
