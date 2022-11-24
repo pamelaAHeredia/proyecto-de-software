@@ -59,6 +59,9 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(private_api_blueprint)
     app.register_blueprint(license_blueprint)
 
+    #Saco el csrf para el front de vue
+    csrf.exempt(private_api_blueprint)
+
     # Handler Error
     # app.register_error_handler(400, handlers.bad_request)
     app.register_error_handler(401, handlers.unauthorized)
@@ -103,8 +106,8 @@ def create_app(env="development", static_folder="static"):
     def seedsdb():
         seeds.run()
 
-    @app.after_request
-    def set_xsrf_cookie(response):
-        response.set_cookie('csrf_token', generate_csrf())
-        return response
+    # @app.after_request
+    # def set_xsrf_cookie(response):
+    #     response.set_cookie('csrf_token', generate_csrf())
+    #     return response
     return app
