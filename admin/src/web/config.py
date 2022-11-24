@@ -46,8 +46,8 @@ class DevelopmentConfig(Config):
     )
     # Sesion valores
     SESSION_TYPE = "filesystem"
-    PORTAL_URL = "http://127.0.0.1:5173"
-    ADMIN_URL = "http://127.0.0.1:5000"
+    PORTAL_URL = ["http://127.0.0.1:5173", "http://localhost:5173"]
+    ADMIN_URL = ["http://127.0.0.1:5000", "http://localhost:5000"]
 
 class TestingConfig(Config):
     """Testing configuration."""

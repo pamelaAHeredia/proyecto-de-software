@@ -1,6 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import { useAuthStore } from "./stores/auth";
 import HelloWorld from "./components/HelloWorld.vue";
+
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -19,11 +22,19 @@ import HelloWorld from "./components/HelloWorld.vue";
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/disciplines">disciplinas</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
+        <div v-if="authStore.is_auth.authenticated">
+          <RouterLink to="/member-disciplines"
+            >Disciplinas del usuario</RouterLink
+          >
+          <RouterLink to="/" @click="authStore.unauth"
+            >Cerrar Sesión</RouterLink
+          >
+        </div>
+        <div v-else>
+          <RouterLink to="/login">Login</RouterLink>
+        </div>
       </nav>
     </div>
-
-
   </header>
 
   <RouterView />
@@ -69,8 +80,8 @@ nav a:first-of-type {
   header {
     display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2); 
-  } 
+    padding-right: calc(var(--section-gap) / 2);
+  }
 
   .logo {
     margin: 0 2rem 0 0;

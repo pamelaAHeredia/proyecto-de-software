@@ -48,15 +48,4 @@
             </div>
         </div>
     </div>
-{% block javascripts %}
-  <script>
-    
-      function pdf_export() {
-    
-            window.open("./exportPDF?member_id=" +
-             + document.getElementById("member_id").value)
-           }   
-  </script>
-{% endblock javascripts %}
-
 {% endblock content %}
