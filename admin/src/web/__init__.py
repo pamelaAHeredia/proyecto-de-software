@@ -20,15 +20,15 @@ from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
 from src.web.controllers.license import license_blueprint
 
-#csrf = CSRFProtect()
+# csrf = CSRFProtect()
 
 def create_app(env="development", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-    #csrf.init_app(app)
-      
+    # csrf.init_app(app)
+   
     # Carga configuracion
     app.config.from_object(config[env])
     CORS(app, origins=app.config["PORTAL_URL"])
@@ -103,8 +103,8 @@ def create_app(env="development", static_folder="static"):
     def seedsdb():
         seeds.run()
 
-    @app.after_request
-    def set_xsrf_cookie(response):
-        response.set_cookie('csrf_token', generate_csrf())
-        return response
+    # @app.after_request
+    # def set_xsrf_cookie(response):
+    #     response.set_cookie('csrf_token', generate_csrf())
+    #     return response
     return app
