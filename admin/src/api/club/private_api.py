@@ -1,5 +1,8 @@
 import datetime
-
+from decimal import Decimal
+from flask import current_app, Blueprint
+from flask import jsonify, request, make_response
+from flask_cors import cross_origin 
 import jwt
 from flask import Blueprint, current_app, jsonify, make_response, request
 from flask_cors import cross_origin
@@ -9,8 +12,8 @@ from src.services.member import MemberService
 from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
-from src.services.utils import verify_pass
 from src.web.helpers.api import token_required
+from src.services.utils import verify_pass
 
 _member_service = MemberService()
 _user_service = UserService()
@@ -30,7 +33,7 @@ def discipline_list(current_user, id_member):
     if member.user==current_user:
         disciplines = _discipline_service.api_members_disciplines(member=member)
     else:
-        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
     return jsonify(disciplines), 200
 
@@ -41,9 +44,9 @@ def discipline_list(current_user, id_member):
 def member_movements(current_user, id_member):
     member = _member_service.get_by_membership_number(id_member)
     if member.user==current_user:
-        movements = _movements_service.api_member_movements(member=member, movement_type="C")
+        movements = _movements_service.api_member_movements(member=member, specific_date=datetime.date.today())
     else:
-        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
     return jsonify(movements), 200
 
@@ -59,16 +62,16 @@ def auth():
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
     user = _user_service.find_user_byUsername(auth_data.username)
-
-    if not user:
+    if user and not user.is_active:
         return make_response(
-            "Usuario incorrecto",
+            {"message":"Usuario inactivo."},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
-    if not user.is_active:
+
+    if not user:
         return make_response(
-            "Usuario inactivo",
+            {"message":"No existe el usuario."},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -85,30 +88,26 @@ def auth():
         return jsonify({"token": token})
 
     return make_response(
-        "Contraseña incorrecta",
+        {"message":"Contraseña incorrecta."},
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
 
+
 @cross_origin
 @private_api_blueprint.post("/me/payment/<int:id_member>")
-# @token_required
-def member_pay(id_member):
-    receipt = request.form.files('image')
-    print(receipt)
-
-@cross_origin
-@private_api_blueprint.get("/me/user_jwt")
 @token_required
-def user_jwt(current_user):
-    user_data = {
-        "username": current_user.username,
-        "email": current_user.email,
-        "id": current_user.id,
-        "first_name": current_user.first_name,
-        "last_name": current_user.last_name,
-    }
-    list_members = _user_service.api_list_members(current_user.id)
-    user_data["members"] = list_members
+def member_pay(current_user, id_member):
+    valid_extensions = ['image/jpeg', 'image/png', 'application/pdf']
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        receipt = request.files["image"]
+        amount = Decimal(request.form["amount"])
+        description = request.form["description"]
+        if receipt.mimetype not in valid_extensions:
+            return jsonify({"message": "Tipo de archivo invalido"}), 415
+        movement = _movements_service.credit(amount, description, member, with_commit=True)
 
-    return jsonify(user_data), 200
+        return jsonify({"message": "ok"}), 200
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403

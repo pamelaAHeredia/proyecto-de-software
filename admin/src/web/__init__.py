@@ -20,15 +20,15 @@ from src.api.club.public_api import public_api_blueprint
 from src.api.club.private_api import private_api_blueprint
 from src.web.controllers.license import license_blueprint
 
-# csrf = CSRFProtect()
+csrf = CSRFProtect()
 
 def create_app(env="development", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
     app = Flask(__name__, static_folder=static_folder)
-    # csrf.init_app(app)
-   
+    csrf.init_app(app)
+      
     # Carga configuracion
     app.config.from_object(config[env])
     CORS(app, origins=app.config["PORTAL_URL"])
@@ -58,6 +58,9 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(public_api_blueprint)
     app.register_blueprint(private_api_blueprint)
     app.register_blueprint(license_blueprint)
+
+    #Saco el csrf para el front de vue
+    csrf.exempt(private_api_blueprint)
 
     # Handler Error
     # app.register_error_handler(400, handlers.bad_request)

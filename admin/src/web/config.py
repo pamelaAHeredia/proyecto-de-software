@@ -7,7 +7,6 @@ class Config(object):
     """Base configuration."""
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.jpeg']
-    UPLOAD_PATH = 'uploads'
     SECRET_KEY = secrets.token_urlsafe(32)
     DEBUG = False
     TESTING = False
@@ -46,8 +45,8 @@ class DevelopmentConfig(Config):
     )
     # Sesion valores
     SESSION_TYPE = "filesystem"
-    PORTAL_URL = "http://127.0.0.1:5173"
-    ADMIN_URL = "http://127.0.0.1:5000"
+    PORTAL_URL = ["http://127.0.0.1:5173", "http://localhost:5173"]
+    ADMIN_URL = ["http://127.0.0.1:5000", "http://localhost:5000"]
 
 class TestingConfig(Config):
     """Testing configuration."""
