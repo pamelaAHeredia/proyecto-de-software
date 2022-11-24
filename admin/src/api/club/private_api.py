@@ -13,6 +13,7 @@ from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
+from src.services.utils import verify_pass
 
 _member_service = MemberService()
 _user_service = UserService()
