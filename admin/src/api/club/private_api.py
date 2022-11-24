@@ -13,6 +13,7 @@ from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
+from src.services.utils import verify_pass
 
 _member_service = MemberService()
 _user_service = UserService()
@@ -59,10 +60,16 @@ def auth():
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
     user = _user_service.find_user_byUsername(auth_data.username)
+    if user and not user.is_active:
+        return make_response(
+            {"message":"Usuario inactivo."},
+            401,
+            {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
+        )
 
     if not user:
         return make_response(
-            {"message":"No se pudo verificar"},
+            {"message":"No existe el usuario."},
             401,
             {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
         )
@@ -79,7 +86,7 @@ def auth():
         return jsonify({"token": token})
 
     return make_response(
-        {"message":"No se pudo verificar"},
+        {"message":"Contraseña incorrecta."},
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
