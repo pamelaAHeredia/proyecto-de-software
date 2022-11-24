@@ -1,17 +1,15 @@
 import datetime
-from flask import current_app, Blueprint
-from flask import jsonify, request, make_response
-from flask_cors import cross_origin 
-import jwt
- 
 
-from src.services.utils import verify_pass
+import jwt
+from flask import Blueprint, current_app, jsonify, make_response, request
+from flask_cors import cross_origin
+
+from src.services.discipline import DisciplineService
 from src.services.member import MemberService
 from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
-
 
 _member_service = MemberService()
 _user_service = UserService()
@@ -82,3 +80,19 @@ def auth():
         401,
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
+
+@cross_origin
+@private_api_blueprint.get("/me/user_jwt")
+@token_required
+def user_jwt(current_user):
+    user_data = {
+        "username": current_user.username,
+        "email": current_user.email,
+        "id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+    }
+    list_members = _user_service.api_list_members(current_user.id)
+    user_data["members"] = list_members
+
+    return jsonify(user_data), 200

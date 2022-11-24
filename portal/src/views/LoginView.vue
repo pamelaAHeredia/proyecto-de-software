@@ -17,7 +17,7 @@
           v-model="usuario"
         />
         <input
-          type="text"
+          type="password"
           id="password"
           class="fadeIn third"
           name="login"
@@ -36,10 +36,14 @@
 </template>
 
 <script>
-import axios from "axios";
-const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
+import { useAuthStore } from "../stores/auth";
+import { apiService } from "@/api";
 
 export default {
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
   name: "LoginComponent",
 
   data: function () {
@@ -60,16 +64,17 @@ export default {
           Authorization: `Basic ${token}`,
         },
       };
-      axios
-        .post(PATH_SERVER + "/api/auth", data, headers)
+      apiService
+        .post("/api/auth", data, headers)
         .then((response) => {
           localStorage.setItem("token", response.data.token);
+          this.authStore.auth();
+          this.$router.push("/welcome");
         })
         .catch((err) => console.log(err.response));
     },
   },
-}
-
+};
 </script>
 
 <style scope>

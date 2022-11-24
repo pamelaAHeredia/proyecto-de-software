@@ -1,5 +1,5 @@
-<template>
-  <!-- <div class="item">
+<!-- <template> -->
+<!-- <div class="item">
     <i>
       <slot name="icon"></slot>
     </i>
@@ -10,8 +10,8 @@
       <slot></slot>
     </div>
   </div> -->
-</template>
-
+<!-- </template> -->
+<!-- 
 <style scoped>
 .item {
   margin-top: 2rem;
@@ -82,4 +82,4 @@ h3 {
     display: none;
   }
 }
-</style>
+</style> -->
