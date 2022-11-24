@@ -103,8 +103,8 @@ def create_app(env="development", static_folder="static"):
     def seedsdb():
         seeds.run()
 
-    # @app.after_request
-    # def set_xsrf_cookie(response):
-    #     response.set_cookie('csrf_token', generate_csrf())
-    #     return response
+    @app.after_request
+    def set_xsrf_cookie(response):
+        response.set_cookie('csrf_token', generate_csrf())
+        return response
     return app
