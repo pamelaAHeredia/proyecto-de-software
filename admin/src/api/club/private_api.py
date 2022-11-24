@@ -4,15 +4,15 @@ from flask import current_app, Blueprint
 from flask import jsonify, request, make_response
 from flask_cors import cross_origin 
 import jwt
- 
+from flask import Blueprint, current_app, jsonify, make_response, request
+from flask_cors import cross_origin
 
-from src.services.utils import verify_pass
+from src.services.discipline import DisciplineService
 from src.services.member import MemberService
 from src.services.user import UserService
 from src.services.movement import MovementService
 from src.services.discipline import DisciplineService
 from src.web.helpers.api import token_required
-
 
 _member_service = MemberService()
 _user_service = UserService()
