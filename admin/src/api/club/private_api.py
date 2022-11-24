@@ -1,5 +1,8 @@
 import datetime
-
+from decimal import Decimal
+from flask import current_app, Blueprint
+from flask import jsonify, request, make_response
+from flask_cors import cross_origin 
 import jwt
 from flask import Blueprint, current_app, jsonify, make_response, request
 from flask_cors import cross_origin
@@ -28,7 +31,7 @@ def discipline_list(current_user, id_member):
     if member.user==current_user:
         disciplines = _discipline_service.api_members_disciplines(member=member)
     else:
-        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
     return jsonify(disciplines), 200
 
@@ -40,7 +43,7 @@ def member_movements(current_user, id_member):
     if member.user==current_user:
         movements = _movements_service.api_member_movements(member=member, movement_type="C")
     else:
-        return jsonify({"message": "El socio no pertenece al usuario"}), 401
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
     return jsonify(movements), 200
 
@@ -81,18 +84,21 @@ def auth():
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
 
-@cross_origin
-@private_api_blueprint.get("/me/user_jwt")
-@token_required
-def user_jwt(current_user):
-    user_data = {
-        "username": current_user.username,
-        "email": current_user.email,
-        "id": current_user.id,
-        "first_name": current_user.first_name,
-        "last_name": current_user.last_name,
-    }
-    list_members = _user_service.api_list_members(current_user.id)
-    user_data["members"] = list_members
 
-    return jsonify(user_data), 200
+@cross_origin
+@private_api_blueprint.post("/me/payment/<int:id_member>")
+@token_required
+def member_pay(current_user, id_member):
+    valid_extensions = ['image/jpeg', 'image/png', 'application/pdf']
+    member = _member_service.get_by_membership_number(id_member)
+    if member.user==current_user:
+        receipt = request.files["image"]
+        amount = Decimal(request.form["amount"])
+        description = request.form["description"]
+        if receipt.mimetype not in valid_extensions:
+            return jsonify({"message": "Tipo de archivo invalido"}), 415
+        movement = _movements_service.credit(amount, description, member, with_commit=True)
+
+        return jsonify({"message": "ok"}), 200
+    else:
+        return jsonify({"message": "El socio no pertenece al usuario"}), 403
