@@ -1,5 +1,7 @@
 import datetime
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from src.models.database import db
+
 
 class Movement(db.Model):
     """
@@ -22,3 +24,10 @@ class Movement(db.Model):
     detail = db.Column(db.String(500), nullable=False)
     member_id = db.Column(db.Integer, db.ForeignKey("member.membership_number"))
     member = db.relationship("Member")
+
+    def resume(self):
+        data = dict()
+        data["date"] = self.date
+        data["amount"] = self.amount
+        data["detail"] = self.detail
+        return data
