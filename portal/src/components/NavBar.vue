@@ -1,6 +1,7 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth";
 import { RouterLink } from "vue-router";
+import SelectComponent from "./SelectComponent.vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 
 const authStore = useAuthStore();
@@ -13,6 +14,9 @@ const authStore = useAuthStore();
         <img src="@/assets/logoclubNavBar.jpg" />
       </div>
       <a class="navbar-brand" href="#">Club Deportivo Villa Elisa</a>
+      <div class="navbar-toggler">
+        <SelectComponent />
+      </div>
       <button
         class="navbar-toggler"
         type="button"
@@ -63,6 +67,9 @@ const authStore = useAuthStore();
                 <RouterLink to="/member-disciplines"
                   >Disciplinas del usuario</RouterLink
                 >
+              </li>
+              <li>
+                <RouterLink to="/payment">Pagos</RouterLink>
               </li>
               <li>
                 <RouterLink to="/" @click="authStore.unauth"

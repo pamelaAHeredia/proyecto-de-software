@@ -30,6 +30,8 @@ export default {
   methods: {
     submitForm() {
       const formData = new FormData();
+      const id = JSON.parse(sessionStorage.getItem("currentUser")).Id;
+      console.log(`El ID es: ${id}`);
       formData.append("image", this.file);
       const headers = {
         headers: {
@@ -37,7 +39,7 @@ export default {
         },
       };
       axios
-        .post(`${PATH_SERVER}/api/me/payment/1`, formData, headers)
+        .post(`${PATH_SERVER}/api/me/payment/${id}`, formData, headers)
         .then((response) => {
           console.log(response);
         })
