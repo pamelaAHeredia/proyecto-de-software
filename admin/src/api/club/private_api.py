@@ -39,7 +39,7 @@ def discipline_list(current_user, id_member):
 
 
 @cross_origin
-@private_api_blueprint.get("")
+@private_api_blueprint.get("/me/payments/<int:id_member>")
 @token_required
 def member_movements(current_user, id_member):
     member = _member_service.get_by_membership_number(id_member)
@@ -125,3 +125,4 @@ def user_jwt(current_user):
     }
     list_members = _user_service.api_list_members(current_user.id)
     user_data["members"] = list_members
+    return jsonify(user_data), 200
