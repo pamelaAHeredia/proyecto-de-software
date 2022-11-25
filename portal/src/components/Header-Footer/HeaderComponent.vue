@@ -11,7 +11,6 @@ import NavBar from "@/components/NavBar.vue";
 
 <style scoped>
 header {
-  /* padding: 20px; */
   height: 90px;
 }
 </style>
