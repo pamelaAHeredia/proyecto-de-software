@@ -28,7 +28,7 @@
     <h1 class="text-center">Disciplinas</h1>
   </div> -->
   <div class="container">
-    <h1 class="text-center">Movimientos</h1>
+    <h1 class="text-center">Movimientos de {{ name }}</h1>
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>
@@ -56,6 +56,12 @@ export default {
     movements: {
       type: Object,
       default: () => ({}),
+    },
+    member: {
+      type: Number,
+    },
+    name: {
+      type: String,
     },
   },
 };

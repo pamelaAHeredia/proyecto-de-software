@@ -1,6 +1,11 @@
 <template>
   <main class="content">
-    <PaymentListComponent v-if="is_loaded" :movements="movements" />
+    <PaymentListComponent
+      v-if="is_loaded"
+      v-bind:name="name"
+      v-bind:movements="movements"
+    />
+    <!-- <button v-on:click="componentKey += 1"></button> -->
   </main>
 </template>
 
@@ -19,10 +24,23 @@ export default {
       movements: {},
       currentMember: null,
       loaded: false,
+      name: "",
     };
   },
+  created() {
+    console.log("Se crea");
+    this.currentMember = this.useSelect.get_current;
+    console.log(this.currentMember);
+    this.name = this.currentMember.Name;
+  },
   mounted() {
-    this.currentMember = this.useSelect.currentMember.Id;
+    console.log("Se monta");
+    this.getListMovements();
+  },
+  updated() {
+    console.log("Se actualiza");
+    this.currentMember = this.useSelect.get_current;
+    this.name = this.currentMember.Name;
     this.getListMovements();
   },
   methods: {
@@ -31,12 +49,10 @@ export default {
       const headers = {
         headers: { "x-access-token": access_token },
       };
-      console.log(`Haciendo get al user ID ${this.currentMember}`);
       await apiService
         .get(`api/me/payments/${this.useSelect.get_current.Id}`, headers)
         .then((response) => {
           this.movements = response.data.movements;
-          console.log(response.data.movements);
           this.loaded = true;
         })
         .catch((e) => console.log(e));
