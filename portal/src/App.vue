@@ -20,9 +20,9 @@ import HeaderComponent from "@/components/Header-Footer/HeaderComponent.vue";
   <div class="wrapper">
     <!-- <HelloWorld msg="⚠️En Construcción🚧" /> -->
     <!-- <NavBar /> -->
-    <KeepAlive>
+    <!-- <KeepAlive> -->
       <HeaderComponent />
-    </KeepAlive>
+    <!-- </KeepAlive> -->
     <!-- <FooterComponent /> -->
     <!-- <nav>
         <RouterLink to="/">Home</RouterLink>

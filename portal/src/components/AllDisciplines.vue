@@ -1,5 +1,4 @@
 <template>
-  <!-- <section id="all-disciplines"> -->
   <div class="disciplines-title">
     <h1 class="text-center">Disciplinas</h1>
   </div>
@@ -48,7 +47,6 @@
     </svg>
   </div>
   <!-- shape divider -->
-  <!-- </section> -->
 </template>
 
 <script>
