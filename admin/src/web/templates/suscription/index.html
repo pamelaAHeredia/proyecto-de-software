@@ -74,7 +74,7 @@
             </div>
             <form action="{{url_for('suscription.leave', suscription_id=suscription.id, discipline_id=discipline_id)}}"
                 method="POST">
-
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Si</button>
