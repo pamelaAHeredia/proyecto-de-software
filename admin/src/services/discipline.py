@@ -35,17 +35,13 @@ class DisciplineService:
 
         return self._discipline_schema.dump(disciplines, many=True)
 
-    def api_members_disciplines(self, members):
+    def api_members_disciplines(self, member):
         disciplines = []
         data = dict()
-        for m in members:
-            for s in m.active_suscriptions:
-                if s.membership_id != 1:
-                    disciplines.append(s.membership.discipline)
-            data[m.membership_number] = self._discipline_schema.dump(
-                disciplines, many=True
-            )
-            disciplines = []
+        for suscription in member.active_suscriptions:
+            if suscription.membership_id!=1:
+                disciplines.append(suscription.membership.discipline)
+            data["disciplines"] = self._discipline_schema.dump(disciplines, many=True)
         return data
 
     def active(self, discipline_id):
