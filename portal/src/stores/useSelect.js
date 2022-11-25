@@ -10,8 +10,7 @@ export const useSelectMember = defineStore("members", {
 
   actions: {
     set_property() {
-      this.members = JSON.parse(sessionStorage.getItem("members"));
-      this.currentMember = JSON.parse(sessionStorage.getItem("currentMember"));
+      this.current_user();
     },
     delete_property() {
       sessionStorage.clear();
@@ -45,17 +44,5 @@ export const useSelectMember = defineStore("members", {
     is_auth: (state) => {
       return state.authenticated;
     },
-    /*is_auth: (state) => {
-      const access_token = sessionStorage.getItem("token");
-      if (access_token) {
-        const decoded = jwt_decode(access_token);
-        if (decoded["exp"] * 1000 <= Date.now()) {
-          state.authenticated = false;
-          state.user = {};
-          sessionStorage.clear();
-        }
-      }
-      return state.authenticated;
-    },*/
   },
 });
