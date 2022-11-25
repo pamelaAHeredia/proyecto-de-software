@@ -3,7 +3,7 @@ import MemberDisciplines from "@/components/MemberDisciplines.vue";
 </script>
 
 <template>
-  <main class="content">
+  <main>
     <MemberDisciplines />
   </main>
 </template>
