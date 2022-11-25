@@ -1,7 +1,6 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth";
 import { RouterLink } from "vue-router";
-// import HelloWorld from "./components/HelloWorld.vue";
 
 const authStore = useAuthStore();
 </script>
@@ -50,10 +49,6 @@ const authStore = useAuthStore();
               <RouterLink to="/"> Home </RouterLink>
             </li>
             <li class="nav-item">
-              <span class="material-symbols-outlined"> star </span>
-              <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
-            </li>
-            <li class="nav-item">
               <span class="material-symbols-outlined"> sports_basketball </span>
               <RouterLink to="/disciplines"> Disciplinas </RouterLink>
             </li>
@@ -61,14 +56,27 @@ const authStore = useAuthStore();
               <span class="material-symbols-outlined"> monitoring </span>
               <RouterLink to="/chart"> Estadisticas </RouterLink>
             </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> emoji_people </span>
+              <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
+            </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> call </span>
+              <RouterLink to="/contact-info">
+                Información de contacto
+              </RouterLink>
+            </li>
+            <hr />
 
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
+                <span class="material-symbols-outlined"> chevron_right </span>
                 <RouterLink to="/member-disciplines"
                   >Disciplinas del usuario</RouterLink
                 >
               </li>
               <li>
+                <span class="material-symbols-outlined"> logout </span>
                 <RouterLink to="/" @click="authStore.unauth"
                   >Cerrar Sesión</RouterLink
                 >
@@ -80,12 +88,6 @@ const authStore = useAuthStore();
                 <RouterLink to="/login"> Login </RouterLink>
               </li>
             </div>
-            <li class="nav-item">
-              <span class="material-symbols-outlined"> call </span>
-              <RouterLink to="/contact-info">
-                Información de contacto
-              </RouterLink>
-            </li>
           </ul>
         </div>
       </div>

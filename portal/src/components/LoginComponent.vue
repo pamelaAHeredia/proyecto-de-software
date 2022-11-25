@@ -8,7 +8,10 @@
 
       <!-- Login Form -->
       <form v-on:submit.prevent="login">
-        {{ errors }}
+        <div v-if="errors.length > 0" class="alert alert-danger" role="alert">
+          {{ errors }}
+        </div>
+
         <input
           type="text"
           id="login"
@@ -36,7 +39,6 @@
 <script>
 import { useAuthStore } from "../stores/auth/";
 import { apiService } from "@/api";
-// apiService.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
 
 export default {
   setup() {
@@ -73,7 +75,8 @@ export default {
           this.$router.push("/welcome");
         })
         .catch((err) => {
-          console.log(err.response.data), (this.errors = err.response.data);
+          console.log(err.response.data),
+            (this.errors = err.response.data.message);
         });
     },
   },
