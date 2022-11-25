@@ -20,6 +20,5 @@ app.mount("#app");
 const access_token = sessionStorage.getItem("token");
 if (access_token) {
   authStore.set_auth();
-  console.log(`Desde main ${sessionStorage.getItem("members")}`);
   useSelect.set_property();
 }

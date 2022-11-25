@@ -28,19 +28,19 @@ export default {
     };
   },
   mounted() {
+    console.log("ME MONTE");
     this.getMembers();
   },
   methods: {
     getMembers() {
       this.members = this.useSelect.get_members;
-      console.log(`Desde select ${sessionStorage.getItem("members")}`);
-      this.currentMember = this.useSelect.get_current;
+      this.currentUser = this.useSelect.get_current;
     },
     changeMember() {
       // eslint-disable-next-line no-unused-vars
       for (const [index, member] of this.members.entries()) {
         if (this.selected === member.Name) {
-          sessionStorage.setItem("currentMember", JSON.stringify(member));
+          console.log(index);
         }
       }
       this.useSelect.set_property();

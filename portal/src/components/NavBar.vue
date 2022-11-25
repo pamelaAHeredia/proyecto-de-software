@@ -16,8 +16,8 @@ const useSelect = useSelectMember();
         <img src="@/assets/logoclubNavBar.jpg" />
       </div>
       <a class="navbar-brand" href="#">Club Deportivo Villa Elisa</a>
-      <div class="navbar-toggler" v-if="authStore.is_auth">
-        <SelectComponent />
+      <div v-if="authStore.is_auth" class="navbar-toggler">
+        <SelectComponent v-if="useSelect.is_auth" />
       </div>
       <button
         class="navbar-toggler"
