@@ -18,6 +18,9 @@ export const useSelectMember = defineStore("members", {
       this.currentMember = {};
       this.authenticated = false;
     },
+    setCurrent(data) {
+      this.currentMember = data;
+    },
     async current_user() {
       const access_token = sessionStorage.getItem("token");
       const headers = {
@@ -26,7 +29,6 @@ export const useSelectMember = defineStore("members", {
       await apiService
         .get("/api/me/user_jwt", headers)
         .then((response) => {
-          console.log("ME CARGO");
           this.members = response.data.members;
           this.currentMember = this.members[0];
           this.authenticated = true;

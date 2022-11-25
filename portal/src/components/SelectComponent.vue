@@ -28,7 +28,6 @@ export default {
     };
   },
   mounted() {
-    console.log("ME MONTE");
     this.getMembers();
   },
   methods: {
@@ -40,10 +39,9 @@ export default {
       // eslint-disable-next-line no-unused-vars
       for (const [index, member] of this.members.entries()) {
         if (this.selected === member.Name) {
-          console.log(index);
+          this.useSelect.setCurrent(member);
         }
       }
-      this.useSelect.set_property();
     },
   },
 };
