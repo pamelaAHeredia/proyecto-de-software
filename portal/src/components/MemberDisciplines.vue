@@ -65,7 +65,7 @@ export default {
         headers: { "x-access-token": access_token },
       };
       await apiService
-        .get("api/me/disciplines", headers)
+        .get("api/me/disciplines/1", headers)
         .then((response) => {
           this.memberDisciplines = response.data;
           console.log(response);
