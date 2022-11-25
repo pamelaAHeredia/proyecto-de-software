@@ -476,7 +476,6 @@ class MemberService:
                     filter_by_status == "Activos"
                 )
         return list(members)
-        
 
     def license_to_pdf(self, id_member):
         """Funcion que exporta un Carnet de Socio a un archivo report.pdf
@@ -524,12 +523,12 @@ class MemberService:
         else:
             pdf.setFillColor(green)
             pdf.drawString(182, 600, "Al dia")
-        uuid_name = str(uuid.uuid4())  
+        uuid_name = str(uuid.uuid4())
 
         picture = member.picture.image
-        image_type = member.picture.image_type.replace("image/","")
+        image_type = member.picture.image_type.replace("image/", "")
         image64 = base64.b64decode(picture)
-        img_file_name = os.path.join(self._static_folder,uuid_name + "." + image_type)
+        img_file_name = os.path.join(self._static_folder, uuid_name + "." + image_type)
         image_result = open(img_file_name, "wb")
         image_result.write(image64)
         image_result.close
@@ -537,7 +536,7 @@ class MemberService:
 
         qr_image = member.picture.qr_image
         qr_image64 = base64.b64decode(qr_image)
-        qr_file_name = os.path.join(self._static_folder,f"{uuid_name}_qr.jpg")
+        qr_file_name = os.path.join(self._static_folder, f"{uuid_name}_qr.jpg")
         with open(qr_file_name, "wb") as qr_result:
             qr_result.write(qr_image64)
         img = ImageReader(qr_file_name)
@@ -548,18 +547,17 @@ class MemberService:
         os.remove(qr_file_name)
         return pdf
 
-
     def api_members_by_gender(self):
         male = Member.query.filter_by(is_active=True, gender="M").count()
         female = Member.query.filter_by(is_active=True, gender="F").count()
         other = Member.query.filter_by(is_active=True, gender="Otro").count()
-        data = {"M": male, "F": female, "Otro": other}
+        data = {"m": male, "f": female, "otro": other}
         return data
 
     def api_members_by_activated(self):
         active = Member.query.filter_by(is_active=True).count()
         inactive = Member.query.filter_by(is_active=False).count()
-        data = {"Active": active, "Inactive": inactive}
+        data = {"active": active, "inactive": inactive}
         return data
 
     def save_member_photo(self, member, photo_type, photo):
@@ -569,23 +567,26 @@ class MemberService:
             box_size=10,
             border=4,
         )
-        qr_code.add_data(f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}')
+        qr_code.add_data(
+            f'{current_app.config["ADMIN_URL"]}/carnet/plantillaCarnet/{member.membership_number}'
+        )
         qr_code.make(fit=True)
         qr_img = qr_code.make_image(fill_color="black", back_color="white")
-        qr_img_path = os.path.join(self._static_folder, f'qr_{member.membership_number}.jpg')
+        qr_img_path = os.path.join(
+            self._static_folder, f"qr_{member.membership_number}.jpg"
+        )
         qr_img.save(qr_img_path)
-        
-        with open(qr_img_path, 'rb') as img:
+
+        with open(qr_img_path, "rb") as img:
             member_qr_image = base64.b64encode(img.read())
             os.remove(qr_img_path)
-        
 
         member_picture = Picture()
         member_picture.image_type = photo_type
         member_picture.image = photo
         member.picture = member_picture
         member.picture.qr_image = member_qr_image
-        
+
         try:
             db.session.commit()
         except:

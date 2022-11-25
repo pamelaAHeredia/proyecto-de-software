@@ -53,6 +53,10 @@ const authStore = useAuthStore();
               <RouterLink to="/disciplines"> Disciplinas </RouterLink>
             </li>
             <li class="nav-item">
+              <span class="material-symbols-outlined"> monitoring </span>
+              <RouterLink to="/chart"> Estadisticas </RouterLink>
+            </li>
+            <li class="nav-item">
               <span class="material-symbols-outlined"> emoji_people </span>
               <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
             </li>
@@ -63,6 +67,7 @@ const authStore = useAuthStore();
               </RouterLink>
             </li>
             <hr />
+
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
                 <span class="material-symbols-outlined"> chevron_right </span>
