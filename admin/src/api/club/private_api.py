@@ -27,6 +27,8 @@ def discipline_list(current_user, id_member):
     disciplines = []
 
     member = _member_service.get_by_membership_number(id_member)
+    if not member:
+        return jsonify({"message": "No se encontro al socio."}), 404
     if member.user==current_user:
         disciplines = _discipline_service.api_members_disciplines(member=member)
     else:
@@ -39,6 +41,8 @@ def discipline_list(current_user, id_member):
 @token_required
 def member_movements(current_user, id_member):
     member = _member_service.get_by_membership_number(id_member)
+    if not member:
+        return jsonify({"message": "No se encontro al socio."}), 404
     if member.user==current_user:
         movements = _movements_service.api_member_movements(member=member, specific_date=datetime.date.today())
     else:
@@ -96,6 +100,8 @@ def auth():
 def member_pay(current_user, id_member):
     valid_extensions = ['image/jpeg', 'image/png', 'application/pdf']
     member = _member_service.get_by_membership_number(id_member)
+    if not member:
+        return jsonify({"message": "No se encontro al socio."}), 404
     if member.user==current_user:
         receipt = request.files["image"]
         amount = Decimal(request.form["amount"])
