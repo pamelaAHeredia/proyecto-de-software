@@ -26,8 +26,15 @@ class Movement(db.Model):
     member = db.relationship("Member")
 
     def resume(self):
+        movements_types = {
+            "S": "Saldo mes anterior",
+            "I": "Intereses sobre el saldo",
+            "D": "Débito",
+            "C": "Crédito",
+        }
         data = dict()
         data["date"] = self.date
         data["amount"] = self.amount
         data["detail"] = self.detail
+        data["movement_type"] = movements_types[self.movement_type]
         return data
