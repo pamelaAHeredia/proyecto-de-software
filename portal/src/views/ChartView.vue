@@ -1,7 +1,7 @@
 <script setup>
 import ChartPieComponent from "@/components/ChartPieComponent.vue";
 import ChartBarComponent from "@/components/ChartBarComponent.vue";
-import ChartLineComponent from "@/components/ChartLineComponent.vue";
+import ChartDoughtComponent from "@/components/ChartDoughtComponent.vue";
 </script>
 
 <template>
@@ -11,13 +11,15 @@ import ChartLineComponent from "@/components/ChartLineComponent.vue";
     </div>
     <br />
     <br />
+    <br />
     <div class="mx-auto d-block">
       <ChartBarComponent />
     </div>
     <br />
     <br />
+    <br />
     <div class="mx-auto d-block">
-      <ChartLineComponent />
+      <ChartDoughtComponent />
     </div>
   </div>
 </template>

@@ -24,8 +24,6 @@ export default {
         .then((response) => {
           this.membersByDiscipline = response.data;
           this.getLabelsAndData();
-          console.log(this.labels);
-          console.log(this.data);
           this.getBarChart();
         })
         .catch((e) => console.log(e));
@@ -47,7 +45,9 @@ export default {
             {
               label: "Cantidad de Socios",
               data: this.data,
-              borderWidth: 3,
+              borderWidth: 2,
+              borderColor: "rgba(12, 12, 12, 1)",
+              borderRadius: 10,
               backgroundColor: [
                 "rgba(255, 99, 132, 0.5)",
                 "rgba(255, 159, 64, 0.5)",
@@ -62,7 +62,7 @@ export default {
         },
         options: {
           responsive: true,
-          aspectRatio: 5,
+          aspectRatio: 4,
           scales: {
             y: {
               beginAtZero: true,
