@@ -33,7 +33,7 @@
       <table class="table table-hover">
         <thead>
           <th>Nombre</th>
-          <th>Categorìa</th>
+          <th>Categoría</th>
           <th>Horario</th>
           <th>Instructor</th>
         </thead>
@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import axios from "axios";
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;

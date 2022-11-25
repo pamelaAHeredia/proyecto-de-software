@@ -283,7 +283,7 @@ class DisciplineService:
 
         disciplines = (
             Discipline.query.filter(Discipline.membership.has(is_active=True))
-            .order_by(Discipline.id)
+            .order_by(Discipline.name, Discipline.category)
             .all()
         )
         data = []
