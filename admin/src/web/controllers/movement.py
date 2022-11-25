@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
 from src.web.helpers.auth import login_required, verify_permission
@@ -29,7 +30,6 @@ def member_balance(member_id):
             date = movement_form.date.data
             service.credit(amount, detail, member, date, True)
             flash("Pago registrado con éxito.", "success")
-            # return redirect(url_for("members.index"))
 
     page = request.args.get("page", 1, type=int)
 
