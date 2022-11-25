@@ -3,7 +3,6 @@ import { useAuthStore } from "@/stores/auth";
 import { useSelectMember } from "../stores/useSelect";
 import { RouterLink } from "vue-router";
 import SelectComponent from "./SelectComponent.vue";
-// import HelloWorld from "./components/HelloWorld.vue";
 
 const authStore = useAuthStore();
 const useSelect = useSelectMember();

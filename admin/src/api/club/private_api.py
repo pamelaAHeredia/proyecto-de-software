@@ -111,3 +111,17 @@ def member_pay(current_user, id_member):
         return jsonify({"message": "ok"}), 200
     else:
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
+
+@cross_origin
+@private_api_blueprint.get("/me/user_jwt")
+@token_required
+def user_jwt(current_user):
+    user_data = {
+        "username": current_user.username,
+        "email": current_user.email,
+        "id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+    }
+    list_members = _user_service.api_list_members(current_user.id)
+    user_data["members"] = list_members

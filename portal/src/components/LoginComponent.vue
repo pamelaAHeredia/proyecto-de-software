@@ -74,7 +74,6 @@ export default {
           this.authStore.set_auth();
           this.useSelect.set_property();
           this.$router.push("/welcome");
-          console.log(`Desde Login ${sessionStorage.getItem("members")}`);
         })
         .catch((err) => {
           console.log(err.response.data), (this.errors = err.response.data);

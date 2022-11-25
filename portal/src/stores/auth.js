@@ -29,7 +29,6 @@ export const useAuthStore = defineStore("authenticated", {
           this.user = response.data;
         })
         .catch((e) => console.log(e));
-      console.log(`Desde auth ${sessionStorage.getItem("members")}`);
     },
   },
   getters: {
