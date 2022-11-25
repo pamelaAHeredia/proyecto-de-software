@@ -11,26 +11,34 @@
 </template>
 
 <script>
+import { useSelectMember } from "../stores/useSelect";
 export default {
+  setup() {
+    const useSelect = useSelectMember();
+    return { useSelect };
+  },
+
+  name: "SelectComponent",
+
   data() {
     return {
       selected: "",
       members: {},
-      currentUser: {},
+      currentMember: {},
     };
   },
   mounted() {
+    console.log("ME MONTE");
     this.getMembers();
   },
   methods: {
     getMembers() {
-      this.members = JSON.parse(sessionStorage.getItem("members"));
-      this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+      this.members = this.useSelect.get_members;
+      this.currentUser = this.useSelect.get_current;
     },
     changeMember() {
       for (const [index, member] of this.members.entries()) {
         if (this.selected === member.Name) {
-          sessionStorage.setItem("currentUser", JSON.stringify(member));
           console.log(index);
         }
       }

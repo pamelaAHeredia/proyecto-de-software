@@ -27,11 +27,6 @@ export const useAuthStore = defineStore("authenticated", {
         .get("/api/me/user_jwt", headers)
         .then((response) => {
           this.user = response.data;
-          sessionStorage.setItem("members", JSON.stringify(this.user.members));
-          sessionStorage.setItem(
-            "currentUser",
-            JSON.stringify(this.user.members[0])
-          );
         })
         .catch((e) => console.log(e));
     },
