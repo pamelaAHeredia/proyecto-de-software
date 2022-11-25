@@ -1,35 +1,114 @@
 <template>
-  <div class="container">
-    <button>Listado</button>
-    <button>Hacer pago</button>
-  </div>
+  <main class="content">
+    <PaymentListComponent v-if="is_loaded" :movements="movements" />
+  </main>
 </template>
 
 <script>
-import axios from "axios";
-const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+import { apiService } from "@/api";
+import { useSelectMember } from "../stores/useSelect";
+import PaymentListComponent from "../components/PaymentListComponent.vue";
 
 export default {
+  setup() {
+    const useSelect = useSelectMember();
+    return { useSelect };
+  },
   data() {
     return {
-      disciplines: null,
+      movements: {},
+      currentMember: null,
+      loaded: false,
     };
   },
   mounted() {
-    this.getDisciplines();
+    this.currentMember = this.useSelect.currentMember.Id;
+    this.getListMovements();
   },
   methods: {
-    getDisciplines() {
-      axios
-        .get(PATH_SERVER + "/api/club/disciplines")
+    async getListMovements() {
+      const access_token = sessionStorage.getItem("token");
+      const headers = {
+        headers: { "x-access-token": access_token },
+      };
+      console.log(`Haciendo get al user ID ${this.currentMember}`);
+      await apiService
+        .get(`api/me/payments/${this.useSelect.get_current.Id}`, headers)
         .then((response) => {
-          this.disciplines = response.data;
+          this.movements = response.data.movements;
+          console.log(response.data.movements);
+          this.loaded = true;
         })
         .catch((e) => console.log(e));
     },
+    is_loaded() {
+      return this.loaded;
+    },
   },
+  components: { PaymentListComponent },
 };
 </script>
 
-<style></style>
+<style scope>
+.container h1 {
+  margin-bottom: 15px;
+  font-size: 60px;
+  color: #333333;
+}
+.filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  /* background: #e3a72f; */
+  background: #333333;
+  /* background: black; */
+}
+.table {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  border-collapse: collapse;
+  border-spacing: 3px;
+  border-radius: 12px 12px 12px 12px;
+  box-shadow: 0 10px, 50px rgba(32, 32, 32, 10);
+  overflow: hidden;
+  background: white;
+  text-align: left;
+}
+th {
+  background: #e3a72f;
+  font-size: 20px;
+  padding: 15px;
+}
+td {
+  font-size: 20px;
+}
+
+.custom-shape-divider-bottom-1669129895 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1669129895 svg {
+  position: relative;
+  display: block;
+  width: calc(231% + 1.3px);
+  height: 500px;
+  transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1669129895 .shape-fill {
+  fill: #333333;
+}
+</style>
