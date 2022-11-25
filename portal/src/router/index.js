@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/HomeView.vue"),
+      component: () => import("@/components/TheWelcome.vue"),
     },
     {
       path: "/about",
@@ -21,9 +21,19 @@ const router = createRouter({
       component: () => import("../views/DisciplinesView.vue"),
     },
     {
+      path: "/chart",
+      name: "chart",
+      component: () => import("../views/ChartView.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
+    },
+    {
+      path: "/contact-info",
+      name: "contact-info",
+      component: () => import("../components/ContactInfo.vue"),
     },
     {
       path: "/member-disciplines",
@@ -43,7 +53,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (authStore.is_auth.authenticated) {
+    if (authStore.is_auth) {
       next();
     } else {
       router.replace("/");

@@ -1,40 +1,51 @@
 import { defineStore } from "pinia";
 import jwt_decode from "jwt-decode";
+import { apiService } from "@/api";
 
 export const useAuthStore = defineStore("authenticated", {
   state: () => ({
-    user: "",
+    user: {},
     authenticated: false,
   }),
 
   actions: {
-    auth() {
-      const token = jwt_decode(localStorage.getItem("token"));
-      (this.user = token["user"]), (this.authenticated = true);
+    set_auth() {
+      this.authenticated = true;
+      this.current_user();
     },
     unauth() {
-      localStorage.removeItem("token");
+      sessionStorage.clear();
       this.authenticated = false;
-      this.user = "";
+      this.user = {};
+    },
+    async current_user() {
+      const access_token = sessionStorage.getItem("token");
+      const headers = {
+        headers: { "x-access-token": access_token },
+      };
+      await apiService
+        .get("/api/me/user_jwt", headers)
+        .then((response) => {
+          this.user = response.data;
+          console.log(response);
+        })
+        .catch((e) => console.log(e));
     },
   },
   getters: {
     is_auth: (state) => {
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        try {
-          const token = jwt_decode(token);
-          if (token["exp"] * 1000 <= Date.now()) {
-            (this.user = token["user"]), (this.authenticated = true);
-          }
-        } catch (error) {
-          // invalid token format
+      const access_token = sessionStorage.getItem("token");
+      if (access_token) {
+        const decoded = jwt_decode(access_token);
+        if (decoded["exp"] * 1000 <= Date.now()) {
+          state.authenticated = false;
+          state.user = {};
+          sessionStorage.clear();
         }
       }
-      return state;
+      return state.authenticated;
     },
-    user_name: (state) => {
+    get_user: (state) => {
       return state.user;
     },
   },

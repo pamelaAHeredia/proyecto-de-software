@@ -121,7 +121,7 @@ class UserService:
         if not mail_found or int(id) == mail_found.id:
             if not username_found or int(id) == username_found.id:
                 user = self.find_user_by_id(id)
-                if not user.is_main_admin: 
+                if not user.is_main_admin:
                     user.email = email
                     user.username = username
                     user.first_name = first_name
@@ -293,10 +293,10 @@ class UserService:
         members = user.members
         list_members = []
         for member in members:
-            info = { "Id": member.membership_number,
-                     "Name": member.last_name + ", " + member.first_name
-                      }
-            list_members.append(info)         
+            info = {
+                "id": member.membership_number,
+                "name": member.last_name + ", " + member.first_name,
+            }
+            list_members.append(info)
             info = {}
         return list_members
-
