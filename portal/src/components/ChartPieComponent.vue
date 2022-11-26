@@ -1,7 +1,7 @@
 <script>
 import Chart from "chart.js/auto";
 import axios from "axios";
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+// axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
 
 export default {
