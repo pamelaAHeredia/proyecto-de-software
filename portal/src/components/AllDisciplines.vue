@@ -1,4 +1,27 @@
 <template>
+  <div class="disciplines-title">
+    <h1 class="text-center">Disciplinas</h1>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <th>Nombre</th>
+        <th>Categorìa</th>
+        <th>Horario</th>
+        <th>Instructor</th>
+      </thead>
+      <tbody>
+        <tr v-for="discipline in disciplines" :key="discipline.id">
+          <th>{{ discipline.name }}</th>
+          <td>{{ discipline.category }}</td>
+          <td>{{ discipline.days_and_schedules }}</td>
+          <td>{{ discipline.instructor }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- shape divider -->
   <div class="custom-shape-divider-bottom-1669129895">
     <svg
@@ -24,52 +47,9 @@
     </svg>
   </div>
   <!-- shape divider -->
-  <!-- <div class="filter">
-    <h1 class="text-center">Disciplinas</h1>
-  </div> -->
-  <div class="container">
-    <h1 class="text-center">Disciplinas</h1>
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <th>Nombre</th>
-          <th>Categorìa</th>
-          <th>Horario</th>
-          <th>Instructor</th>
-        </thead>
-        <tbody>
-          <tr v-for="discipline in disciplines" :key="discipline.id">
-            <th>{{ discipline.name }}</th>
-            <td>{{ discipline.category }}</td>
-            <td>{{ discipline.days_and_schedules }}</td>
-            <td>{{ discipline.instructor }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- <div class="d-flex justify-content-evenly">
-      <div v-for="discipline in disciplines" :key="discipline.id">
-        <div class="card text-center" style="width: 18rem">
-          <div class="card-header">
-            <strong>{{ discipline.name }}</strong>
-          </div>
-          <div class="card-body">
-            <p class="card-text">
-              <strong>Categoría: </strong>{{ discipline.category }}
-            </p>
-            <p>
-              <strong>Horarios: </strong>{{ discipline.days_and_schedules }}
-            </p>
-            <p><strong>Instructor: </strong>{{ discipline.instructor }}</p>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    <!-- -->
-  </div>
 </template>
 
-<script>
+<script lang="js">
 import axios from "axios";
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
@@ -96,23 +76,14 @@ export default {
 };
 </script>
 
-<style scope>
-.container h1 {
+<style>
+.disciplines-title h1 {
   margin-bottom: 15px;
   font-size: 60px;
   color: #333333;
-}
-.filter {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   z-index: 1;
-  /* background: #e3a72f; */
-  background: #333333;
-  /* background: black; */
 }
+
 .table {
   position: absolute;
   z-index: 1;
@@ -145,6 +116,7 @@ td {
   overflow: hidden;
   line-height: 0;
   transform: rotate(180deg);
+  z-index: -1;
 }
 
 .custom-shape-divider-bottom-1669129895 svg {

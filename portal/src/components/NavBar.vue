@@ -55,16 +55,28 @@ const useSelect = useSelectMember();
               <RouterLink to="/"> Home </RouterLink>
             </li>
             <li class="nav-item">
-              <span class="material-symbols-outlined"> star </span>
-              <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
-            </li>
-            <li class="nav-item">
               <span class="material-symbols-outlined"> sports_basketball </span>
               <RouterLink to="/disciplines"> Disciplinas </RouterLink>
             </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> monitoring </span>
+              <RouterLink to="/chart"> Estadisticas </RouterLink>
+            </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> emoji_people </span>
+              <RouterLink to="/about"> ¿quiénes somos? </RouterLink>
+            </li>
+            <li class="nav-item">
+              <span class="material-symbols-outlined"> call </span>
+              <RouterLink to="/contact-info">
+                Información de contacto
+              </RouterLink>
+            </li>
+            <hr />
 
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
+                <span class="material-symbols-outlined"> chevron_right </span>
                 <RouterLink to="/member-disciplines"
                   >Disciplinas del usuario</RouterLink
                 >
@@ -76,14 +88,15 @@ const useSelect = useSelectMember();
                 <RouterLink to="/paymentVoucher">Subir pago</RouterLink>
               </li>
               <li>
+                <span class="material-symbols-outlined"> logout </span>
                 <RouterLink
                   to="/"
                   @click="
                     authStore.unauth();
                     useSelect.delete_property();
                   "
-                  >Cerrar Sesión</RouterLink
-                >
+                  >Cerrar Sesión
+                </RouterLink>
               </li>
             </div>
             <div v-else>
@@ -92,12 +105,6 @@ const useSelect = useSelectMember();
                 <RouterLink to="/login"> Login </RouterLink>
               </li>
             </div>
-            <li class="nav-item">
-              <span class="material-symbols-outlined"> call </span>
-              <RouterLink to="/contact-info">
-                Información de contacto
-              </RouterLink>
-            </li>
           </ul>
         </div>
       </div>
