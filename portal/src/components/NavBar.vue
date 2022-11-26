@@ -73,12 +73,11 @@ const useSelect = useSelectMember();
               </RouterLink>
             </li>
             <hr />
-
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
                 <span class="material-symbols-outlined"> chevron_right </span>
                 <RouterLink to="/member-disciplines"
-                  >Disciplinas del usuario</RouterLink
+                  >Mis disciplinas</RouterLink
                 >
               </li>
               <li>
@@ -87,6 +86,7 @@ const useSelect = useSelectMember();
               <li>
                 <RouterLink to="/paymentVoucher">Subir pago</RouterLink>
               </li>
+              <hr />
               <li>
                 <span class="material-symbols-outlined"> logout </span>
                 <RouterLink
