@@ -1,13 +1,10 @@
 <template>
-  <select v-model="selected">
+  <select v-on:change="changeMember" v-model="selected">
     <option disabled value="">Seleccione un socio</option>
     <option v-for="member in members" :key="member.Id">
       {{ member.Name }}
     </option>
   </select>
-  <button class="btn btn-primary" v-on:click="changeMember">
-    Cambiar socio
-  </button>
 </template>
 
 <script>
