@@ -9,10 +9,12 @@
 
 <script>
 import { useSelectMember } from "../stores/useSelect";
+import { inject } from "vue";
 export default {
   setup() {
     const useSelect = useSelectMember();
-    return { useSelect };
+    const emitter = inject("emitter");
+    return { useSelect, emitter };
   },
 
   name: "SelectComponent",
@@ -37,6 +39,7 @@ export default {
       for (const [index, member] of this.members.entries()) {
         if (this.selected === member.name) {
           this.useSelect.setCurrent(member);
+          this.emitter.emit("channel", true);
         }
       }
     },

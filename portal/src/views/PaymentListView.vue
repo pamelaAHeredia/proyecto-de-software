@@ -7,12 +7,14 @@
 <script>
 import { apiService } from "@/api";
 import { useSelectMember } from "../stores/useSelect";
+import { inject } from "vue";
 import PaymentListComponent from "../components/PaymentListComponent.vue";
 
 export default {
   setup() {
     const useSelect = useSelectMember();
-    return { useSelect };
+    const emitter = inject("emitter");
+    return { useSelect, emitter };
   },
   data() {
     return {
@@ -22,15 +24,14 @@ export default {
     };
   },
   mounted() {
-    this.currentMember = this.useSelect.get_current;
     this.getListMovements();
-  },
-  updated() {
-    this.currentMember = this.useSelect.get_current;
-    this.getListMovements();
+    this.emitter.on("channel", () => {
+      this.getListMovements();
+    });
   },
   methods: {
     async getListMovements() {
+      this.currentMember = this.useSelect.get_current;
       const access_token = sessionStorage.getItem("token");
       const headers = {
         headers: { "x-access-token": access_token },
