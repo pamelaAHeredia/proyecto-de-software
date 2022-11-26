@@ -70,7 +70,10 @@ const useSelect = useSelectMember();
                 >
               </li>
               <li>
-                <RouterLink to="/payment">Pagos</RouterLink>
+                <RouterLink to="/paymentList">Lista de pagos</RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/paymentVoucher">Subir pago</RouterLink>
               </li>
               <li>
                 <RouterLink
