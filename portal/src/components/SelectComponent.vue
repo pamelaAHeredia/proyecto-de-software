@@ -35,7 +35,7 @@ export default {
     changeMember() {
       // eslint-disable-next-line no-unused-vars
       for (const [index, member] of this.members.entries()) {
-        if (this.selected === member.Name) {
+        if (this.selected === member.name) {
           this.useSelect.setCurrent(member);
         }
       }
