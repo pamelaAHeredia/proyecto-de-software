@@ -120,7 +120,6 @@ def member_pay(current_user, id_member):
     else:
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
-
 @cross_origin
 @private_api_blueprint.get("/me/license/<int:id_member>")
 @token_required

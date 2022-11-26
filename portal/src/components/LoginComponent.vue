@@ -38,12 +38,14 @@
 
 <script>
 import { useAuthStore } from "../stores/auth/";
+import { useSelectMember } from "../stores/useSelect";
 import { apiService } from "@/api";
 
 export default {
   setup() {
     const authStore = useAuthStore();
-    return { authStore };
+    const useSelect = useSelectMember();
+    return { authStore, useSelect };
   },
   name: "LoginComponent",
 
@@ -72,6 +74,7 @@ export default {
         .then((response) => {
           sessionStorage.setItem("token", response.data.token);
           this.authStore.set_auth();
+          this.useSelect.set_property();
           this.$router.push("/welcome");
         })
         .catch((err) => {
