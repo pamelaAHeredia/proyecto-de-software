@@ -1,17 +1,24 @@
 <template>
-  <div class="about">
-    <h1 class="display-3">
-      Portal del Club Deportivo Villa Elisa creado por el Grupo 06
-    </h1>
-  </div>
+  <section class="about d-flex">
+    <div class="about-text">
+      <h1>Sobre Nosotros</h1>
+      <h5>club deportivo</h5>
+      <p>
+        Lorem ipsum is placeholder text commonly used in the graphic, print, and
+        publishing industries for previewing layouts and visual mockups.
+      </p>
+      <button @click="contactInfo">Contactar</button>
+    </div>
+    <img src="@/assets/rsz_equipo.jpg" />
+  </section>
 </template>
 
-<style>
-/* @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
-</style>
+<script>
+export default {
+  methods: {
+    contactInfo() {
+      this.$router.push("/contact-info");
+    },
+  },
+};
+</script>
