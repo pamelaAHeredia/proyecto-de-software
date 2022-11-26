@@ -38,7 +38,7 @@ def discipline_list(current_user, id_member):
     return jsonify(disciplines), 200
 
 
-@cross_origin
+# @cross_origin
 @private_api_blueprint.get("/me/payments/<int:id_member>")
 @token_required
 def member_movements(current_user, id_member):
@@ -55,7 +55,7 @@ def member_movements(current_user, id_member):
     return jsonify(movements), 200
 
 
-@cross_origin
+# @cross_origin
 @private_api_blueprint.post("/auth")
 def auth():
     auth_data = request.authorization
@@ -98,7 +98,7 @@ def auth():
         {"WWW-Authenticate": 'Basic realm="Login requerido!"'},
     )
 
-@cross_origin
+# @cross_origin
 @private_api_blueprint.post("/me/payment/<int:id_member>")
 @token_required
 def member_pay(current_user, id_member):
@@ -120,7 +120,7 @@ def member_pay(current_user, id_member):
     else:
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
-@cross_origin
+# @cross_origin
 @private_api_blueprint.get("/me/license/<int:id_member>")
 @token_required
 def member_license(current_user, id_member):
@@ -145,7 +145,7 @@ def member_license(current_user, id_member):
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
 
-@cross_origin
+# @cross_origin
 @private_api_blueprint.get("/me/user_jwt")
 @token_required
 def user_jwt(current_user):
