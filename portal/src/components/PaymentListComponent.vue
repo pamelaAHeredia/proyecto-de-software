@@ -28,7 +28,7 @@
     <h1 class="text-center">Disciplinas</h1>
   </div> -->
   <div class="container">
-    <h1 class="text-center">Movimientos de {{ useSelect.get_current.Name }}</h1>
+    <h1 class="text-center">Movimientos de {{ useSelect.get_current.name }}</h1>
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { useSelectMember } from '../stores/useSelect';
+import { useSelectMember } from "../stores/useSelect";
 export default {
   setup() {
     const useSelect = useSelectMember();

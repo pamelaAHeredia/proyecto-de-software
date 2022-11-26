@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="text-center">Cargar pago de {{ useSelect.get_current.Name }}</h1>
+    <h1 class="text-center">Cargar pago de {{ useSelect.get_current.name }}</h1>
     <form v-on:submit.prevent="submitForm">
       <div class="mb-3">
         <label class="form-label">Seleccione un comprobante de pago</label>
@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     async submitForm() {
-      console.log(this.description);
       const formData = new FormData();
       formData.append("image", this.file);
       formData.append("amount", this.amount);
@@ -70,7 +69,7 @@ export default {
       };
       await apiService
         .post(
-          `/api/me/payment/${this.useSelect.get_current.Id}`,
+          `/api/me/payment/${this.useSelect.get_current.id}`,
           formData,
           headers
         )

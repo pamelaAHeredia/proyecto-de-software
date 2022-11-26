@@ -1,8 +1,8 @@
 <template>
   <select v-on:change="changeMember" v-model="selected">
     <option disabled value="">Seleccione un socio</option>
-    <option v-for="member in members" :key="member.Id">
-      {{ member.Name }}
+    <option v-for="member in members" :key="member.id">
+      {{ member.name }}
     </option>
   </select>
 </template>

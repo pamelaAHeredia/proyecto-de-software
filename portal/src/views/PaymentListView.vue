@@ -36,7 +36,7 @@ export default {
         headers: { "x-access-token": access_token },
       };
       await apiService
-        .get(`api/me/payments/${this.currentMember.Id}`, headers)
+        .get(`api/me/payments/${this.currentMember.id}`, headers)
         .then((response) => {
           this.movements = response.data.movements;
           this.loaded = true;
