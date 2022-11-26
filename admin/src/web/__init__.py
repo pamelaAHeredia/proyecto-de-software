@@ -32,6 +32,7 @@ def create_app(env="production", static_folder="static"):
     # Carga configuracion
     app.config.from_object(config[env])
     # CORS(app, origins=app.config["PORTAL_URL"])
+    CORS(app)
     
     
 
