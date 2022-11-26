@@ -53,6 +53,16 @@ const router = createRouter({
       component: () => import("../views/WelcomeUserView.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/paymentList",
+      name: "paymentList",
+      component: () => import("../views/PaymentListView.vue"),
+    },
+    {
+      path: "/paymentVoucher",
+      name: "paymentVoucher",
+      component: () => import("../views/PaymentVoucher.vue"),
+    },
   ],
 });
 

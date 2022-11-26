@@ -1,22 +1,25 @@
 import { defineStore } from "pinia";
-import jwt_decode from "jwt-decode";
 import { apiService } from "@/api";
 
-export const useAuthStore = defineStore("authenticated", {
+export const useSelectMember = defineStore("members", {
   state: () => ({
-    user: {},
+    members: {},
+    currentMember: {},
     authenticated: false,
   }),
 
   actions: {
-    set_auth() {
-      this.authenticated = true;
+    set_property() {
       this.current_user();
     },
-    unauth() {
+    delete_property() {
       sessionStorage.clear();
+      this.members = {};
+      this.currentMember = {};
       this.authenticated = false;
-      this.user = {};
+    },
+    setCurrent(data) {
+      this.currentMember = data;
     },
     async current_user() {
       const access_token = sessionStorage.getItem("token");
@@ -26,26 +29,22 @@ export const useAuthStore = defineStore("authenticated", {
       await apiService
         .get("/api/me/user_jwt", headers)
         .then((response) => {
-          this.user = response.data;
+          this.members = response.data.members;
+          this.currentMember = this.members[0];
+          this.authenticated = true;
         })
         .catch((e) => console.log(e));
     },
   },
   getters: {
-    is_auth: (state) => {
-      const access_token = sessionStorage.getItem("token");
-      if (access_token) {
-        const decoded = jwt_decode(access_token);
-        if (decoded["exp"] * 1000 <= Date.now()) {
-          state.authenticated = false;
-          state.user = {};
-          sessionStorage.clear();
-        }
-      }
-      return state.authenticated;
+    get_current: (state) => {
+      return state.currentMember;
     },
-    get_user: (state) => {
-      return state.user;
+    get_members: (state) => {
+      return state.members;
+    },
+    is_auth: (state) => {
+      return state.authenticated;
     },
   },
 });
