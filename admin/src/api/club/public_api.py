@@ -12,7 +12,7 @@ settings = SettingsService()
 member_service = MemberService()
 public_api_blueprint = Blueprint("club_api", __name__, url_prefix="/api/club")
 
-@cross_origin
+# @cross_origin
 @public_api_blueprint.get("/disciplines")
 def discipline_list():
     disciplines = service.api_disciplines()
