@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <section class="content">
     <div class="member-disciplines">
       <h1 class="display-3">Disciplinas del</h1>
 
@@ -38,7 +38,7 @@
         </table>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
