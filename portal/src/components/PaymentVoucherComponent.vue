@@ -63,7 +63,7 @@ export default {
       const access_token = sessionStorage.getItem("token");
       const headers = {
         headers: {
-          "x-access-token": access_token,
+          Authorization: access_token,
           "Content-Type": "multipart/form-data",
         },
       };
