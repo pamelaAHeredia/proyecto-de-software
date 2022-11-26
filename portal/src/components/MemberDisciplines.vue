@@ -68,7 +68,6 @@ export default {
         .get("api/me/disciplines/1", headers)
         .then((response) => {
           this.memberDisciplines = response.data;
-          console.log(response);
         })
         .catch((e) => console.log(e));
     },

@@ -75,6 +75,10 @@ const authStore = useAuthStore();
                   >Disciplinas del usuario</RouterLink
                 >
               </li>
+              <li class="dropdown-item">
+                <span class="material-symbols-outlined"> badge </span>
+                <RouterLink to="/member-license"> Carnet de Socio</RouterLink>
+              </li>
               <li>
                 <span class="material-symbols-outlined"> logout </span>
                 <RouterLink to="/" @click="authStore.unauth"

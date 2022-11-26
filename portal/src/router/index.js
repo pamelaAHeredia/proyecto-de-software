@@ -42,6 +42,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/member-license",
+      name: "member-license",
+      component: () => import("../components/MemberLicense.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/welcome",
       name: "welcome",
       component: () => import("../views/WelcomeUserView.vue"),
