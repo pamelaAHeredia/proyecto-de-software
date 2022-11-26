@@ -11,8 +11,8 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "x-access-token" in request.headers:
-            token = request.headers["x-access-token"]
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"]
         if not token:
             return jsonify({"message": "Token requerido"}), 401
         try:

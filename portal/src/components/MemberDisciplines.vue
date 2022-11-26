@@ -62,7 +62,7 @@ export default {
     async getMemberDisciplines() {
       const access_token = sessionStorage.getItem("token");
       const headers = {
-        headers: { "x-access-token": access_token },
+        headers: { Authorization: access_token },
       };
       await apiService
         .get("api/me/disciplines/1", headers)
