@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_session import Session
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 
@@ -22,7 +22,7 @@ from src.web.controllers.license import license_blueprint
 
 csrf = CSRFProtect()
 
-def create_app(env="development", static_folder="static"):
+def create_app(env="production", static_folder="static"):
 
     """Metodo de inicializacion de la aplicacion"""
 
@@ -31,7 +31,7 @@ def create_app(env="development", static_folder="static"):
       
     # Carga configuracion
     app.config.from_object(config[env])
-    CORS(app, origins=app.config["PORTAL_URL"])
+    # CORS(app, origins=app.config["PORTAL_URL"])
 
     # app.secret_key = "secret key"
 
