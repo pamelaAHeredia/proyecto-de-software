@@ -121,7 +121,7 @@ class UserService:
         if not mail_found or int(id) == mail_found.id:
             if not username_found or int(id) == username_found.id:
                 user = self.find_user_by_id(id)
-                if not user.is_main_admin: 
+                if not user.is_main_admin:
                     user.email = email
                     user.username = username
                     user.first_name = first_name
@@ -286,3 +286,17 @@ class UserService:
         user = self.find_user_by_id(id)
         user.password = new_pass
         db.session.commit()
+        return user
+
+    def api_list_members(self, id):
+        user = self.find_user_by_id(id)
+        members = user.members
+        list_members = []
+        for member in members:
+            info = {
+                "id": member.membership_number,
+                "name": member.last_name + ", " + member.first_name,
+            }
+            list_members.append(info)
+            info = {}
+        return list_members

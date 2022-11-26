@@ -101,6 +101,7 @@
             <form
                 action="{{url_for('suscription.enroll', member_id=member.membership_number, discipline_id=discipline_id)}}"
                 method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

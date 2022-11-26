@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_session import Session
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 
@@ -28,10 +28,10 @@ def create_app(env="production", static_folder="static"):
 
     app = Flask(__name__, static_folder=static_folder)
     csrf.init_app(app)
-   
+      
     # Carga configuracion
     app.config.from_object(config[env])
-    CORS(app, origins=app.config["PORTAL_URL"])
+    # CORS(app, origins=app.config["PORTAL_URL"])
 
     # app.secret_key = "secret key"
 
@@ -58,6 +58,9 @@ def create_app(env="production", static_folder="static"):
     app.register_blueprint(public_api_blueprint)
     app.register_blueprint(private_api_blueprint)
     app.register_blueprint(license_blueprint)
+
+    #Saco el csrf para el front de vue
+    csrf.exempt(private_api_blueprint)
 
     # Handler Error
     # app.register_error_handler(400, handlers.bad_request)
@@ -103,8 +106,8 @@ def create_app(env="production", static_folder="static"):
     def seedsdb():
         seeds.run()
 
-    @app.after_request
-    def set_xsrf_cookie(response):
-        response.set_cookie('csrf_token', generate_csrf())
-        return response
+    # @app.after_request
+    # def set_xsrf_cookie(response):
+    #     response.set_cookie('csrf_token', generate_csrf())
+    #     return response
     return app
