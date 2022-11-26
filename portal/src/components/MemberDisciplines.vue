@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="member-disciplines">
-      <h1 class="display-3">Disciplinas del</h1>
+      <h1 class="display-3">Disciplinas del {{ useSelect.get_current.name }}</h1>
 
       <div class="table-responsive">
         <table class="table table-striped">
@@ -42,35 +42,16 @@
 </template>
 
 <script>
-import { useAuthStore } from "../stores/auth";
-import { apiService } from "@/api";
-
+import { useSelectMember } from "../stores/useSelect";
 export default {
   setup() {
-    const authStore = useAuthStore();
-    return { authStore };
+    const useSelect = useSelectMember();
+    return { useSelect };
   },
-  data() {
-    return {
-      memberDisciplines: null,
-    };
-  },
-  mounted() {
-    this.getMemberDisciplines();
-  },
-  methods: {
-    async getMemberDisciplines() {
-      const access_token = sessionStorage.getItem("token");
-      const headers = {
-        headers: { "x-access-token": access_token },
-      };
-      await apiService
-        .get("api/me/disciplines/1", headers)
-        .then((response) => {
-          this.memberDisciplines = response.data;
-          console.log(response);
-        })
-        .catch((e) => console.log(e));
+  props: {
+    memberDisciplines: {
+      type: Object,
+      default: () => ({}),
     },
   },
 };
