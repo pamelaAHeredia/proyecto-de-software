@@ -44,7 +44,7 @@ const router = createRouter({
     {
       path: "/member-license",
       name: "member-license",
-      component: () => import("../components/MemberLicense.vue"),
+      component: () => import("../views/MemberLicenseView.vue"),
       meta: { requiresAuth: true },
     },
     {
