@@ -34,7 +34,7 @@ export default {
       this.currentMember = this.useSelect.get_current;
       const access_token = sessionStorage.getItem("token");
       const headers = {
-        headers: { "x-access-token": access_token },
+        headers: { Authorization: access_token },
       };
       await apiService
         .get(`api/me/payments/${this.currentMember.id}`, headers)
