@@ -145,7 +145,7 @@ def member_license(current_user, id_member):
         return jsonify({"message": "El socio no pertenece al usuario"}), 403
 
 
-# @cross_origin
+@cross_origin(headers=['x-access-token'])
 @private_api_blueprint.get("/me/user_jwt")
 @token_required
 def user_jwt(current_user):
