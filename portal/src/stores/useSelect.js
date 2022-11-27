@@ -24,7 +24,7 @@ export const useSelectMember = defineStore("members", {
     async current_user() {
       const access_token = sessionStorage.getItem("token");
       const headers = {
-        headers: { "x-access-token": access_token },
+        headers: { Authorization: access_token },
       };
       await apiService
         .get("/api/me/user_jwt", headers)
