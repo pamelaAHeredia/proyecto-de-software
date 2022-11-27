@@ -1,5 +1,5 @@
 <template>
-  <section class="about d-flex">
+  <section class="about">
     <div class="about-text">
       <h1>Sobre Nosotros</h1>
       <h5>club deportivo</h5>
@@ -9,7 +9,9 @@
       </p>
       <button @click="contactInfo">Contactar</button>
     </div>
-    <img src="@/assets/rsz_equipo.jpg" />
+    <div>
+      <img src="@/assets/rsz_equipo.jpg" />
+    </div>
   </section>
 </template>
 

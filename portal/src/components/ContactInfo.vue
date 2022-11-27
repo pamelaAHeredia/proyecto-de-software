@@ -61,9 +61,11 @@ export default {
 </script>
 
 <style scoped>
-.containaier {
+.container {
   display: flex;
-  position: relative;
+  /* position: relative; */
+  /* duplicado */
+  /* flex-wrap: wrap; */
 }
 .contact-info {
   z-index: 1;

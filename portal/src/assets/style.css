@@ -51,13 +51,28 @@
     justify-content: center;
     align-items: center;
     background-size: cover;
+    /* duplicado */
+    display: flex;
+    flex-wrap: wrap;
+    padding: 30px;
 }
 .about img {
     height: auto;
     width: 400px;
+    /* duplicado */
+    flex: 2;
 }
 .about-text {
+    letter-spacing: 1px;
+    font-size: 18px;
+    line-height: 28px;
+    margin-bottom: 45px;
+    color:white;
     width: 550px;
+    /* duplicado */
+    flex: 1;
+    min-width: 250px;
+    padding: 25px;
 }
 
 .about h1 {
@@ -75,13 +90,6 @@
     color: #e3a72f;
 }
 
-.about-text {
-    letter-spacing: 1px;
-    font-size: 18px;
-    line-height: 28px;
-    margin-bottom: 45px;
-    color:white;
-} 
 .about-text button {
     background: #e3a72f;
     text-decoration: none;
