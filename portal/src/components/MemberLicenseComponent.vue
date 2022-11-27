@@ -1,11 +1,10 @@
 <template>
   <div class="container">
-    <div class="member-license">
-      <h3>Carnet de Socio</h3>
-    </div>
-    <body>
-      <iframe v-bind:src="license" height="100%" width="100%"></iframe>
-    </body>
+    <h3>Carnet de Socio de {{ useSelect.get_current.name }}</h3>
+    <iframe
+      v-bind:src="license"
+      style="min-height: 100vh; width: 100%"
+    ></iframe>
   </div>
 </template>
 

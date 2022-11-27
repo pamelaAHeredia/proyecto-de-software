@@ -41,7 +41,6 @@ export default {
         .then((response) => {
           this.license = response.data.license_url;
           this.loaded = true;
-          //window.open(this.memberLicense.license_url);
         })
         .catch((e) => console.log(e));
     },
@@ -50,5 +49,5 @@ export default {
     },
   },
   components: { MemberLicenseComponent },
- };
+};
 </script>
