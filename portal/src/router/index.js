@@ -57,11 +57,13 @@ const router = createRouter({
       path: "/paymentList",
       name: "paymentList",
       component: () => import("../views/PaymentListView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/paymentVoucher",
       name: "paymentVoucher",
       component: () => import("../views/PaymentVoucher.vue"),
+      meta: { requiresAuth: true },
     },
   ],
 });

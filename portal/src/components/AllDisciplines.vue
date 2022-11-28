@@ -7,7 +7,7 @@
     <table class="table table-hover">
       <thead>
         <th>Nombre</th>
-        <th>Categorìa</th>
+        <th>Categoría</th>
         <th>Horario</th>
         <th>Instructor</th>
       </thead>
