@@ -31,8 +31,9 @@
             <div class="carousel-caption d-none d-md-block">
               <h5>Socios</h5>
               <p>
-                Podés ver el estado de tu membresía, tu carnet de socio y la
-                información de las disciplinas que practicás.
+                Podés ver el estado de tu membresía, tu carnet de socio,la
+                información de las disciplinas que practicás, los pagos
+                realizados y también la posibilidad de informar un nuevo pago.
               </p>
             </div>
           </div>

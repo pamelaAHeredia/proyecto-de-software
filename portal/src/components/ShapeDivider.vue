@@ -1,13 +1,6 @@
 <template>
-  <div class="container">
-    <div class="contact-info">
-      <h1>Información de contacto</h1>
-      <p>{{ info }}</p>
-    </div>
-  </div>
-
-  <!-- shape divider -->
-  <div class="custom-shape-divider-bottom-1669129895">
+<!-- shape divider -->
+<div class="custom-shape-divider-bottom-1669129895">
     <svg
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
@@ -32,55 +25,7 @@
   </div>
   <!-- shape divider -->
 </template>
-
-<script>
-import axios from "axios";
-// axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-const PATH_SERVER = import.meta.env.VITE_APP_PATH_API;
-
-export default {
-  data() {
-    return {
-      info: null,
-    };
-  },
-  mounted() {
-    this.getInfo();
-  },
-  methods: {
-    async getInfo() {
-      await axios
-        .get(PATH_SERVER + "api/club/informacion")
-        .then((response) => {
-          this.info = response.data.contact_info;
-        })
-        .catch((e) => console.log(e));
-    },
-  },
-};
-</script>
-
-<style scoped>
-.container {
-  display: flex;
-  /* position: relative; */
-  /* duplicado */
-  /* flex-wrap: wrap; */
-}
-.contact-info {
-  z-index: 1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.contact-info h1 {
-  font-size: 55px;
-}
-.contact-info p {
-  font-size: 25px;
-  text-align: center;
-}
+<style>
 .custom-shape-divider-bottom-1669129895 {
   position: absolute;
   bottom: 0;
@@ -101,6 +46,6 @@ export default {
 }
 
 .custom-shape-divider-bottom-1669129895 .shape-fill {
-  fill: #e3a72f;
+  fill: #333333;
 }
 </style>
