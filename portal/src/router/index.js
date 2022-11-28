@@ -42,6 +42,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/member-license",
+      name: "member-license",
+      component: () => import("../views/MemberLicenseView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/welcome",
       name: "welcome",
       component: () => import("../views/WelcomeUserView.vue"),
@@ -51,11 +57,13 @@ const router = createRouter({
       path: "/paymentList",
       name: "paymentList",
       component: () => import("../views/PaymentListView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/paymentVoucher",
       name: "paymentVoucher",
       component: () => import("../views/PaymentVoucher.vue"),
+      meta: { requiresAuth: true },
     },
   ],
 });

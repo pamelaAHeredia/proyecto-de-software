@@ -75,15 +75,21 @@ const useSelect = useSelectMember();
             <hr />
             <div v-if="authStore.is_auth">
               <li class="dropdown-item">
-                <span class="material-symbols-outlined"> chevron_right </span>
+                <span class="material-symbols-outlined"> sports_soccer </span>
                 <RouterLink to="/member-disciplines"
                   >Mis disciplinas</RouterLink
                 >
               </li>
+              <li class="dropdown-item">
+                <span class="material-symbols-outlined"> badge </span>
+                <RouterLink to="/member-license"> Carnet de Socio</RouterLink>
+              </li>
               <li>
+                <span class="material-symbols-outlined"> account_balance </span>
                 <RouterLink to="/paymentList">Lista de pagos</RouterLink>
               </li>
               <li>
+                <span class="material-symbols-outlined"> payments </span>
                 <RouterLink to="/paymentVoucher">Subir pago</RouterLink>
               </li>
               <hr />
