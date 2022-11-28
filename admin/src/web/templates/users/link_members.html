@@ -20,6 +20,7 @@
           </tr>
         </thead>
         <form action="{{url_for('users.link_members', id=user.id)}}" method="post" >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <tbody>
             {% for member in members %}  
             <tr>
