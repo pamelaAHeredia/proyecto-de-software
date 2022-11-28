@@ -51,13 +51,28 @@
     justify-content: center;
     align-items: center;
     background-size: cover;
+    /* duplicado */
+    display: flex;
+    flex-wrap: wrap;
+    padding: 30px;
 }
 .about img {
     height: auto;
     width: 400px;
+    /* duplicado */
+    flex: 2;
 }
 .about-text {
+    letter-spacing: 1px;
+    font-size: 18px;
+    line-height: 28px;
+    margin-bottom: 45px;
+    color:white;
     width: 550px;
+    /* duplicado */
+    flex: 1;
+    min-width: 250px;
+    padding: 25px;
 }
 
 .about h1 {
@@ -75,13 +90,6 @@
     color: #e3a72f;
 }
 
-.about-text {
-    letter-spacing: 1px;
-    font-size: 18px;
-    line-height: 28px;
-    margin-bottom: 45px;
-    color:white;
-} 
 .about-text button {
     background: #e3a72f;
     text-decoration: none;
@@ -90,3 +98,35 @@
     font-weight: bold;
     padding: 13px 30px;
 }
+
+.disciplines-title h1 {
+    margin-bottom: 15px;
+    font-size: 60px;
+    color: #333333;
+    z-index: 1;
+    text-align: center;
+  }
+  
+.table {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%;
+    border-collapse: collapse;
+    border-spacing: 3px;
+    border-radius: 12px 12px 12px 12px;
+    box-shadow: 0 10px, 50px rgba(32, 32, 32, 10);
+    overflow: hidden;
+    background: white;
+    text-align: left;
+  }
+  th {
+    background: #e3a72f;
+    font-size: 20px;
+    padding: 15px;
+  }
+  td {
+    font-size: 20px;
+  }

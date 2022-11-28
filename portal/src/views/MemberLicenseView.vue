@@ -1,16 +1,14 @@
 <template>
-  <main>
-    <MemberDisciplines v-if="is_loaded" v-bind:disciplines="disciplines" />
-    <ShapeDivider />
+  <main class="content">
+    <MemberLicenseComponent v-if="is_loaded" v-bind:license="license" />
   </main>
 </template>
 
 <script>
-import { apiService } from "@/api";
 import { useSelectMember } from "../stores/useSelect";
 import { inject } from "vue";
-import MemberDisciplines from "../components/MemberDisciplines.vue";
-import ShapeDivider from "../components/ShapeDivider.vue";
+import { apiService } from "@/api";
+import MemberLicenseComponent from "../components/MemberLicenseComponent.vue";
 
 export default {
   setup() {
@@ -20,28 +18,28 @@ export default {
   },
   data() {
     return {
-      disciplines: {},
+      license: "",
       currentMember: null,
       loaded: false,
     };
   },
   mounted() {
-    this.getDisciplines();
+    this.getMemberLicense();
     this.emitter.on("channel", () => {
-      this.getDisciplines();
+      this.getMemberLicense();
     });
   },
   methods: {
-    async getDisciplines() {
+    async getMemberLicense() {
       this.currentMember = this.useSelect.get_current;
       const access_token = sessionStorage.getItem("token");
       const headers = {
         headers: { Authorization: access_token },
       };
       await apiService
-        .get(`/api/me/disciplines/${this.currentMember.id}`, headers)
+        .get(`api/me/license/${this.currentMember.id}`, headers)
         .then((response) => {
-          this.disciplines = response.data.disciplines;
+          this.license = response.data.license_url;
           this.loaded = true;
         })
         .catch((e) => console.log(e));
@@ -50,6 +48,6 @@ export default {
       return this.loaded;
     },
   },
-  components: { MemberDisciplines, ShapeDivider },
+  components: { MemberLicenseComponent },
 };
 </script>
