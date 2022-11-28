@@ -283,4 +283,5 @@ class MovementService:
         data = dict()
         movements = self.get_movements(member=member, specific_date=specific_date)
         data["movements"] = [m.resume() for m in movements]
+        data["balance"] = self.get_balance(member, all=True)
         return data
